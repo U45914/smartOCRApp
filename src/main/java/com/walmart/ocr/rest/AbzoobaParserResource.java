@@ -56,7 +56,7 @@ public class AbzoobaParserResource {
 			myMap=JsonstringToMap.jsonString2Map(output);
 			myMap.remove("id");
 			myMap.remove("Raw_Data");
-			myMap.put("UPC Number", parseInput.getImageFileName());
+			myMap.put("UPC Number", parseInput.getImageFileName().substring(0, parseInput.getImageFileName().lastIndexOf('.')));
 			}
 			else{
 			myMap= new HashMap<String, Object>();
