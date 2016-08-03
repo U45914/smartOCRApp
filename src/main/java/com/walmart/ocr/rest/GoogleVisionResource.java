@@ -62,9 +62,9 @@ public class GoogleVisionResource {
 			List<EntityAnnotation> labelAnnotations = annotateImageResponse
 					.getLabelAnnotations();
 			if (null != labelAnnotations) {
+				resultString.append("Label Details : ");
 				for (EntityAnnotation labelAnnotation : labelAnnotations) {
 					System.out.println(labelAnnotation.getDescription());
-					resultString.append("Label Details : ");
 					resultString.append(labelAnnotation.getDescription());
 					resultString.append(" ");
 				}
@@ -72,8 +72,8 @@ public class GoogleVisionResource {
 			List<EntityAnnotation> logoAnnotations = annotateImageResponse
 					.getLogoAnnotations();
 			if (null != logoAnnotations) {
+				resultString.append("Logo Details : ");
 				for (EntityAnnotation logoAnnotation : logoAnnotations) {
-					resultString.append("Logo Details : ");
 					resultString.append(logoAnnotation.getDescription());
 					System.out.println(logoAnnotation.getDescription());
 					resultString.append(" ");
