@@ -58,6 +58,7 @@ public class GoogleVisionResource {
 				for (EntityAnnotation labelAnnotation : labelAnnotations) {
 					System.out.println(labelAnnotation.getDescription());
 					resultString.append(labelAnnotation.getDescription());
+					resultString.append(" ");
 				}
 			}
 			List<EntityAnnotation> logoAnnotations = annotateImageResponse.getLogoAnnotations();
@@ -65,6 +66,7 @@ public class GoogleVisionResource {
 				for (EntityAnnotation logoAnnotation : logoAnnotations) {
 					resultString.append(logoAnnotation.getDescription());
 					System.out.println(logoAnnotation.getDescription());
+					resultString.append(" ");
 				}
 			}
 			List<EntityAnnotation> textAnnotations = annotateImageResponse.getTextAnnotations();
@@ -75,6 +77,7 @@ public class GoogleVisionResource {
 				for (EntityAnnotation textAnnotation : textAnnotations) {
 					// resultString.append(textAnnotation.getDescription());
 					System.out.println(textAnnotation.getDescription());
+					resultString.append(" ");
 				}
 			}
 			result = resultString.toString();
