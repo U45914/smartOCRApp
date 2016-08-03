@@ -23,21 +23,26 @@ import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.ColorInfo;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
+import com.google.api.services.vision.v1.model.ImageProperties;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.model.OCRResult;
+import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
 
 @Path("/smartOCR")
 public class GoogleVisionResource {
 
-	private static final Logger logger = Logger.getLogger(GoogleVisionResource.class);
+	private static final Logger logger = Logger
+			.getLogger(GoogleVisionResource.class);
 
 	@POST
 	@Path("/convertImageToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile1(@FormDataParam("file") InputStream uploadedInputStream,
+	public Response uploadFile1(
+			@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
 		String uploadedFileLocation = fileDetail.getFileName();
@@ -52,33 +57,54 @@ public class GoogleVisionResource {
 			logger("File uploaded to : " + uploadedFileLocation);
 			File imageFile = new File(uploadedFileLocation);
 			GVision gvision = new GVision();
-			AnnotateImageResponse annotateImageResponse = gvision.doOCR(imageFile);
-			List<EntityAnnotation> labelAnnotations = annotateImageResponse.getLabelAnnotations();
+			AnnotateImageResponse annotateImageResponse = gvision
+					.doOCR(imageFile);
+			List<EntityAnnotation> labelAnnotations = annotateImageResponse
+					.getLabelAnnotations();
 			if (null != labelAnnotations) {
 				for (EntityAnnotation labelAnnotation : labelAnnotations) {
 					System.out.println(labelAnnotation.getDescription());
+					resultString.append("Label Details : ");
 					resultString.append(labelAnnotation.getDescription());
 					resultString.append(" ");
 				}
 			}
-			List<EntityAnnotation> logoAnnotations = annotateImageResponse.getLogoAnnotations();
+			List<EntityAnnotation> logoAnnotations = annotateImageResponse
+					.getLogoAnnotations();
 			if (null != logoAnnotations) {
 				for (EntityAnnotation logoAnnotation : logoAnnotations) {
+					resultString.append("Logo Details : ");
 					resultString.append(logoAnnotation.getDescription());
 					System.out.println(logoAnnotation.getDescription());
 					resultString.append(" ");
 				}
 			}
-			List<EntityAnnotation> textAnnotations = annotateImageResponse.getTextAnnotations();
+			List<EntityAnnotation> textAnnotations = annotateImageResponse
+					.getTextAnnotations();
 			if (null != textAnnotations) {
+				resultString.append("Text Details : ");
 				if (null != textAnnotations.get(0)) {
-					resultString.append(textAnnotations.get(0).getDescription());
+					resultString
+							.append(textAnnotations.get(0).getDescription());
 				}
 				for (EntityAnnotation textAnnotation : textAnnotations) {
 					// resultString.append(textAnnotation.getDescription());
 					System.out.println(textAnnotation.getDescription());
 					resultString.append(" ");
 				}
+			}
+			ImageProperties imagePropertiesAnnotation = annotateImageResponse
+					.getImagePropertiesAnnotation();
+			if (null != imagePropertiesAnnotation) {
+				ColorInfo colorInfo = imagePropertiesAnnotation
+						.getDominantColors().getColors().get(0);
+				ColorUtils colorUtils = new ColorUtils();
+				String myColor = colorUtils.getColorNameFromRgb(
+						Math.round(colorInfo.getColor().getRed()),
+						Math.round(colorInfo.getColor().getGreen()),
+						Math.round(colorInfo.getColor().getBlue()));
+				resultString.append("Color Details : ");
+				resultString.append(myColor);
 			}
 			result = resultString.toString();
 			uploadedInputStream.close();
@@ -111,7 +137,6 @@ public class GoogleVisionResource {
 		FileInputStream inputStream = null;
 		try {
 			inputStream = new FileInputStream("ConvertedSmart.txt");
-
 			everything = IOUtils.toString(inputStream);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -123,10 +148,12 @@ public class GoogleVisionResource {
 	}
 
 	// save uploaded file to new location
-	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
+	private void writeToFile(InputStream uploadedInputStream,
+			String uploadedFileLocation) {
 
 		try {
-			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
+			OutputStream out = new FileOutputStream(new File(
+					uploadedFileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
