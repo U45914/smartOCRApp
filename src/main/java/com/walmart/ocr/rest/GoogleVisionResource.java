@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,62 +19,81 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
-import net.sourceforge.tess4j.util.LoadLibs;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.model.OCRResult;
+import com.walmart.ocr.util.GVision;
 
-@Path("/ocr")
-public class OcrConverterResource {
+@Path("/smartOCR")
+public class GoogleVisionResource {
 
-	private static final Logger logger = Logger.getLogger(OcrConverterResource.class);
-	
+	private static final Logger logger = Logger.getLogger(GoogleVisionResource.class);
+
 	@POST
 	@Path("/convertImageToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile1(
-			@FormDataParam("file") InputStream uploadedInputStream,
+	public Response uploadFile1(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
 		String uploadedFileLocation = fileDetail.getFileName();
 		String result = null;
+		StringBuilder resultString = new StringBuilder();
 		try {
+
 			logger(" ");
 			logger("******** New Conversion Started *******");
 			// save it
 			writeToFile(uploadedInputStream, uploadedFileLocation);
-			String output = "File uploaded to : " + uploadedFileLocation;
-			logger(output);
+			logger("File uploaded to : " + uploadedFileLocation);
 			File imageFile = new File(uploadedFileLocation);
-			ITesseract instance = new Tesseract(); // JNA Interface Mapping
-			// ITesseract instance = new Tesseract1(); // JNA Direct Mapping
-			//In case you don't have your own tessdata, let it also be extracted for you
-			File tessDataFolder = LoadLibs.extractTessResources("tessdata");
-
-			//Set the tessdata path
-			instance.setDatapath(tessDataFolder.getAbsolutePath());
-			result = instance.doOCR(imageFile);
-			result = result.replace("\n", " ");
-			logger(result);
+			GVision gvision = new GVision();
+			AnnotateImageResponse annotateImageResponse = gvision.doOCR(imageFile);
+			List<EntityAnnotation> labelAnnotations = annotateImageResponse.getLabelAnnotations();
+			if (null != labelAnnotations) {
+				for (EntityAnnotation labelAnnotation : labelAnnotations) {
+					System.out.println(labelAnnotation.getDescription());
+					resultString.append(labelAnnotation.getDescription());
+				}
+			}
+			List<EntityAnnotation> logoAnnotations = annotateImageResponse.getLogoAnnotations();
+			if (null != logoAnnotations) {
+				for (EntityAnnotation logoAnnotation : logoAnnotations) {
+					resultString.append(logoAnnotation.getDescription());
+					System.out.println(logoAnnotation.getDescription());
+				}
+			}
+			List<EntityAnnotation> textAnnotations = annotateImageResponse.getTextAnnotations();
+			if (null != textAnnotations) {
+				if (null != textAnnotations.get(0)) {
+					resultString.append(textAnnotations.get(0).getDescription());
+				}
+				for (EntityAnnotation textAnnotation : textAnnotations) {
+					// resultString.append(textAnnotation.getDescription());
+					System.out.println(textAnnotation.getDescription());
+				}
+			}
+			result = resultString.toString();
 			uploadedInputStream.close();
-			if(imageFile.delete())
+
+			if (imageFile.delete())
 				logger(uploadedFileLocation + " Deleted");
-			else{
+			else {
 				logger("Failed to delete File");
 			}
-		} catch (TesseractException e) {
-			logger(e.getMessage());
+
+			saveToTXT(result);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		saveToTXT(result);
 		return Response.status(200).entity(result).build();
 
 	}
@@ -87,7 +107,7 @@ public class OcrConverterResource {
 		String everything = null;
 		FileInputStream inputStream = null;
 		try {
-			inputStream = new FileInputStream("Converted1.txt");
+			inputStream = new FileInputStream("ConvertedSmart.txt");
 
 			everything = IOUtils.toString(inputStream);
 		} catch (FileNotFoundException e) {
@@ -100,12 +120,10 @@ public class OcrConverterResource {
 	}
 
 	// save uploaded file to new location
-	private void writeToFile(InputStream uploadedInputStream,
-			String uploadedFileLocation) {
+	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
 
 		try {
-			OutputStream out = new FileOutputStream(new File(
-					uploadedFileLocation));
+			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
@@ -123,7 +141,7 @@ public class OcrConverterResource {
 	public void saveToTXT(String content) {
 
 		try {
-			File file = new File("Converted1.txt");
+			File file = new File("ConvertedSmart.txt");
 
 			// if file does not exists, then create it
 			if (!file.exists()) {
@@ -143,7 +161,8 @@ public class OcrConverterResource {
 		}
 
 	}
-	void logger(String log){
+
+	void logger(String log) {
 		logger.debug(log);
 	}
 }

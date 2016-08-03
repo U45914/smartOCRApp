@@ -5,12 +5,18 @@ $(function()
      
 
      var $jqValue = $('.jqValue');
-     var $jqValue1 = $('.jqValue1');
+	 var $tableValue = $('.tableValue');
+	 var imageFileName ;
 	// Add events
-	$('input[type=file]').on('change', prepareUpload);
+	$('input[type=file]').on('change', prepareUpload); 
+	/* $('imagefile').on('change', prepareUpload); 
+	$('imagefile').bind(prepareUpload, function() {
+		hideLoadingScreen();
+	});*/
 	$('form').on('submit', uploadFiles);
     $("#imagefile").change(function ()
-              {
+              {	
+            	//  showLoadingScreen();
                      $("#img").show();
                      $("#img").attr("src",'');
                      if (typeof(FileReader)!="undefined"){
@@ -24,6 +30,7 @@ $(function()
                                      $("#img").attr("src",e.target.result);
                                  }
                                  reader.readAsDataURL(getfile[0]);
+                                 imageFileName= getfile[0].name;
                              } else {
                                  alert(getfile[0].name + " is not image file.");
                                  return false;
@@ -39,6 +46,7 @@ $(function()
 	function prepareUpload(event)
 	{
 		files = event.target.files;
+		
 	}
 
 	// Catch the form submit and upload the files
@@ -46,35 +54,43 @@ $(function()
 	{
 		event.stopPropagation(); // Stop stuff happening
         event.preventDefault(); // Totally stop stuff happening
-
+        
         // START A LOADING SPINNER HERE
 
         // Create a formdata object and add the files
 		var data = new FormData();
+		var jsondata = {"id":"newmmmmaaaa2","Brand":"Lego","Age":"7-14","Warning":"choking hazard","Raw_Data":"LEGO MARVEL SUPER HEROES Age 7-14 76031THE HULK BUSTER SMASH 248 pcs/pzs WARNING: CHOKING HAZARD TOY CONTAINS SMALL PARTS AND A SMALL BALL.NOT FOR CHILDREN UNDER 3 YEARS.AVENGERSAGE OF ULTRONNEW SUPER JUMPER","Pieces":"248"};
 		$.each(files, function(key, value)
 		{
 			data.append("file", value);
 		});
-        
+		showLoadingScreen();
+		$jqValue.html("");
+		$tableValue.html("");
         $.ajax({
-            url: 'rest/ocr/convertImageToText',
+        	url: 'rest/smartOCR/convertImageToText',
             type: 'POST',
             data: data,
             cache: false,
             //dataType: 'json',
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            
             success: function(data, textStatus, jqXHR)
             {
+            	
             	if(typeof data.error === 'undefined')
             	{
 				    $jqValue.html(data);
+					var requestBody ={ "id": "newmmmmaaaa2", "text" : data , "imageFileName" : imageFileName};
+					GetTableData(requestBody);
             		// Success so call function to process the form
             		submitForm(event, data);
             	}
             	else
             	{
 				 $jqValue.html("Unable to retrieve text");
+				 //var tabledata = gettableData(jsondata);
             		// Handle errors here
             		console.log('ERRORS: ' + data.error);
             	}
@@ -82,46 +98,87 @@ $(function()
             error: function(jqXHR, textStatus, errorThrown)
             {
 			   $jqValue.html("Unable to retrieve text");
+			    //var tabledata = gettableData(jsondata);
             	// Handle errors here
             	console.log('ERRORS: ' + textStatus);
             	// STOP LOADING SPINNER
             }
         });
     }
+	
+	function GetTableData(requestBody)
+	{ 
+	$.ajax({
+            url: 'rest/abzoobaParse/parseText',
+			//url: 'http://localhost:8080/abzooba/parseText',
+            type: 'POST',
+            data: JSON.stringify(requestBody),
+            cache: false,
+			crossDomain : true,
+            //dataType: 'json',
+            processData: false, // Don't process the files
+            contentType: 'application/json', // Set content type to false as jQuery will tell the server its a query string request
+            success: function(data, textStatus, jqXHR )
+            {
+            	hideLoadingScreen();
+            	if(typeof data.error === 'undefined')
+            	{
+            	
+				  var tabledata = gettableData(data);
+            	}
+            	else
+            	{
+               	   // Handle errors here
+            		console.log('ERRORS: ' + data.error);
+            	}
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+            	// Handle errors here
+            	console.log('ERRORS: ' + textStatus);
+            	// STOP LOADING SPINNER
+            }
+        });
+	}
+
+	function gettableData(jsonObj) {
+        var html = '<table border="0" class="ocrTable">';
+        $.each(jsonObj, function(key, value){
+            html += '<tr>';
+            html += '<td>' + key + '</td>';
+            html += '<td>' + value + '</td>';
+            html += '</tr>';
+        });
+        html += '</table>';
+        $tableValue.html(html);
+    }
 
     function submitForm(event, data)
 	{
-    	event.stopPropagation(); // Stop stuff happening
-        event.preventDefault(); // Totally stop stuff happening
-
 		// Create a jQuery object from the form
-	//	$form = $(event.target);
+		$form = $(event.target);
 		
 		// Serialize the form data
-	//	var formData = $form.serialize();
+		var formData = $form.serialize();
 		
 		// You should sterilise the file names
-	//	$.each(data.files, function(key, value)
-	//	{
-	//		formData = formData + '&filenames[]=' + value;
-	//	});
+		$.each(data.files, function(key, value)
+		{
+			formData = formData + '&filenames[]=' + value;
+		});
 
 		$.ajax({
-			url: 'rest/abzoobaParse/parseText',
+			url: 'submit.php',
             type: 'POST',
-            contentType:"application/json; charset=utf-8",
-            data: JSON.stringify({"id":"hello" ,"text":data}),
+            data: formData,
             cache: false,
             dataType: 'json',
-            processData: false, // Don't process the files
-            //contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(data, textStatus, jqXHR)
             {
             	if(typeof data.error === 'undefined')
             	{
             		// Success so call function to process the form
             		console.log('SUCCESS: ' + data.success);
-            		$jqValue1.html(data);
             	}
             	else
             	{
@@ -141,3 +198,11 @@ $(function()
 		});
 	}
 });
+
+function showLoadingScreen() {
+	$(".loadingScreen").show();
+}
+
+function hideLoadingScreen() {
+	$(".loadingScreen").hide();
+}

@@ -20,11 +20,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.model.ParseRequest;
+import com.walmart.ocr.util.JsonstringToMap;
 
 @Path("/abzoobaParse")
 public class AbzoobaParserResource {
 
-	private static final Logger logger = Logger.getLogger(AbzoobaParserResource.class);
+	private static final Logger logger = Logger
+			.getLogger(AbzoobaParserResource.class);
 
 	@POST
 	@Path("/parseText")
@@ -32,12 +34,15 @@ public class AbzoobaParserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, Object> uploadFile1(ParseRequest parseInput) {
 		String output = null;
+		//Only Fake Response.
+		boolean fake=false;
 		Map<String, Object> myMap=null;
 		try {
 			logger("Parsing With  Abzooba ....");
+			if(!fake){
 			Client client = Client.create();
 
-			WebResource webResource = client.resource("http://52.23.170.75:5000/model1");
+			WebResource webResource = client.resource("http://52.23.170.75:5000/model2");
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString(parseInput);
 			ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
@@ -49,9 +54,34 @@ public class AbzoobaParserResource {
 			output = response.getEntity(String.class);
 			myMap= new HashMap<String, Object>();
 			myMap=JsonstringToMap.jsonString2Map(output);
-			
-			logger("Output from Server .... ");
-			logger(output);
+			myMap.remove("id");
+			myMap.remove("Raw_Data");
+			myMap.put("UPC Number", parseInput.getImageFileName());
+			}
+			else{
+			myMap= new HashMap<String, Object>();
+			//myMap.put("id", parseInput.getId());
+			//myMap.put("Raw_Data", parseInput.getText());
+			myMap.put("Brand", "Lego");
+			myMap.put("Age", "7-14");
+			myMap.put("Warning", "choking hazard");
+			myMap.put("Pieces", "248");
+//			Client client = Client.create();
+//
+//			WebResource webResource = client.resource("http://ocrsmartreader.herokuapp.com/rest/abzoobaParse/parseText");
+//			ObjectMapper mapper = new ObjectMapper();
+//			String jsonInString = mapper.writeValueAsString(parseInput);
+//			ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
+//
+//			if (response.getStatus() != 200) {
+//				throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+//			}
+//
+//			output = response.getEntity(String.class);
+			//myMap= new HashMap<String, Object>();
+			//myMap=JsonstringToMap.jsonString2Map(output);
+			//myMap.put("UPC Number", parseInput.getImageFileName());
+			}
 
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
@@ -62,9 +92,9 @@ public class AbzoobaParserResource {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
 		return myMap;
 	}
-
 	void logger(String log) {
 		logger.debug(log);
 	}
