@@ -9,35 +9,123 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.ColorInfo;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.ImageProperties;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import com.walmart.ocr.model.GVisionResponse;
 import com.walmart.ocr.model.OCRResult;
 import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
+import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
 
 @Path("/smartOCR")
 public class GoogleVisionResource {
 
 	private static final Logger logger = Logger
 			.getLogger(GoogleVisionResource.class);
+	private static final String FILE_UPLOAD_PATH = "ImagesToProcess/";
+	private int fileCount = 1;
 
+	@POST
+	@Path("/convertImagesToText")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response uploadMultiFile(@Context HttpServletRequest request) {
+
+		String result = null;
+		try {
+
+			logger(" ");
+			logger("******** New Conversion Started *******");
+			saveFiles(request);
+			logger("******** Saved Files *******");
+			List<File> imageFiles = new ArrayList<File>();
+			for (int file = 1; file < fileCount; file++) {
+				imageFiles.add(new File(FILE_UPLOAD_PATH + "image-" + file));
+			}
+
+			GVision gvision = new GVision();
+			BatchAnnotateImagesResponse batchImageResponse = gvision.doOCR(imageFiles);
+			GVisionResponse gVisionResponse = GvisionResponseToOCRResponseConverter.convert(batchImageResponse);
+			
+			result = GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Response.status(200).entity(result).build();
+
+	}
+
+	private void saveFiles(HttpServletRequest request) {
+		String name = null;
+		/* Check whether request is multipart or not. */
+		if (ServletFileUpload.isMultipartContent(request)) {
+			FileItemFactory factory = new DiskFileItemFactory();
+			ServletFileUpload fileUpload = new ServletFileUpload(factory);
+			try {
+
+				List<FileItem> items = fileUpload.parseRequest(request);
+
+				if (items != null) {
+					Iterator<FileItem> iter = items.iterator();
+					/*
+					 * Return true if the instance represents a simple form
+					 * field. Return false if it represents an uploaded file.
+					 */
+
+					while (iter.hasNext()) {
+						final FileItem item = iter.next();
+						final String fieldName = item.getFieldName();
+						final String fieldValue = item.getString();
+						if (item.isFormField()) {
+							name = fieldValue;
+							System.out.println("Field Name: " + fieldName + ", Field Value: " + fieldValue);
+							System.out.println("Candidate Name: " + name);
+						} else {
+							final File file = new File(FILE_UPLOAD_PATH + "image-" + fileCount++);
+
+							System.out.println("Saving the file: " + file.getName());
+							item.write(file);
+						}
+					}
+				}
+			} catch (FileUploadException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
 	@POST
 	@Path("/convertImageToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.util.JsonstringToMap;
 
+
 @Path("/abzoobaParse")
 public class AbzoobaParserResource {
 

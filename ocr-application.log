@@ -181,3 +181,9 @@
 2016-07-27 00:47:46 DEBUG AbzoobaParserResource:69 - Parsing With  Abzooba ....
 2016-07-27 00:47:48 DEBUG AbzoobaParserResource:69 - Output from Server .... 
 2016-07-27 00:47:48 DEBUG AbzoobaParserResource:69 - {"id":"hello","Raw_Data":"sample label for macaroni & cheese serving size 1 cup (228g) servings per container 2 amount per sewing calories 250 calories from fat 110 o\/o daily value* total fat 12g 18% saturated fat 3g 15% trans fat 3g cholesterol 30mg 10% 9w total carbohydrate 31 g 10% dietary fiber 0g 0% sugars 5g protein 5g vitamin a 4% vitamin c 2% calcium 20% iron 4% * percent daily values are based on a 2,000 calorie diet. your daily values may be higher or lower depending on your calorie needs. calories 2,000 2,500 total fat less than 65g 809 sat fat less than 209 25g cholesterol less than 300mg 300mg sodium less than 2,400mg 2,400mg total carbohydrate 3009 3759 dietary fiber 25g 30g","Brand":"Nil","Age":"Nil","Warning":"Nil","Pieces":"Nil","Players":"nil","Net_Weight":"Nil"}
+2016-08-07 13:13:05 DEBUG GoogleVisionResource:284 -  
+2016-08-07 13:13:05 DEBUG GoogleVisionResource:284 - ******** New Conversion Started *******
+2016-08-07 13:13:06 DEBUG GoogleVisionResource:284 - ******** Saved Files *******
+2016-08-07 13:20:02 DEBUG GoogleVisionResource:284 -  
+2016-08-07 13:20:02 DEBUG GoogleVisionResource:284 - ******** New Conversion Started *******
+2016-08-07 13:20:02 DEBUG GoogleVisionResource:284 - ******** Saved Files *******
