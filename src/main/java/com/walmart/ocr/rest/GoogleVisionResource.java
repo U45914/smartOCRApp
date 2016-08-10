@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,6 +33,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.log4j.Logger;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
@@ -70,9 +74,18 @@ public class GoogleVisionResource {
 			logger("******** Saved Files *******");
 			List<File> imageFiles = new ArrayList<File>();
 			imageFiles=(List<File>) FileUtils.listFiles(file, null, false);
+			Collections.sort(imageFiles, new Comparator<File>() {
+
+				@Override
+				public int compare(File o1, File o2) {
+					// TODO Auto-generated method stub
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
 			String upscString ="12345";
 			if(null!=imageFiles.get(0)){
 			upscString = imageFiles.get(0).getName();
+			System.out.println("Creating UPSC string using file :"+upscString);
 			upscString=upscString.substring(0, upscString.indexOf("-"));
 			}
 			GVision gvision = new GVision();
