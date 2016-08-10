@@ -131,13 +131,13 @@ public class GvisionResponseToOCRResponseConverter {
 		int count =1;
 		for (String logo : gVisionResponse.getLogoDetails()) {
 			if(count==1){
-			ocrStringBuilder.append("Logo Details: ");
+			ocrStringBuilder.append("LogoDetails: ");
 			ocrStringBuilder.append(logo);
 			ocrStringBuilder.append(" ");
 			count=0;
 			}
 			else{
-				ocrStringBuilder1.append("Logo Details: ");
+				ocrStringBuilder1.append("LogoDetails: ");
 				ocrStringBuilder1.append(logo);
 				ocrStringBuilder1.append(" ");
 			}
@@ -146,13 +146,13 @@ public class GvisionResponseToOCRResponseConverter {
 		
 		for (String label : gVisionResponse.getLabelDetails()) {
 			if(count==1){
-			ocrStringBuilder.append("Label Details: ");
+			ocrStringBuilder.append("LabelDetails: ");
 			ocrStringBuilder.append(label);
 			ocrStringBuilder.append(" ");
 			count=0;
 			}
 			else{
-				ocrStringBuilder1.append("Label Details: ");
+				ocrStringBuilder1.append("LabelDetails: ");
 				ocrStringBuilder1.append(label);
 				ocrStringBuilder1.append(" ");
 				
@@ -161,13 +161,13 @@ public class GvisionResponseToOCRResponseConverter {
 		count =1;
 		for (String text : gVisionResponse.getTextDeatils()) {
 			if(count==1){
-			ocrStringBuilder.append("Text Details: ");
+			ocrStringBuilder.append("TextDetails: ");
 			ocrStringBuilder.append(text);
 			ocrStringBuilder.append(" ");
 			count=0;
 			}
 			else{
-				ocrStringBuilder1.append("Text Details: ");
+				ocrStringBuilder1.append("TextDetails: ");
 				ocrStringBuilder1.append(text);
 				ocrStringBuilder1.append(" ");
 			}
@@ -175,13 +175,13 @@ public class GvisionResponseToOCRResponseConverter {
 		count =1;
 		for (String color : gVisionResponse.getColorDeatils()) {
 			if(count==1){
-			ocrStringBuilder.append("Color Details: ");
+			ocrStringBuilder.append("ColorDetails: ");
 			ocrStringBuilder.append(color);
 			ocrStringBuilder.append(" ");
 			count=0;
 			}
 			else{
-				ocrStringBuilder1.append("Color Details: ");
+				ocrStringBuilder1.append("ColorDetails: ");
 				ocrStringBuilder1.append(color);
 				ocrStringBuilder1.append(" ");
 			}
