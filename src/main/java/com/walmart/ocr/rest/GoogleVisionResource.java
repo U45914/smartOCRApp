@@ -33,7 +33,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.comparator.NameFileComparator;
 import org.apache.log4j.Logger;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
