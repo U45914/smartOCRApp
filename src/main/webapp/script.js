@@ -81,6 +81,7 @@ $(function() {
 			cache : false,
 			// dataType: 'json',
 			processData : false, // Don't process the files
+			//contentType : 'application/json',
 			contentType : false, // Set content type to false as jQuery will
 									// tell the server its a query string
 									// request
@@ -88,20 +89,20 @@ $(function() {
 			success : function(data, textStatus, jqXHR) {
 
 				if (typeof data.error === 'undefined') {
-					$jqValue.html(data);
+					gettableData1(data);
 					hideLoadingScreen();
 					var requestBody = {
 						"id" : "newmmmmaaaa2",
 						"text" : data,
 						"imageFileName" : imageFileName
 					};
-					// GetTableData(requestBody);
+					GetTableData(data);
 					// Success so call function to process the form
 					submitForm(event, data);
 					
 				} else {
 					$jqValue.html("Unable to retrieve text");
-					// var tabledata = gettableData(jsondata);
+					//var tabledata = gettableData(jsondata);
 					// Handle errors here
 					hideLoadingScreen();
 					console.log('ERRORS: ' + data.error);
@@ -109,13 +110,24 @@ $(function() {
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				$jqValue.html("Unable to retrieve text");
-				// var tabledata = gettableData(jsondata);
+			//var tabledata = gettableData(jsondata);
 				// Handle errors here
 				console.log('ERRORS: ' + textStatus);
 				// STOP LOADING SPINNER
 				hideLoadingScreen();
 			}
 		});
+	}
+	function gettableData1(jsonObj) {
+		var html = '<table border="0" class="ocrTable">';
+		$.each(jsonObj, function(key, value) {
+			html += '<tr>';
+			html += '<td>' + key + '</td>';
+			html += '<td>' + value + '</td>';
+			html += '</tr>';
+		});
+		html += '</table>';
+		$jqValue	.html(html);
 	}
 
 	function GetTableData(requestBody) {
@@ -132,19 +144,21 @@ $(function() {
 												// jQuery will tell the server
 												// its a query string request
 			success : function(data, textStatus, jqXHR) {
-				hideLoadingScreen();
+				//hideLoadingScreen();
 				if (typeof data.error === 'undefined') {
 
 					var tabledata = gettableData(data);
 				} else {
 					// Handle errors here
 					console.log('ERRORS: ' + data.error);
+					hideLoadingScreen();
 				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				// Handle errors here
 				console.log('ERRORS: ' + textStatus);
 				// STOP LOADING SPINNER
+				hideLoadingScreen();
 			}
 		});
 	}

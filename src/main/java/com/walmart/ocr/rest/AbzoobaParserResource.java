@@ -43,9 +43,12 @@ public class AbzoobaParserResource {
 			if(!fake){
 			Client client = Client.create();
 
-			WebResource webResource = client.resource("http://52.23.170.75:5000/model2");
+			//WebResource webResource = client.resource("http://52.23.170.75:5000/model2");
+			WebResource webResource = client.resource("http://52.23.170.75:5000/beauty");
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonInString = mapper.writeValueAsString(parseInput);
+			jsonInString=jsonInString.replace("frontText", "FrontText");
+			jsonInString=jsonInString.replace("backText", "BackText");
 			ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
 			if (response.getStatus() != 200) {
@@ -57,7 +60,7 @@ public class AbzoobaParserResource {
 			myMap=JsonstringToMap.jsonString2Map(output);
 			myMap.remove("id");
 			myMap.remove("Raw_Data");
-			myMap.put("UPC Number", parseInput.getImageFileName().substring(0, parseInput.getImageFileName().lastIndexOf('.')));
+			myMap.put("UPC Number", parseInput.getId());
 			}
 			else{
 			myMap= new HashMap<String, Object>();

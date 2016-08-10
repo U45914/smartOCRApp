@@ -2,26 +2,28 @@ package com.walmart.ocr.model;
 
 public class ParseRequest {
 	private String id;
-	private String text;
-	private String imageFileName;
+	private String FrontText;
+	private String BackText;
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getText() {
-		return text;
+	
+	public String getFrontText() {
+		return FrontText;
 	}
-	public void setText(String text) {
-		this.text = text;
+	public void setFrontText(String frontText) {
+		FrontText = frontText;
 	}
-	public String getImageFileName() {
-		return imageFileName;
+	public String getBackText() {
+		return BackText;
 	}
-	public void setImageFileName(String imageFileName) {
-		this.imageFileName = imageFileName;
+	public void setBackText(String backText) {
+		BackText = backText;
 	}
+	
 	
 
 }

@@ -128,7 +128,8 @@ public class GVision {
 			AnnotateImageRequest request = new AnnotateImageRequest();		
 			request.setFeatures(ImmutableList.of(new Feature().setType("TEXT_DETECTION").setMaxResults(MAX_RESULTS),
 					new Feature().setType("LOGO_DETECTION").setMaxResults(MAX_RESULTS),
-					new Feature().setType("LABEL_DETECTION").setMaxResults(MAX_RESULTS)));
+					new Feature().setType("LABEL_DETECTION").setMaxResults(MAX_RESULTS),
+					new Feature().setType("IMAGE_PROPERTIES").setMaxResults(MAX_RESULTS)));
 			request.setImage(new Image().encodeContent(bFile));
 			annotateImageRequests.add(request);
 		}

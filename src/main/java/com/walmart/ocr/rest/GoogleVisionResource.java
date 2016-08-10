@@ -28,6 +28,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
@@ -40,6 +41,7 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.model.GVisionResponse;
 import com.walmart.ocr.model.OCRResult;
+import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
@@ -50,30 +52,38 @@ public class GoogleVisionResource {
 	private static final Logger logger = Logger
 			.getLogger(GoogleVisionResource.class);
 	private static final String FILE_UPLOAD_PATH = "ImagesToProcess/";
-	private int fileCount = 1;
 
 	@POST
 	@Path("/convertImagesToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadMultiFile(@Context HttpServletRequest request) {
 
-		String result = null;
+		ParseRequest parseRequest = new ParseRequest();
 		try {
 
 			logger(" ");
 			logger("******** New Conversion Started *******");
+			File file = new File(FILE_UPLOAD_PATH);
+			FileUtils.cleanDirectory(file);
 			saveFiles(request);
 			logger("******** Saved Files *******");
 			List<File> imageFiles = new ArrayList<File>();
-			for (int file = 1; file < fileCount; file++) {
-				imageFiles.add(new File(FILE_UPLOAD_PATH + "image-" + file));
+			imageFiles=(List<File>) FileUtils.listFiles(file, null, false);
+			String upscString ="12345";
+			if(null!=imageFiles.get(0)){
+			upscString = imageFiles.get(0).getName();
+			upscString=upscString.substring(0, upscString.indexOf("-"));
 			}
-
 			GVision gvision = new GVision();
 			BatchAnnotateImagesResponse batchImageResponse = gvision.doOCR(imageFiles);
 			GVisionResponse gVisionResponse = GvisionResponseToOCRResponseConverter.convert(batchImageResponse);
 			
-			result = GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
+			//result = GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
+			parseRequest=GvisionResponseToOCRResponseConverter.toParseRequest(gVisionResponse);
+			parseRequest.setId(upscString);
+			
+	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +91,7 @@ public class GoogleVisionResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return Response.status(200).entity(result).build();
+		return Response.status(200).entity(parseRequest).build();
 
 	}
 
@@ -111,7 +121,7 @@ public class GoogleVisionResource {
 							System.out.println("Field Name: " + fieldName + ", Field Value: " + fieldValue);
 							System.out.println("Candidate Name: " + name);
 						} else {
-							final File file = new File(FILE_UPLOAD_PATH + "image-" + fileCount++);
+							final File file = new File(FILE_UPLOAD_PATH + item.getName());
 
 							System.out.println("Saving the file: " + file.getName());
 							item.write(file);
@@ -134,8 +144,11 @@ public class GoogleVisionResource {
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
 		String uploadedFileLocation = fileDetail.getFileName();
-		String result = null;
+		String frontText = null;
+		String backText = null;
 		StringBuilder resultString = new StringBuilder();
+		StringBuilder resultString1 = new StringBuilder();
+		ParseRequest parseRequest = new ParseRequest();
 		try {
 
 			logger(" ");
@@ -150,35 +163,59 @@ public class GoogleVisionResource {
 			List<EntityAnnotation> labelAnnotations = annotateImageResponse
 					.getLabelAnnotations();
 			if (null != labelAnnotations) {
-				resultString.append("Label Details : ");
+				
+				int count=1;
 				for (EntityAnnotation labelAnnotation : labelAnnotations) {
 					System.out.println(labelAnnotation.getDescription());
-					resultString.append(labelAnnotation.getDescription());
-					resultString.append(" ");
+					if (count == 1) {
+						resultString.append("label details ");
+						resultString.append(labelAnnotation.getDescription());
+						resultString.append(" ");
+					}
+					else{
+						resultString1.append("label details ");
+						resultString1.append(labelAnnotation.getDescription());
+						resultString1.append(" ");	
+					}
 				}
 			}
 			List<EntityAnnotation> logoAnnotations = annotateImageResponse
 					.getLogoAnnotations();
 			if (null != logoAnnotations) {
-				resultString.append("Logo Details : ");
+				int count=1;
 				for (EntityAnnotation logoAnnotation : logoAnnotations) {
+					if (count == 1) {
+					resultString.append("logo details  ");
 					resultString.append(logoAnnotation.getDescription());
 					System.out.println(logoAnnotation.getDescription());
 					resultString.append(" ");
+					}
+					else{
+						resultString1.append("logo details : ");
+						resultString1.append(logoAnnotation.getDescription());
+						System.out.println(logoAnnotation.getDescription());
+						resultString1.append(" ");
+					}
 				}
 			}
 			List<EntityAnnotation> textAnnotations = annotateImageResponse
 					.getTextAnnotations();
 			if (null != textAnnotations) {
-				resultString.append("Text Details : ");
-				if (null != textAnnotations.get(0)) {
-					resultString
-							.append(textAnnotations.get(0).getDescription());
-				}
+				int count=1;
+				
 				for (EntityAnnotation textAnnotation : textAnnotations) {
-					// resultString.append(textAnnotation.getDescription());
-					System.out.println(textAnnotation.getDescription());
-					resultString.append(" ");
+					if (count == 1) {
+						resultString.append("text details ");
+						resultString.append(textAnnotation.getDescription());
+						System.out.println(textAnnotation.getDescription());
+						resultString.append(" ");
+					}
+					else{
+						resultString1.append("text details ");
+						resultString1.append(textAnnotation.getDescription());
+						System.out.println(textAnnotation.getDescription());
+						resultString1.append(" ");
+					}
 				}
 			}
 			ImageProperties imagePropertiesAnnotation = annotateImageResponse
@@ -191,19 +228,22 @@ public class GoogleVisionResource {
 						Math.round(colorInfo.getColor().getRed()),
 						Math.round(colorInfo.getColor().getGreen()),
 						Math.round(colorInfo.getColor().getBlue()));
-				resultString.append("Color Details : ");
+				resultString.append("color details ");
 				resultString.append(myColor);
 			}
-			result = resultString.toString();
+			frontText = resultString.toString();
+			backText= resultString1.toString();
 			uploadedInputStream.close();
-
+			parseRequest.setFrontText(frontText);
+			parseRequest.setBackText(backText);
+			parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
 			if (imageFile.delete())
 				logger(uploadedFileLocation + " Deleted");
 			else {
 				logger("Failed to delete File");
 			}
 
-			saveToTXT(result);
+			saveToTXT(frontText);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -211,7 +251,7 @@ public class GoogleVisionResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return Response.status(200).entity(result).build();
+		return Response.status(200).entity(parseRequest).build();
 
 	}
 
