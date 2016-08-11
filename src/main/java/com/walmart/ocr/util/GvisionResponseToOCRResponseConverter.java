@@ -74,7 +74,7 @@ public class GvisionResponseToOCRResponseConverter {
 		if (null != annotateImageResponse.getTextAnnotations()) {
 			//Google API gives 1st element as full test & reset with coordinates .
 			//So take only 1st element now.
-			if(null != textBuilder.append(annotateImageResponse.getTextAnnotations().get(0))){
+			if(null != annotateImageResponse.getTextAnnotations().get(0)){
 				textBuilder.append(annotateImageResponse.getTextAnnotations()
 						.get(0).getDescription());
 				textBuilder.append(" ");
