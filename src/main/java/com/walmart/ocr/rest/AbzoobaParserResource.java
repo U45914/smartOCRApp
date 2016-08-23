@@ -57,10 +57,11 @@ public class AbzoobaParserResource {
 
 			output = response.getEntity(String.class);
 			myMap= new LinkedHashMap<String, Object>();
+			Map<String, Object> myMap1=JsonstringToMap.jsonString2Map(output);
+			myMap1.remove("id");
+			myMap1.remove("Raw_Data");			
 			myMap.put("UPC Number", parseInput.getId());
-			myMap=JsonstringToMap.jsonString2Map(output);
-			myMap.remove("id");
-			myMap.remove("Raw_Data");
+			myMap.putAll(myMap1);
 			
 			}
 			else{
