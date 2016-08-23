@@ -1,5 +1,5 @@
 package com.walmart.ocr.util;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class JsonstringToMap {
 	 */
 	private static Map<String, Object> jsonString2Map(String jsonString,String prependKey)
 			throws JSONException {
-		Map<String, Object> jsonMap = new HashMap<String, Object>();		
+		Map<String, Object> jsonMap = new LinkedHashMap<String, Object>();		
 		JSONObject jsonObject = new JSONObject(jsonString);
 		Iterator<?> keyset = jsonObject.keys();
 		while (keyset.hasNext()) {
