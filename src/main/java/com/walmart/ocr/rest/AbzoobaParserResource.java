@@ -64,7 +64,7 @@ public class AbzoobaParserResource {
 			
 			}
 			else{
-			myMap= new HashMap<String, Object>();
+			myMap= new LinkedHashMap<String, Object>();
 			//myMap.put("id", parseInput.getId());
 			//myMap.put("Raw_Data", parseInput.getText());
 			myMap.put("Brand", "Lego");
