@@ -78,7 +78,10 @@ public class GvisionResponseToOCRResponseConverter {
 			}
 		}
 		gVR.getTextDeatils().add(textBuilder.toString());
-		gVR.getTextDeatilsFormatted().add(FormatOCRText.processX(textBuilder.toString(), annotateImageResponse));
+		List<EntityAnnotation> textAnnos = annotateImageResponse
+				.getTextAnnotations();
+		String fullText = textAnnos.get(0).getDescription();
+		gVR.getTextDeatilsFormatted().add(FormatOCRText.processX(fullText, annotateImageResponse));
 	}
 
 	private static void getLabelDeatils(AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
