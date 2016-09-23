@@ -196,16 +196,20 @@ public class GvisionResponseToOCRResponseConverter {
 		String formattedText;
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(0)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(0);
+			System.out.println("Front formattedText : " + formattedText);
 			formattedText.replaceAll("\n", "<br/>");
 			formattedText.replaceAll(" ", "&nbsp;");
 			parseRequest.setFrontTextFormatted(formattedText);
+			System.out.println("Front formattedText html : " + formattedText);
 		}
 		parseRequest.setBackText(ocrStringBuilder1.toString());
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(1)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(1);
+			System.out.println("Back formattedText : " + formattedText);
 			formattedText.replaceAll("\n", "<br/>");
 			formattedText.replaceAll(" ", "&nbsp;");
-			parseRequest.setFrontTextFormatted(formattedText);
+			parseRequest.setBackTextFormatted(formattedText);
+			System.out.println("Back formattedText html : " + formattedText);
 		}
 		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
 		return parseRequest;
