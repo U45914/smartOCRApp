@@ -197,8 +197,8 @@ public class GvisionResponseToOCRResponseConverter {
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(0)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(0);
 			System.out.println("Front formattedText : " + formattedText);
-			formattedText.replaceAll("\n", "<br/>");
-			formattedText.replaceAll(" ", "&nbsp;");
+			formattedText=formattedText.replaceAll("\n", "<br/>");
+			formattedText=formattedText.replaceAll(" ", "&nbsp;");
 			parseRequest.setFrontTextFormatted(formattedText);
 			System.out.println("Front formattedText html : " + formattedText);
 		}
@@ -206,8 +206,8 @@ public class GvisionResponseToOCRResponseConverter {
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(1)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(1);
 			System.out.println("Back formattedText : " + formattedText);
-			formattedText.replaceAll("\n", "<br/>");
-			formattedText.replaceAll(" ", "&nbsp;");
+			formattedText=formattedText.replaceAll("\n", "<br/>");
+			formattedText=formattedText.replaceAll(" ", "&nbsp;");
 			parseRequest.setBackTextFormatted(formattedText);
 			System.out.println("Back formattedText html : " + formattedText);
 		}
