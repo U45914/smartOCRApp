@@ -20,6 +20,8 @@ public class GvisionResponseToOCRResponseConverter {
 		gVR.setLabelDetails(labels);
 		List<String> texts = new ArrayList<String>();
 		gVR.setTextDeatils(texts);
+		List<String> formatedTexts = new ArrayList<String>();
+		gVR.setTextDeatilsFormatted(formatedTexts);
 		List<String> colors = new ArrayList<String>();
 		gVR.setColorDeatils(colors);
 
