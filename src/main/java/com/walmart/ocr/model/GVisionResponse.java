@@ -6,6 +6,7 @@ public class GVisionResponse {
 	private List<String> logoDetails;
 	private List<String> labelDetails;
 	private List<String> textDeatils;
+	private List<String> textDeatilsFormatted;
 	private List<String> colorDeatils;
 	public List<String> getLogoDetails() {
 		return logoDetails;
@@ -30,6 +31,12 @@ public class GVisionResponse {
 	}
 	public void setColorDeatils(List<String> colorDeatils) {
 		this.colorDeatils = colorDeatils;
+	}
+	public List<String> getTextDeatilsFormatted() {
+		return textDeatilsFormatted;
+	}
+	public void setTextDeatilsFormatted(List<String> textDeatilsFormatted) {
+		this.textDeatilsFormatted = textDeatilsFormatted;
 	}
 	
 
