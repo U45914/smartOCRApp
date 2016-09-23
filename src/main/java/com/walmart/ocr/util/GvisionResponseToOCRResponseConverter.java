@@ -193,12 +193,19 @@ public class GvisionResponseToOCRResponseConverter {
 			}
 		}
 		parseRequest.setFrontText(ocrStringBuilder.toString());
+		String formattedText;
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(0)){
-			parseRequest.setFrontTextFormatted(gVisionResponse.getTextDeatilsFormatted().get(0));
+			formattedText=gVisionResponse.getTextDeatilsFormatted().get(0);
+			formattedText.replaceAll("\n", "<br/>");
+			formattedText.replaceAll(" ", "&nbsp;");
+			parseRequest.setFrontTextFormatted(formattedText);
 		}
 		parseRequest.setBackText(ocrStringBuilder1.toString());
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(1)){
-			parseRequest.setBackTextFormatted(gVisionResponse.getTextDeatilsFormatted().get(1));
+			formattedText=gVisionResponse.getTextDeatilsFormatted().get(1);
+			formattedText.replaceAll("\n", "<br/>");
+			formattedText.replaceAll(" ", "&nbsp;");
+			parseRequest.setFrontTextFormatted(formattedText);
 		}
 		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
 		return parseRequest;
