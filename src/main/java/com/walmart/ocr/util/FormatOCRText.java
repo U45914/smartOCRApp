@@ -108,12 +108,12 @@ public class FormatOCRText {
 
 		String arrangedString = arrangeSentences(processedText,
 				sentenceLocationMap);
-		// System.out.println("***********Joined Sentences *************");
-		// System.out.println(arrangedString);
+		 System.out.println("***********Joined Sentences *************");
+		 System.out.println(arrangedString);
 
 	}
 
-	private static String arrangeSentences(String textWithPosition,
+	public static String arrangeSentences(String textWithPosition,
 			Map<String, BoundingPoly> sentenceLocationMap) {
 
 		/*
@@ -147,6 +147,8 @@ public class FormatOCRText {
 			}
 			if (diffSpace < 5) {
 				System.out.println(sentence);
+				joiner.append(sentence.trim());
+				joiner.append("\n");
 				sentenceLocationMap.remove(sentence.trim());
 
 			}
@@ -157,10 +159,13 @@ public class FormatOCRText {
 			}
 
 		}
+		joiner.append("\n");
 		System.out.println("*** Remaining String ***");
 		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap
 				.entrySet()) {
 			System.out.println(entry.getKey());
+			joiner.append(entry.getKey().trim());
+			joiner.append("\n");
 		}
 
 		return joiner.toString();
