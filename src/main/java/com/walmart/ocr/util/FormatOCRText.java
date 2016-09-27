@@ -134,6 +134,7 @@ public class FormatOCRText {
 		int wordCount = 0;
 
 		StringBuilder joiner = new StringBuilder();
+		StringBuilder joiner1 = new StringBuilder();
 		char firstChar1;
 		int noOfSpaces1;
 		int diffSpace;
@@ -164,11 +165,16 @@ public class FormatOCRText {
 		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap
 				.entrySet()) {
 			System.out.println(entry.getKey());
-			joiner.append(entry.getKey().trim());
-			joiner.append("\n");
+			joiner1.append(entry.getKey().trim());
+			joiner1.append("\n");
 		}
-
-		return joiner.toString();
+		if(joiner.length() > joiner1.length())
+		{
+			return joiner.append(joiner1).toString();
+		}
+		else{
+			return joiner1.append(joiner).toString();
+		}
 	}
 
 	private static String sortX(String processedText,
