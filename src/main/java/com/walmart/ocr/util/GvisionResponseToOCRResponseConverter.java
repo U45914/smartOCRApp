@@ -291,10 +291,10 @@ public class GvisionResponseToOCRResponseConverter {
 			parseRequest.setFrontTextFormatted(formattedText);
 			System.out.println("Front formattedText html : " + formattedText);
 		}
-		parseRequest.setBackText(ocrStringBuilder1.toString());
+		
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(1)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(1);
-			parseRequest.setFrontText(ocrStringBuilder1.toString()+formattedText);
+			parseRequest.setBackText(ocrStringBuilder.toString()+formattedText);
 			System.out.println("Back formattedText : " + formattedText);
 			formattedText=formattedText.replaceAll("\n", "<br/>");
 			formattedText=formattedText.replaceAll(" ", "&nbsp;");
