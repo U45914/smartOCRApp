@@ -1,113 +1,49 @@
 package com.walmart.ocr.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.MultiMap;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.BoundingPoly;
-import com.google.api.services.vision.v1.model.ColorInfo;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
-import com.google.api.services.vision.v1.model.ImageProperties;
-import com.walmart.ocr.model.GVisionResponse;
-import com.walmart.ocr.model.ParseRequest;
+import com.google.api.services.vision.v1.model.Vertex;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
-public class GvisionResponseToOCRResponseConverter {
-	public static GVisionResponse convert(BatchAnnotateImagesResponse bAIR) {
-		GVisionResponse gVR = new GVisionResponse();
-		List<String> logos = new ArrayList<String>();
-		gVR.setLogoDetails(logos);
-		List<String> labels = new ArrayList<String>();
-		gVR.setLabelDetails(labels);
-		List<String> texts = new ArrayList<String>();
-		gVR.setTextDeatils(texts);
-		List<String> formatedTexts = new ArrayList<String>();
-		gVR.setTextDeatilsFormatted(formatedTexts);
-		List<String> colors = new ArrayList<String>();
-		gVR.setColorDeatils(colors);
+public class FormatOCRText {
 
-		for (AnnotateImageResponse annotateImageResponse : bAIR.getResponses()) {
-			getLogoDeatils(annotateImageResponse, gVR);
-			getLabelDeatils(annotateImageResponse, gVR);
-			getTextDeatils(annotateImageResponse, gVR);
-			getColorDetails(annotateImageResponse, gVR);
-		}
-		return gVR;
-	}
-
-	public static GVisionResponse convertToParseequest(
-			BatchAnnotateImagesResponse bAIR) {
-
-		GVisionResponse gVR = new GVisionResponse();
-		List<String> logos = new ArrayList<String>();
-		gVR.setLogoDetails(logos);
-		List<String> labels = new ArrayList<String>();
-		gVR.setLabelDetails(labels);
-		List<String> texts = new ArrayList<String>();
-		gVR.setTextDeatils(texts);
-		List<String> colors = new ArrayList<String>();
-		gVR.setTextDeatils(colors);
-
-		for (AnnotateImageResponse annotateImageResponse : bAIR.getResponses()) {
-			getLogoDeatils(annotateImageResponse, gVR);
-			getLabelDeatils(annotateImageResponse, gVR);
-			getTextDeatils(annotateImageResponse, gVR);
-			getColorDetails(annotateImageResponse, gVR);
-		}
-		return gVR;
-	}
-
-	private static void getColorDetails(
-			AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
-		ImageProperties imagePropertiesAnnotation = annotateImageResponse
-				.getImagePropertiesAnnotation();
-		if (null != imagePropertiesAnnotation) {
-			ColorInfo colorInfo = imagePropertiesAnnotation.getDominantColors()
-					.getColors().get(0);
-			ColorUtils colorUtils = new ColorUtils();
-			String myColor = colorUtils.getColorNameFromRgb(
-					Math.round(colorInfo.getColor().getRed()),
-					Math.round(colorInfo.getColor().getGreen()),
-					Math.round(colorInfo.getColor().getBlue()));
-
-			gVR.getColorDeatils().add(myColor);
-		}
-	}
-
-	private static void getTextDeatils(
-			AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
-		StringBuilder textBuilder = new StringBuilder();
-		if (null != annotateImageResponse.getTextAnnotations()) {
-			for (EntityAnnotation entity : annotateImageResponse
-					.getTextAnnotations()) {
-				textBuilder.append(entity.getDescription());
-				textBuilder.append(" ");
-			}
-		}
-		gVR.getTextDeatils().add(textBuilder.toString());
-		List<EntityAnnotation> textAnnos = annotateImageResponse
-				.getTextAnnotations();
-		String fullText = textAnnos.get(0).getDescription();
-		gVR.getTextDeatilsFormatted().add(
-				processOCRText(fullText, annotateImageResponse));
-	}
-
-	private static String processOCRText(String text,
-			AnnotateImageResponse annotateImageResponse) {
-
+	public static void main(String[] args) {
+		// Get the TextAnotate google vision response from JSON.
+		AnnotateImageResponse annotateImageResponse = createTextEAResponse();
 		List<EntityAnnotation> textAnnos = annotateImageResponse
 				.getTextAnnotations();
 		System.out.println("***********Full Text  *************");
 		String fullText = textAnnos.get(0).getDescription();
 		System.out.println(fullText);
 
-		String processedText = FormatOCRText.processX(fullText,
-				annotateImageResponse);
+		String processedText = processX(fullText, annotateImageResponse);
 		System.out
 				.println("***************---Text based on Location of words --********");
 		System.out.println(processedText);
@@ -170,148 +106,318 @@ public class GvisionResponseToOCRResponseConverter {
 					+ entry.getValue());
 		}
 
-		String arrangedString = FormatOCRText.arrangeSentences(processedText,
+		String arrangedString = arrangeSentences(processedText,
 				sentenceLocationMap);
-		// System.out.println("***********Joined Sentences *************");
-		// System.out.println(arrangedString);
-		return arrangedString;
+		 System.out.println("***********Joined Sentences *************");
+		 System.out.println(arrangedString);
+
 	}
 
-	private static void getLabelDeatils(
-			AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
-		StringBuilder labelBuilder = new StringBuilder();
-		if (null != annotateImageResponse.getLabelAnnotations()) {
-			for (EntityAnnotation entity : annotateImageResponse
-					.getLabelAnnotations()) {
-				labelBuilder.append(entity.getDescription());
-				labelBuilder.append(" ");
-			}
-		}
-		gVR.getLabelDetails().add(labelBuilder.toString());
-	}
+	public static String arrangeSentences(String textWithPosition,
+			Map<String, BoundingPoly> sentenceLocationMap) {
 
-	private static void getLogoDeatils(
-			AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
-		StringBuilder logoBuilder = new StringBuilder();
-
-		if (null != annotateImageResponse.getLogoAnnotations()) {
-			for (EntityAnnotation entity : annotateImageResponse
-					.getLogoAnnotations()) {
-				logoBuilder.append(entity.getDescription());
-				logoBuilder.append(" ");
-			}
-		}
-
-		gVR.getLogoDetails().add(logoBuilder.toString());
-	}
-
-	public static String toOCRString(GVisionResponse gVisionResponse) {
-		StringBuilder ocrStringBuilder = new StringBuilder();
-		ocrStringBuilder.append("LogoDetails: ");
-		for (String logo : gVisionResponse.getLogoDetails()) {
-			ocrStringBuilder.append(logo);
-			ocrStringBuilder.append(" ");
-		}
-		ocrStringBuilder.append("LabelDetails: ");
-		for (String label : gVisionResponse.getLabelDetails()) {
-			ocrStringBuilder.append(label);
-			ocrStringBuilder.append(" ");
-		}
-		ocrStringBuilder.append("TextDetails: ");
-		for (String text : gVisionResponse.getTextDeatils()) {
-			ocrStringBuilder.append(text);
-			ocrStringBuilder.append(" ");
-		}
-		return ocrStringBuilder.toString();
-	}
-
-	public static ParseRequest toParseRequest(GVisionResponse gVisionResponse) {
-
-		ParseRequest parseRequest = new ParseRequest();
-		StringBuilder ocrStringBuilder = new StringBuilder();
-		StringBuilder ocrStringBuilder1 = new StringBuilder();
-		int count = 1;
-		for (String logo : gVisionResponse.getLogoDetails()) {
-			if (count == 1) {
-				ocrStringBuilder.append("Logo Details: ");
-				ocrStringBuilder.append(logo);
-				ocrStringBuilder.append(" ");
-				count = 0;
-			} else {
-				ocrStringBuilder1.append("Logo Details: ");
-				ocrStringBuilder1.append(logo);
-				ocrStringBuilder1.append(" ");
-			}
-		}
-		count = 1;
-
-		for (String label : gVisionResponse.getLabelDetails()) {
-			if (count == 1) {
-				ocrStringBuilder.append("Label Details: ");
-				ocrStringBuilder.append(label);
-				ocrStringBuilder.append(" ");
-				count = 0;
-			} else {
-				ocrStringBuilder1.append("Label Details: ");
-				ocrStringBuilder1.append(label);
-				ocrStringBuilder1.append(" ");
-
-			}
-		}
 		/*
-		 * count =1; for (String text : gVisionResponse.getTextDeatils()) {
-		 * if(count==1){ ocrStringBuilder.append("Text Details: ");
-		 * ocrStringBuilder.append(text); ocrStringBuilder.append(" "); count=0;
-		 * } else{ ocrStringBuilder1.append("Text Details: ");
-		 * ocrStringBuilder1.append(text); ocrStringBuilder1.append(" "); } }
+		 * textWithPosition -->has sentences arranged using tab & white spaces
+		 * .Each line has one sentence.
+		 * 
+		 * sentenceLocationMap --> has sentence & its location from Google
+		 * Vision.
 		 */
 
-		ocrStringBuilder.append("Text Details: ");
-		ocrStringBuilder1.append("Text Details: ");
+		// Split the word blocks based on new line.
 
-		String formattedText;
-		if (null != gVisionResponse.getTextDeatilsFormatted().get(0)) {
-			formattedText = gVisionResponse.getTextDeatilsFormatted().get(0);
-			System.out.println("Front formattedText : " + formattedText);
+		List<String> wordBlockList = Arrays
+				.asList(textWithPosition.split("\n"));
+		String fisrtString = wordBlockList.get(0);
+		char firstChar = fisrtString.trim().charAt(0);
+		int noOfSpaces = fisrtString.indexOf(firstChar);
+		int wordCount = 0;
 
-			// parseRequest.setFrontText(ocrStringBuilder.toString()+formattedText);
-			ocrStringBuilder.append(formattedText);
-			formattedText = formattedText.replaceAll("\n", "<br/>");
-			formattedText = formattedText.replaceAll(" ", "&nbsp;");
-			parseRequest.setFrontTextFormatted(formattedText);
-			System.out.println("Front formattedText html : " + formattedText);
-		}
-		if (gVisionResponse.getTextDeatilsFormatted().size() > 1) {
-			if (null != gVisionResponse.getTextDeatilsFormatted().get(1)) {
-				formattedText = gVisionResponse.getTextDeatilsFormatted()
-						.get(1);
-				ocrStringBuilder1.append(formattedText);
-				// parseRequest.setBackText(ocrStringBuilder.toString()+formattedText);
-				System.out.println("Back formattedText : " + formattedText);
-				formattedText = formattedText.replaceAll("\n", "<br/>");
-				formattedText = formattedText.replaceAll(" ", "&nbsp;");
-				parseRequest.setBackTextFormatted(formattedText);
-				System.out
-						.println("Back formattedText html : " + formattedText);
+		StringBuilder joiner = new StringBuilder();
+		StringBuilder joiner1 = new StringBuilder();
+		char firstChar1;
+		int noOfSpaces1;
+		int diffSpace;
+
+		for (String sentence : wordBlockList) {
+			firstChar1 = sentence.trim().charAt(0);
+			noOfSpaces1 = sentence.indexOf(firstChar1);
+			diffSpace = noOfSpaces1 - noOfSpaces;
+			if (diffSpace < 0) {
+				diffSpace = diffSpace * -1;
 			}
-		}
-		count = 1;
-		for (String color : gVisionResponse.getColorDeatils()) {
-			if (count == 1) {
-				ocrStringBuilder.append("Color Details: ");
-				ocrStringBuilder.append(color);
-				ocrStringBuilder.append(" ");
-				count = 0;
-			} else {
-				ocrStringBuilder1.append("Color Details: ");
-				ocrStringBuilder1.append(color);
-				ocrStringBuilder1.append(" ");
+			if (diffSpace < 5) {
+				System.out.println(sentence);
+				joiner.append(sentence.trim());
+				joiner.append("\n");
+				sentenceLocationMap.remove(sentence.trim());
+
 			}
+			wordCount++;
+			if (wordBlockList.size() == wordCount) {
+				wordCount = 0;
+
+			}
+
 		}
-		parseRequest.setFrontText(ocrStringBuilder.toString());
-		parseRequest.setBackText(ocrStringBuilder1.toString());
-		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math
-				.random())));
-		return parseRequest;
+		joiner.append("\n");
+		System.out.println("*** Remaining String ***");
+		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap
+				.entrySet()) {
+			System.out.println(entry.getKey());
+			joiner1.append(entry.getKey().trim());
+			joiner1.append("\n");
+		}
+		if(joiner.length() > joiner1.length())
+		{
+			return joiner.append(joiner1).toString();
+		}
+		else{
+			return joiner1.append(joiner).toString();
+		}
 	}
+
+	private static String sortX(String processedText,
+			AnnotateImageResponse annotateImageResponse) {
+
+		// Split the word blocks based on new line.
+
+		List<String> wordBlockList = Arrays.asList(processedText.split("\n"));
+
+		Map<String, BoundingPoly> wordLocationMap = new LinkedHashMap<String, BoundingPoly>();
+		List<EntityAnnotation> worldList = annotateImageResponse
+				.getTextAnnotations();
+		// Remove the first Word as it is full text in image,
+		worldList.remove(0);
+		// Form a Map of words & its Location
+		for (EntityAnnotation word : worldList) {
+			wordLocationMap.put(word.getDescription(), word.getBoundingPoly());
+		}
+
+		// Initialize the local variables.
+		String startWord = null;
+
+		for (String wordBlock : wordBlockList) {
+			if (!wordBlock.isEmpty()) {
+
+				// System.out.println("wordBlock : " + wordBlock);
+				if (wordBlock.indexOf(" ") == -1) {
+					startWord = wordBlock;
+				} else {
+					startWord = wordBlock.substring(0, wordBlock.indexOf(" "));
+				}
+				// System.out.println("startWord : " + startWord);
+
+				BoundingPoly locationOfWord = wordLocationMap.get(startWord);
+				wordLocationMap.put(wordBlock, locationOfWord);
+			}
+		}
+		System.out.println("********************************************");
+		System.out.println("wordLocationMap : " + wordLocationMap);
+		System.out.println("********************************************");
+		Map<String, BoundingPoly> sortedwordLocationMap = sortByStartX(wordLocationMap);
+
+		System.out.println("sortedwordLocationMap : " + sortedwordLocationMap);
+		System.out.println("********************************************");
+
+		StringBuilder sortedString = new StringBuilder();
+		for (Map.Entry<String, BoundingPoly> entry : sortedwordLocationMap
+				.entrySet()) {
+			sortedString.append(entry.getKey());
+			sortedString.append("\n");
+		}
+		return sortedString.toString();
+	}
+
+	private static Map<String, BoundingPoly> sortByStartX(
+			Map<String, BoundingPoly> unsortMap) {
+
+		// 1. Convert Map to List of Map
+		List<Map.Entry<String, BoundingPoly>> list = new LinkedList<Map.Entry<String, BoundingPoly>>(
+				unsortMap.entrySet());
+
+		// 2. Sort list with Collections.sort(), provide a custom Comparator
+		// Try switch the o1 o2 position for a different order
+		Collections.sort(list,
+				new Comparator<Map.Entry<String, BoundingPoly>>() {
+					public int compare(Map.Entry<String, BoundingPoly> o1,
+							Map.Entry<String, BoundingPoly> o2) {
+						if (null != o1.getValue() && null != o2.getValue()) {
+							return (o2.getValue().getVertices().get(0).getX())
+									.compareTo(o1.getValue().getVertices()
+											.get(0).getX());
+						} else {
+							return 0;
+						}
+					}
+				});
+
+		// 3. Loop the sorted list and put it into a new insertion order Map
+		// LinkedHashMap
+		Map<String, BoundingPoly> sortedMap = new LinkedHashMap<String, BoundingPoly>();
+		for (Map.Entry<String, BoundingPoly> entry : list) {
+			sortedMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedMap;
+	}
+
+	/*
+	 * Arrange the text based on the location of text.
+	 */
+	public static String processX(String string,
+			AnnotateImageResponse annotateImageResponse) {
+		StringBuilder imageTestBuilder = new StringBuilder();
+
+		List<EntityAnnotation> worldList = annotateImageResponse
+				.getTextAnnotations();
+		// Remove the first Word as it is full text in image,
+		worldList.remove(0);
+		MultiMap wordLocationMap = new  MultiHashMap();
+		// Form a Map of words & its Location
+		for (EntityAnnotation word : worldList) {
+			wordLocationMap.put(word.getDescription(), word.getBoundingPoly());
+		}
+
+		// Split the word blocks based on new line.
+
+		List<String> wordBlockList = Arrays.asList(string.split("\n"));
+
+		// Initialize the local variables.
+		String startWord = null;
+		Integer prevStartX = 0;
+		Integer prexStartY = 0;
+		int prevNoOfTabs = 0;
+
+		boolean isNewLine = true;
+		Map<String,Integer> wordCount = new HashMap<String, Integer>();
+		for (String wordBlock : wordBlockList) {
+			if (!wordBlock.isEmpty()) {
+				int current_count = 0;
+
+				// System.out.println("wordBlock : " + wordBlock);
+				if (wordBlock.indexOf(" ") == -1) {
+					startWord = wordBlock;
+				} else {
+					startWord = wordBlock.substring(0, wordBlock.indexOf(" "));
+				}
+				// System.out.println("startWord : " + startWord);
+
+				List<BoundingPoly> locationOfWord =(List<BoundingPoly>) wordLocationMap.get(startWord);
+				
+				if(locationOfWord.size() > 1){
+					
+					if(null!=wordCount.get(startWord)){
+						current_count = wordCount.get(startWord) + 1;
+					}
+						
+					wordCount.put(startWord, current_count);
+				}
+				
+				if (null != locationOfWord) {
+					Integer startX = locationOfWord.get(current_count).getVertices().get(0).getX();
+					Integer startY = locationOfWord.get(current_count).getVertices().get(1).getY();
+					// System.out.println("BoundingPoly : " + locationOfWord);
+					// System.out.println("StartX : " + startX);
+
+					if (prevStartX != 0) {
+						Integer diffInX = startX - prevStartX;
+						Integer diffInY = startY - prexStartY;
+						// if (diffInY > 5 || diffInY < -5)
+						{
+							// System.out.println("New Line -- DiffX :" +
+							// diffInY);
+							imageTestBuilder.append("\n");
+							isNewLine = true;
+						}
+					}
+
+					int noOfTabs = startX / 30;
+					// System.out.println("noOfTabs : " + noOfTabs);
+					if (!isNewLine) {
+						noOfTabs = (noOfTabs - prevNoOfTabs) / 2;
+					}
+					for (int i = 0; i < noOfTabs; i++) {
+						imageTestBuilder.append("  ");
+
+					}
+
+					imageTestBuilder.append(wordBlock);
+					prevStartX = startX;
+					prexStartY = startY;
+					isNewLine = false;
+					// System.out.println("********************************************");
+					// System.out.println(imageTestBuilder.toString());
+					// System.out.println("********************************************");
+				}
+			}
+		}
+		// System.out.println("********************************************");
+		// System.out.println(imageTestBuilder.toString());
+		// System.out.println("********************************************");
+		return imageTestBuilder.toString();
+	}
+
+	private static AnnotateImageResponse createTextEAResponse() {
+		String productCreateJson;
+		AnnotateImageResponse annotateImageResponse = null;
+		try {
+			productCreateJson = Resources.toString(
+					Resources.getResource("GVision.json"), Charsets.UTF_8);
+			JSONObject jsonObj = new JSONObject(productCreateJson);
+			Map<String, Object> jsonMap = JsonstringToMap
+					.jsonString2Map(jsonObj.toString());
+			// System.out.println(jsonMap.get("textAnnotations"));
+			JSONArray textJsonArray = new JSONArray(jsonMap.get(
+					"textAnnotations").toString());
+			List<EntityAnnotation> textEAList = new ArrayList<EntityAnnotation>();
+			for (int i = 0; i < textJsonArray.length(); i++) {
+				EntityAnnotation ea = new EntityAnnotation();
+				ea.setDescription(textJsonArray.getJSONObject(i)
+						.get("description").toString());
+				ea.setBoundingPoly(CreateBoundingPolicy(textJsonArray
+						.getJSONObject(i).get("boundingPoly").toString()));
+				// System.out.println(textJsonArray.getJSONObject(i));
+				textEAList.add(ea);
+			}
+
+			annotateImageResponse = new AnnotateImageResponse();
+			annotateImageResponse.setTextAnnotations(textEAList);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return annotateImageResponse;
+	}
+
+	@JsonCreator
+	public static BoundingPoly CreateBoundingPolicy(String jsonString) {
+
+		BoundingPoly ea = new BoundingPoly();
+		try {
+			Map<String, Object> jsonMap = JsonstringToMap
+					.jsonString2Map(jsonString);
+			JSONArray textJsonArray = new JSONArray(jsonMap.get("vertices")
+					.toString());
+			List<Vertex> vertexList = new ArrayList<Vertex>();
+			for (int i = 0; i < textJsonArray.length(); i++) {
+
+				Vertex vertex = new Vertex();
+				vertex.setX(Integer.parseInt(textJsonArray.getJSONObject(i)
+						.get("x").toString()));
+				vertex.setY(Integer.parseInt(textJsonArray.getJSONObject(i)
+						.get("y").toString()));
+				vertexList.add(vertex);
+			}
+			ea.setVertices(vertexList);
+
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return ea;
+	}
+
 }
