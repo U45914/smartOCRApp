@@ -248,7 +248,7 @@ public class GvisionResponseToOCRResponseConverter {
 				
 			}
 		}
-		count =1;
+		/*count =1;
 		for (String text : gVisionResponse.getTextDeatils()) {
 			if(count==1){
 			ocrStringBuilder.append("Text Details: ");
@@ -261,7 +261,8 @@ public class GvisionResponseToOCRResponseConverter {
 				ocrStringBuilder1.append(text);
 				ocrStringBuilder1.append(" ");
 			}
-		}
+		}*/
+		
 		count =1;
 		for (String color : gVisionResponse.getColorDeatils()) {
 			if(count==1){
@@ -276,11 +277,15 @@ public class GvisionResponseToOCRResponseConverter {
 				ocrStringBuilder1.append(" ");
 			}
 		}
-		parseRequest.setFrontText(ocrStringBuilder.toString());
+		ocrStringBuilder.append("Text Details: ");
+		ocrStringBuilder1.append("Text Details: ");
+		
+		
 		String formattedText;
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(0)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(0);
 			System.out.println("Front formattedText : " + formattedText);
+			parseRequest.setFrontText(ocrStringBuilder.toString()+formattedText);
 			formattedText=formattedText.replaceAll("\n", "<br/>");
 			formattedText=formattedText.replaceAll(" ", "&nbsp;");
 			parseRequest.setFrontTextFormatted(formattedText);
@@ -289,6 +294,7 @@ public class GvisionResponseToOCRResponseConverter {
 		parseRequest.setBackText(ocrStringBuilder1.toString());
 		if(null!=gVisionResponse.getTextDeatilsFormatted().get(1)){
 			formattedText=gVisionResponse.getTextDeatilsFormatted().get(1);
+			parseRequest.setFrontText(ocrStringBuilder1.toString()+formattedText);
 			System.out.println("Back formattedText : " + formattedText);
 			formattedText=formattedText.replaceAll("\n", "<br/>");
 			formattedText=formattedText.replaceAll(" ", "&nbsp;");
