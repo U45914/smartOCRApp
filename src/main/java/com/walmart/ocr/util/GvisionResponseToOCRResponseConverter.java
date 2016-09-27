@@ -1,10 +1,16 @@
 package com.walmart.ocr.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
+import com.google.api.services.vision.v1.model.BoundingPoly;
 import com.google.api.services.vision.v1.model.ColorInfo;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.ImageProperties;
@@ -83,7 +89,85 @@ public class GvisionResponseToOCRResponseConverter {
 		List<EntityAnnotation> textAnnos = annotateImageResponse
 				.getTextAnnotations();
 		String fullText = textAnnos.get(0).getDescription();
-		gVR.getTextDeatilsFormatted().add(FormatOCRText.processX(fullText, annotateImageResponse));
+		gVR.getTextDeatilsFormatted().add(processOCRText(fullText, annotateImageResponse));
+	}
+	
+	private static String processOCRText(String text , AnnotateImageResponse annotateImageResponse){
+		
+		List<EntityAnnotation> textAnnos = annotateImageResponse
+				.getTextAnnotations();
+		System.out.println("***********Full Text  *************");
+		String fullText = textAnnos.get(0).getDescription();
+		System.out.println(fullText);
+
+		String processedText = FormatOCRText.processX(fullText, annotateImageResponse);
+		System.out
+				.println("***************---Text based on Location of words --********");
+		System.out.println(processedText);
+
+		// Sort based on X & put in map of word:Location.
+		System.out.println("***********Sort based on X *************");
+		Map<String, BoundingPoly> wordLocationMap = new LinkedHashMap<String, BoundingPoly>();
+		Collections.sort(textAnnos, new Comparator<EntityAnnotation>() {
+
+			@Override
+			public int compare(EntityAnnotation o1, EntityAnnotation o2) {
+				if (null != o1.getBoundingPoly()
+						&& null != o2.getBoundingPoly()) {
+					return o1
+							.getBoundingPoly()
+							.getVertices()
+							.get(0)
+							.getX()
+							.compareTo(
+									o2.getBoundingPoly().getVertices().get(0)
+											.getX());
+				}
+				return 0;
+			}
+		});
+		// System.out.println(textAnnos);
+		System.out.println("*********End of Sort based on X ***************");
+		textAnnos.remove(0);
+		// System.out.println(textAnnos);
+		for (EntityAnnotation ea : textAnnos) {
+
+			// System.out.println(ea);
+			wordLocationMap.put(ea.getDescription().trim(),
+					ea.getBoundingPoly());
+		}
+		// End of Sort based on X
+
+		// Iterate the Sentences & find its Location using 1st word .
+		List<String> sentences = Arrays.asList(fullText.split("\n"));
+
+		Map<String, BoundingPoly> sentenceLocationMap = new LinkedHashMap<String, BoundingPoly>();
+		System.out.println("***********Sort Sentences on X*************");
+		for (String sentence : sentences) {
+			// System.out.println(sentence);
+			String firstWord = sentence;
+			int spacePos = sentence.indexOf(" ");
+			if (spacePos != -1) {
+				firstWord = sentence.substring(0, spacePos);
+			}
+			sentenceLocationMap.put(sentence,
+					wordLocationMap.get(firstWord.trim()));
+		}
+
+		System.out
+				.println("***********End of Sort Sentences on X *************");
+
+		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap
+				.entrySet()) {
+			System.out.println("Key : " + entry.getKey() + " Value : "
+					+ entry.getValue());
+		}
+
+		String arrangedString = FormatOCRText.arrangeSentences(processedText,
+				sentenceLocationMap);
+		// System.out.println("***********Joined Sentences *************");
+		// System.out.println(arrangedString);
+		return arrangedString;
 	}
 
 	private static void getLabelDeatils(AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
