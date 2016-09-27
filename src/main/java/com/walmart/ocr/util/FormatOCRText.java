@@ -11,6 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+
+import org.apache.commons.collections.MultiHashMap;
+import org.apache.commons.collections.MultiMap;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -33,8 +39,9 @@ public class FormatOCRText {
 		AnnotateImageResponse annotateImageResponse = createTextEAResponse();
 		List<EntityAnnotation> textAnnos = annotateImageResponse
 				.getTextAnnotations();
+		System.out.println("***********Full Text  *************");
 		String fullText = textAnnos.get(0).getDescription();
-		// System.out.println(fullText);
+		System.out.println(fullText);
 
 		String processedText = processX(fullText, annotateImageResponse);
 		System.out
@@ -254,7 +261,7 @@ public class FormatOCRText {
 				.getTextAnnotations();
 		// Remove the first Word as it is full text in image,
 		worldList.remove(0);
-		Map<String, BoundingPoly> wordLocationMap = new HashMap<String, BoundingPoly>();
+		MultiMap wordLocationMap = new  MultiHashMap();
 		// Form a Map of words & its Location
 		for (EntityAnnotation word : worldList) {
 			wordLocationMap.put(word.getDescription(), word.getBoundingPoly());
@@ -271,8 +278,10 @@ public class FormatOCRText {
 		int prevNoOfTabs = 0;
 
 		boolean isNewLine = true;
+		Map<String,Integer> wordCount = new HashMap<String, Integer>();
 		for (String wordBlock : wordBlockList) {
 			if (!wordBlock.isEmpty()) {
+				int current_count = 0;
 
 				// System.out.println("wordBlock : " + wordBlock);
 				if (wordBlock.indexOf(" ") == -1) {
@@ -282,10 +291,20 @@ public class FormatOCRText {
 				}
 				// System.out.println("startWord : " + startWord);
 
-				BoundingPoly locationOfWord = wordLocationMap.get(startWord);
+				List<BoundingPoly> locationOfWord =(List<BoundingPoly>) wordLocationMap.get(startWord);
+				
+				if(locationOfWord.size() > 1){
+					
+					if(null!=wordCount.get(startWord)){
+						current_count = wordCount.get(startWord) + 1;
+					}
+						
+					wordCount.put(startWord, current_count);
+				}
+				
 				if (null != locationOfWord) {
-					Integer startX = locationOfWord.getVertices().get(0).getX();
-					Integer startY = locationOfWord.getVertices().get(1).getY();
+					Integer startX = locationOfWord.get(current_count).getVertices().get(0).getX();
+					Integer startY = locationOfWord.get(current_count).getVertices().get(1).getY();
 					// System.out.println("BoundingPoly : " + locationOfWord);
 					// System.out.println("StartX : " + startX);
 
