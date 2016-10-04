@@ -111,7 +111,7 @@ public class GvisionResponseToOCRResponseConverter {
 		
 		for(String sentence : processedText ){
 			sentenceBuilder.append(sentence);
-			sentenceBuilder.append(" || ");
+			sentenceBuilder.append(" ");
 		}
 		return sentenceBuilder.toString();
 		
