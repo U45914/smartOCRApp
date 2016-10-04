@@ -91,7 +91,7 @@ public class FormatOCRText {
 					System.out.println("diffX :" + diffX);
 					System.out.println("diffY :" + diffY);
 					System.out.println("done");*/
-					if(diffX < 75 && diffY < 100){
+					if(diffX < 50 && diffY < 100){
 						if(!sentenceBlocksDone.contains(firstSentance)){
 						makeSent.append(firstSentance);
 						makeSent.append(" ");
