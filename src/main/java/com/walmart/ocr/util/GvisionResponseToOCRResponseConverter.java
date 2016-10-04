@@ -106,8 +106,16 @@ public class GvisionResponseToOCRResponseConverter {
 		String fullText = textAnnos.get(0).getDescription();
 		System.out.println(fullText);
 
-		String processedText = FormatOCRText.processX(fullText,
-				annotateImageResponse);
+		List<String> processedText = FormatOCRText.processGoogleResponse(annotateImageResponse);
+		StringBuilder sentenceBuilder = new StringBuilder();
+		
+		for(String sentence : processedText ){
+			sentenceBuilder.append(sentence);
+			sentenceBuilder.append(" || ");
+		}
+		return sentenceBuilder.toString();
+		
+		/*
 		System.out
 				.println("***************---Text based on Location of words --********");
 		System.out.println(processedText);
@@ -174,7 +182,7 @@ public class GvisionResponseToOCRResponseConverter {
 				sentenceLocationMap);
 		// System.out.println("***********Joined Sentences *************");
 		// System.out.println(arrangedString);
-		return arrangedString;
+		return arrangedString;*/
 	}
 
 	private static void getLabelDeatils(
