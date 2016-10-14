@@ -62,7 +62,7 @@ public class AbzoobaParserResource {
 			myMap1.remove("Raw_Data");			
 			myMap.put("UPC Number", parseInput.getId());
 			String longDesc = (String) myMap1.get("Product_Long_Description");
-			longDesc= longDesc.replaceAll("\n", "<br/>");
+			longDesc= longDesc.replaceAll("\n", "<br/> <br/>");
 			myMap1.put("Product_Long_Description",longDesc);
 			myMap.putAll(myMap1);
 			
