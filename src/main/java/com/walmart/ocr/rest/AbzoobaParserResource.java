@@ -1,7 +1,6 @@
 package com.walmart.ocr.rest;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,16 +59,16 @@ public class AbzoobaParserResource {
 			myMap= new LinkedHashMap<String, Object>();
 			Map<String, Object> myMap1=JsonstringToMap.jsonString2Map(output);
 			myMap1.remove("id");
-			myMap1.remove("Raw_Data");
-			String longDesc=(String) myMap1.get("Product_Long_Description");
-			longDesc= longDesc.replace(("\n"), "<br/>");
-			myMap1.put("Product_Long_Description",longDesc);
-			 
+			myMap1.remove("Raw_Data");			
 			myMap.put("UPC Number", parseInput.getId());
+			String longDesc = (String) myMap1.get("Product_Long_Description");
+			longDesc= longDesc.replaceAll("\n", "<br/>");
+			myMap1.put("Product_Long_Description",longDesc);
 			myMap.putAll(myMap1);
+			
 			}
 			else{
-			myMap= new HashMap<String, Object>();
+			myMap= new LinkedHashMap<String, Object>();
 			//myMap.put("id", parseInput.getId());
 			//myMap.put("Raw_Data", parseInput.getText());
 			myMap.put("Brand", "Lego");
