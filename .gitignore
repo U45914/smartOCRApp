@@ -1,1 +1,7 @@
 /target/
+/.settings
+/ImagesToProcess
+/.classpath
+/.project
+/log4j-application.log
+/ocr-application.log
