@@ -11,7 +11,9 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<context:annotation-config />
-
+	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
+		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
+	</bean>
 			
 	<!-- Import all resources -->
 
@@ -20,5 +22,6 @@
 	
 	<import resource="../database/DataSource.xml"/>
 	<import resource="../database/Hibernate.xml"/>
+	<import resource="./rabbit-mq-config.xml"/>
 
 </beans>

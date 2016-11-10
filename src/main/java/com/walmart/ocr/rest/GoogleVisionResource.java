@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -34,6 +33,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
@@ -45,16 +46,20 @@ import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.model.GVisionResponse;
 import com.walmart.ocr.model.OCRResult;
 import com.walmart.ocr.model.ParseRequest;
+import com.walmart.ocr.rabbit.provider.RabbitMQProvider;
 import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
 
 @Path("/smartOCR")
+@Component
 public class GoogleVisionResource {
 
 	private static final Logger logger = Logger
 			.getLogger(GoogleVisionResource.class);
 	private static final String FILE_UPLOAD_PATH = "ImagesToProcess/";
+	
+	@Autowired RabbitMQProvider rabbitMqProvider;
 
 	@POST
 	@Path("/convertImagesToText")
@@ -64,8 +69,9 @@ public class GoogleVisionResource {
 
 		ParseRequest parseRequest = new ParseRequest();
 		try {
-
+			rabbitMqProvider.sendMessage(request.getRemoteHost());
 			logger(" ");
+			
 			logger("******** New Conversion Started *******");
 			File file = new File(FILE_UPLOAD_PATH);
 			FileUtils.cleanDirectory(file);
@@ -85,7 +91,7 @@ public class GoogleVisionResource {
 			if(null!=imageFiles.get(0)){
 			upscString = imageFiles.get(0).getName();
 			System.out.println("Creating UPSC string using file :"+upscString);
-			upscString=upscString.substring(0, upscString.indexOf("-"));
+			//upscString=upscString.substring(0, upscString.indexOf("-"));
 			}
 			GVision gvision = new GVision();
 			BatchAnnotateImagesResponse batchImageResponse = gvision.doOCR(imageFiles);
@@ -105,6 +111,10 @@ public class GoogleVisionResource {
 		}
 		return Response.status(200).entity(parseRequest).build();
 
+	}
+
+	public void setRabbitMqProvider(RabbitMQProvider rabbitMqProvider) {
+		this.rabbitMqProvider = rabbitMqProvider;
 	}
 
 	private void saveFiles(HttpServletRequest request) {
