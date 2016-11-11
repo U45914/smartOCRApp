@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<context:annotation-config />
+	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
+		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
+	</bean>
+			
+	<!-- Import all resources -->
+
+	<!-- db-sqlite-config.xml file is used to run a ddl command -->
+	<import resource="../database/db-sqlite-config.xml" />
+	
+	<import resource="../database/DataSource.xml"/>
+	<import resource="../database/Hibernate.xml"/>
+	<import resource="./rabbit-mq-config.xml"/>
+
+</beans>

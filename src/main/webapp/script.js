@@ -90,7 +90,7 @@ $(function() {
 
 				if (typeof data.error === 'undefined') {
 					gettableData1(data);
-					hideLoadingScreen();
+					//hideLoadingScreen();
 					var requestBody = {
 						"id" : "newmmmmaaaa2",
 						"text" : data,
@@ -146,6 +146,7 @@ $(function() {
 			success : function(data, textStatus, jqXHR) {
 				//hideLoadingScreen();
 				if (typeof data.error === 'undefined') {
+					hideLoadingScreen();
 
 					var tabledata = gettableData(data);
 				} else {

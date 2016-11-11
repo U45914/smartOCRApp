@@ -1,0 +1,78 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:context="http://www.springframework.org/schema/context"
+    
+	xsi:schemaLocation="http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="rabbitMQProvider" class="com.walmart.ocr.rabbit.provider.RabbitMQProvider" > 
+		<property name="template" ref="amqpTemplate" />
+	</bean>
+	
+	<rabbit:connection-factory id="rabbitMqConnectionFactory" port="10810" virtual-host="JGc7bZMDFAOc"
+		host="wet-buckthorn-1.bigwig.lshift.net" username="Ds2esvCc" password="3t1MLmb0PQRKkYVwEshelYn6E3f2pxaP" />
+
+	<rabbit:admin connection-factory="rabbitMqConnectionFactory" />
+
+	<rabbit:queue name="WM.SMART.OCR" />
+
+	<rabbit:direct-exchange name="smartOcrExchange">
+		<rabbit:bindings>
+			<rabbit:binding queue="WM.SMART.OCR"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<rabbit:template id="amqpTemplate" connection-factory="rabbitMqConnectionFactory"
+		exchange="smartOcrExchange" queue="WM.SMART.OCR" />
+		
+	<rabbit:listener-container
+        connection-factory="rabbitMqConnectionFactory">
+        <rabbit:listener ref="smartOcrMessageListner" queues="WM.SMART.OCR"  />
+    </rabbit:listener-container>
+     
+    <context:annotation-config />
+    <context:component-scan base-package="com.walmart" />
+<!--     <aop:aspectj-autoproxy /> -->
+ 
+    <bean id="smartOcrMessageListner" class="com.walmart.ocr.rabbit.listner.SmartOCRMessageListner">
+    </bean>
+</beans>
+
+
+
+<!-- <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="rabbitMQProvider" class="com.walmart.ocr.rabbit.provider.RabbitMQProvider" > 
+		<property name="template" ref="rabbiTemplate" />
+	</bean>
+	Connection Factory
+	<bean id="rabbitConnFactory"
+		class="org.springframework.amqp.rabbit.connection.SingleConnectionFactory">
+		<constructor-arg>
+			<value>localhost</value>
+		</constructor-arg>
+		<property name="username" value="guest" />
+		<property name="password" value="guest" />
+		<property name="virtualHost" value="/" />
+		<property name="port" value="5672" />
+	</bean>
+
+	Spring AMQP Template
+	<bean id="rabbiTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+		<property name="connectionFactory" ref="rabbitConnFactory" />
+		<property name="routingKey" value="UST.SMART.OCR" />
+		<property name="queue" value="UST.SMART.OCR" />
+	</bean>
+
+	Spring AMQP Admin
+	<bean id="admin" class="org.springframework.amqp.rabbit.core.RabbitAdmin">
+		<constructor-arg ref="rabbitConnFactory" />
+	</bean>
+
+</beans> -->
