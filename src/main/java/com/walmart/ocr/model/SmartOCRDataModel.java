@@ -7,10 +7,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * @author ranai1
  *
  */
+@Entity
+@Table(name="OCR_INFO")
 public class SmartOCRDataModel implements Serializable {
 
 	/**
@@ -18,21 +26,32 @@ public class SmartOCRDataModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@Column(name="OCR_REQUEST_ID")
 	private String ocrRequestId;// This will be a unique UUID
 	
+	@Column(name="GI_VISION_RESPONSE")
 	private String givisionResponse;
+	
+	@Column(name="CROWD_SOURCE_RESPONSE")
 	private String cloudSourceResponse;
-	
+	@Column(name="")
 	private String absoobaRequestInfo;
+	@Column(name="ABZOOBA_REQUEST_RESPONSE")
 	private String absoobaResponse;
+	@Column(name="CLOUD_SOURCE_USER_ID")
 	private String cloudSourceUserId;
+	@Column(name="STATUS")
 	private String status;
-	
+	@Column(name="")
 	private String imageUrls;
+	@Column(name="")
 	private byte[] image;
-	
+	@Column(name="")
 	private Date imageUploadDate;
+	@Column(name="")
 	private Date imageProcessedDate;
+	@Column(name="")
 	private Date cloudeSourceSubmitDate;
 	
 	
