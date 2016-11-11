@@ -11,8 +11,8 @@
 		<property name="template" ref="amqpTemplate" />
 	</bean>
 	
-	<rabbit:connection-factory id="rabbitMqConnectionFactory"
-		host="wet-buckthorn-1.bigwig.lshift.net:10810/JGc7bZMDFAOc" username="Ds2esvCc" password="3t1MLmb0PQRKkYVwEshelYn6E3f2pxaP" />
+	<rabbit:connection-factory id="rabbitMqConnectionFactory" port="10810" virtual-host="JGc7bZMDFAOc"
+		host="wet-buckthorn-1.bigwig.lshift.net" username="Ds2esvCc" password="3t1MLmb0PQRKkYVwEshelYn6E3f2pxaP" />
 
 	<rabbit:admin connection-factory="rabbitMqConnectionFactory" />
 
