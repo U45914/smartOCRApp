@@ -11,10 +11,15 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<context:annotation-config />
+	
 	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
 	</bean>
 			
+	<!-- Tell Spring where to scan for components -->
+	<context:component-scan
+		base-package="com.walmart.ocr.dao.*" />
+		
 	<!-- Import all resources -->
 
 	<!-- db-sqlite-config.xml file is used to run a ddl command -->

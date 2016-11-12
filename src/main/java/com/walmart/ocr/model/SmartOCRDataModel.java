@@ -5,12 +5,20 @@ package com.walmart.ocr.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author ranai1
  *
  */
+@Entity
+@Table(name="OCR_INFO")
 public class SmartOCRDataModel implements Serializable {
 
 	/**
@@ -18,21 +26,33 @@ public class SmartOCRDataModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String ocrRequestId;// This will be a unique UUID
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="OCR_REQUEST_ID")
+	private Integer ocrRequestId;// This will be a unique UUID
 	
+	@Column(name="GI_VISION_RESPONSE")
 	private String givisionResponse;
+	
+	@Column(name="CROWD_SOURCE_RESPONSE")
 	private String cloudSourceResponse;
-	
+	@Column(name="ABZOOBA_REQUEST_INFO")
 	private String absoobaRequestInfo;
+	@Column(name="ABZOOBA_REQUEST_RESPONSE")
 	private String absoobaResponse;
+	@Column(name="CLOUD_SOURCE_USER_ID")
 	private String cloudSourceUserId;
+	@Column(name="STATUS")
 	private String status;
-	
+	@Column(name="IMAGE_URL")
 	private String imageUrls;
+	@Column(name="IMAGE")
 	private byte[] image;
-	
+	@Column(name="IMAGE_UPLOAD_DATE")
 	private Date imageUploadDate;
+	@Column(name="IMAGE_PROCESSED_DATE")
 	private Date imageProcessedDate;
+	@Column(name="CROWD_SOURCE_SUBMIT_DATE")
 	private Date cloudeSourceSubmitDate;
 	
 	
@@ -43,7 +63,7 @@ public class SmartOCRDataModel implements Serializable {
 	/**
 	 * @return the ocrRequestId
 	 */
-	public String getOcrRequestId() {
+	public Integer getOcrRequestId() {
 		return ocrRequestId;
 	}
 
@@ -51,7 +71,7 @@ public class SmartOCRDataModel implements Serializable {
 	/**
 	 * @param ocrRequestId the ocrRequestId to set
 	 */
-	public void setOcrRequestId(String ocrRequestId) {
+	public void setOcrRequestId(Integer ocrRequestId) {
 		this.ocrRequestId = ocrRequestId;
 	}
 
@@ -166,73 +186,4 @@ public class SmartOCRDataModel implements Serializable {
 	public void setImageUrls(String imageUrls) {
 		this.imageUrls = imageUrls;
 	}
-
-
-	/**
-	 * @return the image
-	 */
-	public byte[] getImage() {
-		return image;
-	}
-
-
-	/**
-	 * @param image the image to set
-	 */
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
-
-
-	/**
-	 * @return the imageUploadDate
-	 */
-	public Date getImageUploadDate() {
-		return imageUploadDate;
-	}
-
-
-	/**
-	 * @param imageUploadDate the imageUploadDate to set
-	 */
-	public void setImageUploadDate(Date imageUploadDate) {
-		this.imageUploadDate = imageUploadDate;
-	}
-
-
-	/**
-	 * @return the imageProcessedDate
-	 */
-	public Date getImageProcessedDate() {
-		return imageProcessedDate;
-	}
-
-
-	/**
-	 * @param imageProcessedDate the imageProcessedDate to set
-	 */
-	public void setImageProcessedDate(Date imageProcessedDate) {
-		this.imageProcessedDate = imageProcessedDate;
-	}
-
-
-	/**
-	 * @return the cloudeSourceSubmitDate
-	 */
-	public Date getCloudeSourceSubmitDate() {
-		return cloudeSourceSubmitDate;
-	}
-
-
-	/**
-	 * @param cloudeSourceSubmitDate the cloudeSourceSubmitDate to set
-	 */
-	public void setCloudeSourceSubmitDate(Date cloudeSourceSubmitDate) {
-		this.cloudeSourceSubmitDate = cloudeSourceSubmitDate;
-	}
-	
-	
-	
-
-	
 }

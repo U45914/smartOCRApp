@@ -11,7 +11,7 @@
 
 	<jdbc:initialize-database>
 		<jdbc:script location="classpath:META-INF/db/sql/create-db.sql"/>
-		<jdbc:script location="classpath:META-INF/db/sql/insert-data.sql"/>
+		<!-- <jdbc:script location="classpath:META-INF/db/sql/insert-data.sql"/> -->
 	</jdbc:initialize-database>
 
 </beans>
