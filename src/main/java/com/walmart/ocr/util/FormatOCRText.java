@@ -29,92 +29,82 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 
 public class FormatOCRText {
-	public static List<String> processGoogleResponse(AnnotateImageResponse annotateImageResponse){
-		List<EntityAnnotation> textAnnos = annotateImageResponse
-				.getTextAnnotations();
+	public static List<String> processGoogleResponse(AnnotateImageResponse annotateImageResponse) {
+		List<EntityAnnotation> textAnnos = annotateImageResponse.getTextAnnotations();
 		System.out.println("***********Full Text  *************");
 		String fullText = textAnnos.get(0).getDescription();
 		System.out.println(fullText);
-		LinkedHashMap<String, BoundingPoly> sentanceLocationMap = processX(
-				fullText, annotateImageResponse);
-		System.out
-				.println("***************---Text based on Location of words --********");
+		LinkedHashMap<String, BoundingPoly> sentanceLocationMap = processX(fullText, annotateImageResponse);
+		System.out.println("***************---Text based on Location of words --********");
 		System.out.println(sentanceLocationMap);
-		for (Map.Entry<String, BoundingPoly> mapEntry : sentanceLocationMap
-				.entrySet()) {
+		for (Map.Entry<String, BoundingPoly> mapEntry : sentanceLocationMap.entrySet()) {
 
-			System.out.println(mapEntry.getKey() + " --> "
-					+ mapEntry.getValue());
+			System.out.println(mapEntry.getKey() + " --> " + mapEntry.getValue());
 
 		}
 
-		//Map <String, BoundingPoly>sentanceLocationMapSorted=sortByStartX(sentanceLocationMap);
+		// Map <String,
+		// BoundingPoly>sentanceLocationMapSorted=sortByStartX(sentanceLocationMap);
 
-		System.out
-		.println("***************---Sorted  on X  --********");
+		System.out.println("***************---Sorted  on X  --********");
 		List<String> sentenceBlocks = new LinkedList<String>();
 		List<String> sentenceBlocksDone = new LinkedList<String>();
 		int remainingSize = sentanceLocationMap.entrySet().size();
 		int blockCount;
-		
-		Map.Entry<String,BoundingPoly> entry=sentanceLocationMap.entrySet().iterator().next();
-		
-		
-		String curSentance = null ;
-		BoundingPoly curLocation= null;
-		String firstSentance = null ;
-		BoundingPoly firstLocation= null;
-		
-		
-			
-			for (Map.Entry<String, BoundingPoly> mapEntryOuter : sentanceLocationMap
-					.entrySet()) {
-				firstSentance = mapEntryOuter.getKey();
-				firstLocation = mapEntryOuter.getValue();
-				StringBuilder makeSent = new StringBuilder();
-				if(!sentenceBlocksDone.contains(firstSentance)){
-			
-				for (Map.Entry<String, BoundingPoly> mapEntry : sentanceLocationMap
-						.entrySet()) {
+
+		Map.Entry<String, BoundingPoly> entry = sentanceLocationMap.entrySet().iterator().next();
+
+		String curSentance = null;
+		BoundingPoly curLocation = null;
+		String firstSentance = null;
+		BoundingPoly firstLocation = null;
+
+		for (Map.Entry<String, BoundingPoly> mapEntryOuter : sentanceLocationMap.entrySet()) {
+			firstSentance = mapEntryOuter.getKey();
+			firstLocation = mapEntryOuter.getValue();
+			StringBuilder makeSent = new StringBuilder();
+			if (!sentenceBlocksDone.contains(firstSentance)) {
+
+				for (Map.Entry<String, BoundingPoly> mapEntry : sentanceLocationMap.entrySet()) {
 
 					curSentance = mapEntry.getKey();
 					curLocation = mapEntry.getValue();
-					Integer diffY = firstLocation.getVertices().get(0).getY()
-							- curLocation.getVertices().get(0).getY();
-					diffY=getPositive(diffY);
-					
-					Integer diffX = firstLocation.getVertices().get(0).getX()
-							- curLocation.getVertices().get(0).getX();
-					diffX=getPositive(diffX);
-					/*System.out.println(firstSentance + " : " + firstLocation);
-					System.out.println(curSentance + " :" + curLocation);
-					System.out.println("diffX :" + diffX);
-					System.out.println("diffY :" + diffY);
-					System.out.println("done");*/
-					if(diffX < 50 && diffY < 100){
-						if(!sentenceBlocksDone.contains(firstSentance)){
-						makeSent.append(firstSentance);
-						makeSent.append(" ");
-						sentenceBlocksDone.add(firstSentance);						
+					Integer diffY = firstLocation.getVertices().get(0).getY() - curLocation.getVertices().get(0).getY();
+					diffY = getPositive(diffY);
+
+					Integer diffX = firstLocation.getVertices().get(0).getX() - curLocation.getVertices().get(0).getX();
+					diffX = getPositive(diffX);
+					/*
+					 * System.out.println(firstSentance + " : " +
+					 * firstLocation); System.out.println(curSentance + " :" +
+					 * curLocation); System.out.println("diffX :" + diffX);
+					 * System.out.println("diffY :" + diffY);
+					 * System.out.println("done");
+					 */
+					if (diffX < 50 && diffY < 100) {
+						if (!sentenceBlocksDone.contains(firstSentance)) {
+							makeSent.append(firstSentance);
+							makeSent.append(" ");
+							sentenceBlocksDone.add(firstSentance);
 						}
 						firstSentance = curSentance;
 						firstLocation = curLocation;
 					}
-					
+
 					System.out.println(makeSent);
-					
+
 				}
 				System.out.println(makeSent.toString());
-				if(makeSent.length() > 0){
+				if (makeSent.length() > 0) {
 					sentenceBlocks.add(makeSent.toString());
 				}
-				
-				}
-		}
-			
-			for(String sent :sentenceBlocks){
-			System.out.println(sent);
+
 			}
+		}
+
+		for (String sent : sentenceBlocks) {
+			System.out.println(sent);
+		}
 		// Sort based on X & put in map of word:Location.
 		System.out.println("***********Sort based on X *************");
 		return sentenceBlocks;
@@ -123,9 +113,7 @@ public class FormatOCRText {
 	public static void main(String[] args) {
 		// Get the TextAnotate google vision response from JSON.
 		AnnotateImageResponse annotateImageResponse = createTextEAResponse();
-		
 
-		
 		/*
 		 * Map<String, BoundingPoly> wordLocationMap = new LinkedHashMap<String,
 		 * BoundingPoly>(); Collections.sort(textAnnos, new
@@ -174,16 +162,15 @@ public class FormatOCRText {
 		// System.out.println(arrangedString);
 
 	}
-	
-	private static Integer getPositive(Integer i){
-		if(i<0){
-			i=i*-1;
+
+	private static Integer getPositive(Integer i) {
+		if (i < 0) {
+			i = i * -1;
 		}
 		return i;
 	}
 
-	public static String arrangeSentences(String textWithPosition,
-			Map<String, BoundingPoly> sentenceLocationMap) {
+	public static String arrangeSentences(String textWithPosition, Map<String, BoundingPoly> sentenceLocationMap) {
 
 		/*
 		 * textWithPosition -->has sentences arranged using tab & white spaces
@@ -195,8 +182,7 @@ public class FormatOCRText {
 
 		// Split the word blocks based on new line.
 
-		List<String> wordBlockList = Arrays
-				.asList(textWithPosition.split("\n"));
+		List<String> wordBlockList = Arrays.asList(textWithPosition.split("\n"));
 		String fisrtString = wordBlockList.get(0);
 		char firstChar = fisrtString.trim().charAt(0);
 		int noOfSpaces = fisrtString.indexOf(firstChar);
@@ -231,8 +217,7 @@ public class FormatOCRText {
 		}
 		joiner.append("\n");
 		System.out.println("*** Remaining String ***");
-		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap
-				.entrySet()) {
+		for (Map.Entry<String, BoundingPoly> entry : sentenceLocationMap.entrySet()) {
 			System.out.println(entry.getKey());
 			joiner1.append(entry.getKey().trim());
 			joiner1.append("\n");
@@ -244,8 +229,7 @@ public class FormatOCRText {
 		}
 	}
 
-	public static String arrangeBlocks(
-			Map<String, BoundingPoly> sentenceLocationMap) {
+	public static String arrangeBlocks(Map<String, BoundingPoly> sentenceLocationMap) {
 
 		/*
 		 * textWithPosition -->has sentences arranged using tab & white spaces
@@ -256,15 +240,13 @@ public class FormatOCRText {
 		 */
 
 		// Split the word blocks based on new line.
-		Map.Entry<String, BoundingPoly> entry = sentenceLocationMap.entrySet()
-				.iterator().next();
+		Map.Entry<String, BoundingPoly> entry = sentenceLocationMap.entrySet().iterator().next();
 
 		String fisrtSent = entry.getKey();
 		BoundingPoly fisrtSentLoc = sentenceLocationMap.get(fisrtSent);
 		Integer firsttextSize = null;
 		if (null != fisrtSentLoc) {
-			firsttextSize = fisrtSentLoc.getVertices().get(2).getY()
-					- fisrtSentLoc.getVertices().get(1).getY();
+			firsttextSize = fisrtSentLoc.getVertices().get(2).getY() - fisrtSentLoc.getVertices().get(1).getY();
 		}
 		BoundingPoly secondSentLoc = null;
 		Integer secondtextSize = null;
@@ -273,17 +255,14 @@ public class FormatOCRText {
 
 		StringBuilder joiner = new StringBuilder();
 		StringBuilder joiner1 = new StringBuilder();
-		for (Map.Entry<String, BoundingPoly> mapEntry : sentenceLocationMap
-				.entrySet()) {
+		for (Map.Entry<String, BoundingPoly> mapEntry : sentenceLocationMap.entrySet()) {
 
 			secondSentLoc = sentenceLocationMap.get(mapEntry.getKey());
 			if (null != secondSentLoc) {
-				secondtextSize = secondSentLoc.getVertices().get(2).getY()
-						- secondSentLoc.getVertices().get(1).getY();
+				secondtextSize = secondSentLoc.getVertices().get(2).getY() - secondSentLoc.getVertices().get(1).getY();
 			}
 			if (null != fisrtSentLoc && null != secondSentLoc) {
-				diffinY = secondSentLoc.getVertices().get(3).getY()
-						- fisrtSentLoc.getVertices().get(1).getY();
+				diffinY = secondSentLoc.getVertices().get(3).getY() - fisrtSentLoc.getVertices().get(1).getY();
 			}
 			if (diffinY > firsttextSize && diffinY > 10) {
 				System.out.println(delimit);
@@ -303,16 +282,14 @@ public class FormatOCRText {
 		return null;
 	}
 
-	private static String sortX(String processedText,
-			AnnotateImageResponse annotateImageResponse) {
+	private static String sortX(String processedText, AnnotateImageResponse annotateImageResponse) {
 
 		// Split the word blocks based on new line.
 
 		List<String> wordBlockList = Arrays.asList(processedText.split("\n"));
 
 		Map<String, BoundingPoly> wordLocationMap = new LinkedHashMap<String, BoundingPoly>();
-		List<EntityAnnotation> worldList = annotateImageResponse
-				.getTextAnnotations();
+		List<EntityAnnotation> worldList = annotateImageResponse.getTextAnnotations();
 		// Remove the first Word as it is full text in image,
 		worldList.remove(0);
 		// Form a Map of words & its Location
@@ -347,36 +324,29 @@ public class FormatOCRText {
 		System.out.println("********************************************");
 
 		StringBuilder sortedString = new StringBuilder();
-		for (Map.Entry<String, BoundingPoly> entry : sortedwordLocationMap
-				.entrySet()) {
+		for (Map.Entry<String, BoundingPoly> entry : sortedwordLocationMap.entrySet()) {
 			sortedString.append(entry.getKey());
 			sortedString.append("\n");
 		}
 		return sortedString.toString();
 	}
 
-	private static Map<String, BoundingPoly> sortByStartX(
-			Map<String, BoundingPoly> unsortMap) {
+	private static Map<String, BoundingPoly> sortByStartX(Map<String, BoundingPoly> unsortMap) {
 
 		// 1. Convert Map to List of Map
-		List<Map.Entry<String, BoundingPoly>> list = new LinkedList<Map.Entry<String, BoundingPoly>>(
-				unsortMap.entrySet());
+		List<Map.Entry<String, BoundingPoly>> list = new LinkedList<Map.Entry<String, BoundingPoly>>(unsortMap.entrySet());
 
 		// 2. Sort list with Collections.sort(), provide a custom Comparator
 		// Try switch the o1 o2 position for a different order
-		Collections.sort(list,
-				new Comparator<Map.Entry<String, BoundingPoly>>() {
-					public int compare(Map.Entry<String, BoundingPoly> o1,
-							Map.Entry<String, BoundingPoly> o2) {
-						if (null != o1.getValue() && null != o2.getValue()) {
-							return (o1.getValue().getVertices().get(0).getX())
-									-(o2.getValue().getVertices()
-											.get(0).getX());
-						} else {
-							return 0;
-						}
-					}
-				});
+		Collections.sort(list, new Comparator<Map.Entry<String, BoundingPoly>>() {
+			public int compare(Map.Entry<String, BoundingPoly> o1, Map.Entry<String, BoundingPoly> o2) {
+				if (null != o1.getValue() && null != o2.getValue()) {
+					return (o1.getValue().getVertices().get(0).getX()) - (o2.getValue().getVertices().get(0).getX());
+				} else {
+					return 0;
+				}
+			}
+		});
 
 		// 3. Loop the sorted list and put it into a new insertion order Map
 		// LinkedHashMap
@@ -390,12 +360,10 @@ public class FormatOCRText {
 	/*
 	 * Arrange the text based on the location of text.
 	 */
-	public static LinkedHashMap<String, BoundingPoly> processX(String string,
-			AnnotateImageResponse annotateImageResponse) {
+	public static LinkedHashMap<String, BoundingPoly> processX(String string, AnnotateImageResponse annotateImageResponse) {
 		StringBuilder imageTestBuilder = new StringBuilder();
 
-		List<EntityAnnotation> worldList = annotateImageResponse
-				.getTextAnnotations();
+		List<EntityAnnotation> worldList = annotateImageResponse.getTextAnnotations();
 		// Remove the first Word as it is full text in image,
 		worldList.remove(0);
 		MultiMap wordLocationMap = new MultiHashMap();
@@ -430,11 +398,9 @@ public class FormatOCRText {
 					startWord = wordBlock;
 				} else {
 					startWord = wordBlock.substring(0, spaceIndex);
-					remainingSent = wordBlock.substring(spaceIndex + 1,
-							wordBlock.length());
+					remainingSent = wordBlock.substring(spaceIndex + 1, wordBlock.length());
 					if (remainingSent.indexOf(" ") != -1) {
-						secondWord = remainingSent.substring(0,
-								remainingSent.indexOf(" "));
+						secondWord = remainingSent.substring(0, remainingSent.indexOf(" "));
 					} else {
 						secondWord = remainingSent;
 					}
@@ -442,10 +408,8 @@ public class FormatOCRText {
 				}
 				// System.out.println("startWord : " + startWord);
 
-				List<BoundingPoly> locationOfWord = (List<BoundingPoly>) wordLocationMap
-						.get(startWord);
-				List<BoundingPoly> locationOfSecondWord = (List<BoundingPoly>) wordLocationMap
-						.get(secondWord);
+				List<BoundingPoly> locationOfWord = (List<BoundingPoly>) wordLocationMap.get(startWord);
+				List<BoundingPoly> locationOfSecondWord = (List<BoundingPoly>) wordLocationMap.get(secondWord);
 
 				if (locationOfWord.size() > 1) {
 					boolean match = false;
@@ -453,10 +417,8 @@ public class FormatOCRText {
 					if (null != locationOfWord && null != locationOfSecondWord) {
 						for (int j = 0; j < locationOfWord.size(); j++) {
 							for (int i = 0; i < locationOfSecondWord.size(); i++) {
-								int diffY = locationOfWord.get(j).getVertices()
-										.get(0).getY()
-										- locationOfSecondWord.get(i)
-												.getVertices().get(0).getY();
+								int diffY = locationOfWord.get(j).getVertices().get(0).getY()
+										- locationOfSecondWord.get(i).getVertices().get(0).getY();
 								if (diffY < 0) {
 									diffY = diffY * -1;
 								}
@@ -472,12 +434,9 @@ public class FormatOCRText {
 				}
 
 				if (null != locationOfWord) {
-					sentenceLocationMap.put(wordBlock.trim(),
-							locationOfWord.get(current_count));
-					Integer startX = locationOfWord.get(current_count)
-							.getVertices().get(0).getX();
-					Integer startY = locationOfWord.get(current_count)
-							.getVertices().get(1).getY();
+					sentenceLocationMap.put(wordBlock.trim(), locationOfWord.get(current_count));
+					Integer startX = locationOfWord.get(current_count).getVertices().get(0).getX();
+					Integer startY = locationOfWord.get(current_count).getVertices().get(1).getY();
 					// System.out.println("BoundingPoly : " + locationOfWord);
 					// System.out.println("StartX : " + startX);
 
@@ -524,21 +483,16 @@ public class FormatOCRText {
 		String productCreateJson;
 		AnnotateImageResponse annotateImageResponse = null;
 		try {
-			productCreateJson = Resources.toString(
-					Resources.getResource("Listerine.json"), Charsets.UTF_8);
+			productCreateJson = Resources.toString(Resources.getResource("Listerine.json"), Charsets.UTF_8);
 			JSONObject jsonObj = new JSONObject(productCreateJson);
-			Map<String, Object> jsonMap = JsonstringToMap
-					.jsonString2Map(jsonObj.toString());
+			Map<String, Object> jsonMap = JsonstringToMap.jsonString2Map(jsonObj.toString());
 			// System.out.println(jsonMap.get("textAnnotations"));
-			JSONArray textJsonArray = new JSONArray(jsonMap.get(
-					"textAnnotations").toString());
+			JSONArray textJsonArray = new JSONArray(jsonMap.get("textAnnotations").toString());
 			List<EntityAnnotation> textEAList = new ArrayList<EntityAnnotation>();
 			for (int i = 0; i < textJsonArray.length(); i++) {
 				EntityAnnotation ea = new EntityAnnotation();
-				ea.setDescription(textJsonArray.getJSONObject(i)
-						.get("description").toString());
-				ea.setBoundingPoly(CreateBoundingPolicy(textJsonArray
-						.getJSONObject(i).get("boundingPoly").toString()));
+				ea.setDescription(textJsonArray.getJSONObject(i).get("description").toString());
+				ea.setBoundingPoly(CreateBoundingPolicy(textJsonArray.getJSONObject(i).get("boundingPoly").toString()));
 				// System.out.println(textJsonArray.getJSONObject(i));
 				textEAList.add(ea);
 			}
@@ -559,18 +513,14 @@ public class FormatOCRText {
 
 		BoundingPoly ea = new BoundingPoly();
 		try {
-			Map<String, Object> jsonMap = JsonstringToMap
-					.jsonString2Map(jsonString);
-			JSONArray textJsonArray = new JSONArray(jsonMap.get("vertices")
-					.toString());
+			Map<String, Object> jsonMap = JsonstringToMap.jsonString2Map(jsonString);
+			JSONArray textJsonArray = new JSONArray(jsonMap.get("vertices").toString());
 			List<Vertex> vertexList = new ArrayList<Vertex>();
 			for (int i = 0; i < textJsonArray.length(); i++) {
 
 				Vertex vertex = new Vertex();
-				vertex.setX(Integer.parseInt(textJsonArray.getJSONObject(i)
-						.get("x").toString()));
-				vertex.setY(Integer.parseInt(textJsonArray.getJSONObject(i)
-						.get("y").toString()));
+				vertex.setX(Integer.parseInt(textJsonArray.getJSONObject(i).get("x").toString()));
+				vertex.setY(Integer.parseInt(textJsonArray.getJSONObject(i).get("y").toString()));
 				vertexList.add(vertex);
 			}
 			ea.setVertices(vertexList);

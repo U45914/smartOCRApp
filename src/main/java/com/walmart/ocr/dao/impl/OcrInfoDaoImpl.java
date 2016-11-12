@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.SmartOCRDataModel;
-import com.walmart.ocr.model.User;
 
 /**
  * @author U46591

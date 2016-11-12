@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.walmart.ocr.model.SmartOCRDataModel;
-import com.walmart.ocr.model.User;
 
 /**
  * @author U46591

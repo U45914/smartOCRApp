@@ -46,62 +46,71 @@ import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.model.GVisionResponse;
 import com.walmart.ocr.model.OCRResult;
 import com.walmart.ocr.model.ParseRequest;
+import com.walmart.ocr.model.SmartOCRDataModel;
 import com.walmart.ocr.rabbit.provider.RabbitMQProvider;
 import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
+import com.walmart.ocr.util.MessageConverter;
+import com.walmart.ocr.util.SmartOCRStatus;
 
 @Path("/smartOCR")
 @Component
 public class GoogleVisionResource {
 
-	private static final Logger logger = Logger
-			.getLogger(GoogleVisionResource.class);
+	private static final Logger logger = Logger.getLogger(GoogleVisionResource.class);
 	private static final String FILE_UPLOAD_PATH = "ImagesToProcess/";
-	
-	@Autowired RabbitMQProvider rabbitMqProvider;
+
+	@Autowired
+	RabbitMQProvider rabbitMqProvider;
 
 	@POST
 	@Path("/convertImagesToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadMultiFile(@Context HttpServletRequest request) {
+		SmartOCRDataModel ocrDataModel = new SmartOCRDataModel();
+		ocrDataModel.setStatus(SmartOCRStatus.PRODUCT_IMAGE_PARSE_REQUEST_RECEIVED);
+		ocrDataModel.setOcrRequestId(1);
 
 		ParseRequest parseRequest = new ParseRequest();
 		try {
-			rabbitMqProvider.sendMessage(request.getRemoteHost());
+			//rabbitMqProvider.sendMessage(request.getRemoteHost());
 			logger(" ");
-			
+
 			logger("******** New Conversion Started *******");
 			File file = new File(FILE_UPLOAD_PATH);
 			FileUtils.cleanDirectory(file);
-			saveFiles(request);
+			String locationOfImage = saveFiles(request);
+
+			ocrDataModel.setImageUrls(locationOfImage);
+
 			logger("******** Saved Files *******");
 			List<File> imageFiles = new ArrayList<File>();
-			imageFiles=(List<File>) FileUtils.listFiles(file, null, false);
+			imageFiles = (List<File>) FileUtils.listFiles(file, null, false);
 			Collections.sort(imageFiles, new Comparator<File>() {
 
 				@Override
 				public int compare(File o1, File o2) {
-					// TODO Auto-generated method stub
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
-			String upscString ="12345";
-			if(null!=imageFiles.get(0)){
-			upscString = imageFiles.get(0).getName();
-			System.out.println("Creating UPSC string using file :"+upscString);
-			//upscString=upscString.substring(0, upscString.indexOf("-"));
+			String upscString = "12345";
+			if (null != imageFiles.get(0)) {
+				upscString = imageFiles.get(0).getName();
+				System.out.println("Creating UPSC string using file :" + upscString);
+				upscString = upscString.substring(0, upscString.indexOf("-"));
 			}
 			GVision gvision = new GVision();
 			BatchAnnotateImagesResponse batchImageResponse = gvision.doOCR(imageFiles);
+			
 			GVisionResponse gVisionResponse = GvisionResponseToOCRResponseConverter.convert(batchImageResponse);
-			
-			//result = GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
-			parseRequest=GvisionResponseToOCRResponseConverter.toParseRequest(gVisionResponse);
+
+			// result =
+			// GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
+			parseRequest = GvisionResponseToOCRResponseConverter.toParseRequest(gVisionResponse);
 			parseRequest.setId(upscString);
-			
-	
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,6 +118,9 @@ public class GoogleVisionResource {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		ocrDataModel.setGivisionResponse(GvisionResponseToOCRResponseConverter.parseRequestObjectTOJsonString(parseRequest));
+		rabbitMqProvider.sendMessage(MessageConverter.convertSmartOcrDataModelToJsonString(ocrDataModel));
+		
 		return Response.status(200).entity(parseRequest).build();
 
 	}
@@ -117,14 +129,14 @@ public class GoogleVisionResource {
 		this.rabbitMqProvider = rabbitMqProvider;
 	}
 
-	private void saveFiles(HttpServletRequest request) {
+	private String saveFiles(HttpServletRequest request) {
+		StringBuilder imagePathBuilder = new StringBuilder();
 		String name = null;
 		/* Check whether request is multipart or not. */
 		if (ServletFileUpload.isMultipartContent(request)) {
 			FileItemFactory factory = new DiskFileItemFactory();
 			ServletFileUpload fileUpload = new ServletFileUpload(factory);
-			try {
-
+			try {	
 				List<FileItem> items = fileUpload.parseRequest(request);
 
 				if (items != null) {
@@ -147,6 +159,8 @@ public class GoogleVisionResource {
 
 							System.out.println("Saving the file: " + file.getName());
 							item.write(file);
+							imagePathBuilder.append(file.getPath());
+							imagePathBuilder.append(";");
 						}
 					}
 				}
@@ -156,14 +170,14 @@ public class GoogleVisionResource {
 				e.printStackTrace();
 			}
 		}
+		return imagePathBuilder.toString();
 
 	}
+
 	@POST
 	@Path("/convertImageToText")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile1(
-			@FormDataParam("file") InputStream uploadedInputStream,
-			@FormDataParam("file") FormDataContentDisposition fileDetail) {
+	public Response uploadFile1(@FormDataParam("file") InputStream uploadedInputStream, @FormDataParam("file") FormDataContentDisposition fileDetail) {
 
 		String uploadedFileLocation = fileDetail.getFileName();
 		String frontText = null;
@@ -180,39 +194,34 @@ public class GoogleVisionResource {
 			logger("File uploaded to : " + uploadedFileLocation);
 			File imageFile = new File(uploadedFileLocation);
 			GVision gvision = new GVision();
-			AnnotateImageResponse annotateImageResponse = gvision
-					.doOCR(imageFile);
-			List<EntityAnnotation> labelAnnotations = annotateImageResponse
-					.getLabelAnnotations();
+			AnnotateImageResponse annotateImageResponse = gvision.doOCR(imageFile);
+			List<EntityAnnotation> labelAnnotations = annotateImageResponse.getLabelAnnotations();
 			if (null != labelAnnotations) {
-				
-				int count=1;
+
+				int count = 1;
 				for (EntityAnnotation labelAnnotation : labelAnnotations) {
 					System.out.println(labelAnnotation.getDescription());
 					if (count == 1) {
 						resultString.append("label details ");
 						resultString.append(labelAnnotation.getDescription());
 						resultString.append(" ");
-					}
-					else{
+					} else {
 						resultString1.append("label details ");
 						resultString1.append(labelAnnotation.getDescription());
-						resultString1.append(" ");	
+						resultString1.append(" ");
 					}
 				}
 			}
-			List<EntityAnnotation> logoAnnotations = annotateImageResponse
-					.getLogoAnnotations();
+			List<EntityAnnotation> logoAnnotations = annotateImageResponse.getLogoAnnotations();
 			if (null != logoAnnotations) {
-				int count=1;
+				int count = 1;
 				for (EntityAnnotation logoAnnotation : logoAnnotations) {
 					if (count == 1) {
-					resultString.append("logo details  ");
-					resultString.append(logoAnnotation.getDescription());
-					System.out.println(logoAnnotation.getDescription());
-					resultString.append(" ");
-					}
-					else{
+						resultString.append("logo details  ");
+						resultString.append(logoAnnotation.getDescription());
+						System.out.println(logoAnnotation.getDescription());
+						resultString.append(" ");
+					} else {
 						resultString1.append("logo details : ");
 						resultString1.append(logoAnnotation.getDescription());
 						System.out.println(logoAnnotation.getDescription());
@@ -220,19 +229,17 @@ public class GoogleVisionResource {
 					}
 				}
 			}
-			List<EntityAnnotation> textAnnotations = annotateImageResponse
-					.getTextAnnotations();
+			List<EntityAnnotation> textAnnotations = annotateImageResponse.getTextAnnotations();
 			if (null != textAnnotations) {
-				int count=1;
-				
+				int count = 1;
+
 				for (EntityAnnotation textAnnotation : textAnnotations) {
 					if (count == 1) {
 						resultString.append("text details ");
 						resultString.append(textAnnotation.getDescription());
 						System.out.println(textAnnotation.getDescription());
 						resultString.append(" ");
-					}
-					else{
+					} else {
 						resultString1.append("text details ");
 						resultString1.append(textAnnotation.getDescription());
 						System.out.println(textAnnotation.getDescription());
@@ -240,21 +247,17 @@ public class GoogleVisionResource {
 					}
 				}
 			}
-			ImageProperties imagePropertiesAnnotation = annotateImageResponse
-					.getImagePropertiesAnnotation();
+			ImageProperties imagePropertiesAnnotation = annotateImageResponse.getImagePropertiesAnnotation();
 			if (null != imagePropertiesAnnotation) {
-				ColorInfo colorInfo = imagePropertiesAnnotation
-						.getDominantColors().getColors().get(0);
+				ColorInfo colorInfo = imagePropertiesAnnotation.getDominantColors().getColors().get(0);
 				ColorUtils colorUtils = new ColorUtils();
-				String myColor = colorUtils.getColorNameFromRgb(
-						Math.round(colorInfo.getColor().getRed()),
-						Math.round(colorInfo.getColor().getGreen()),
-						Math.round(colorInfo.getColor().getBlue()));
+				String myColor = colorUtils.getColorNameFromRgb(Math.round(colorInfo.getColor().getRed()),
+						Math.round(colorInfo.getColor().getGreen()), Math.round(colorInfo.getColor().getBlue()));
 				resultString.append("color details ");
 				resultString.append(myColor);
 			}
 			frontText = resultString.toString();
-			backText= resultString1.toString();
+			backText = resultString1.toString();
 			uploadedInputStream.close();
 			parseRequest.setFrontText(frontText);
 			parseRequest.setBackText(backText);
@@ -298,12 +301,10 @@ public class GoogleVisionResource {
 	}
 
 	// save uploaded file to new location
-	private void writeToFile(InputStream uploadedInputStream,
-			String uploadedFileLocation) {
+	private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
 
 		try {
-			OutputStream out = new FileOutputStream(new File(
-					uploadedFileLocation));
+			OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
 			while ((read = uploadedInputStream.read(bytes)) != -1) {
