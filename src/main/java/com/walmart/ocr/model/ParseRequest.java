@@ -1,11 +1,19 @@
 package com.walmart.ocr.model;
 
 public class ParseRequest {
+	private String smartOcrId;
 	private String id;
 	private String FrontText;
 	private String BackText;
 	private String FrontTextFormatted;
 	private String BackTextFormatted;
+	
+	public String getSmartOcrId() {
+		return smartOcrId;
+	}
+	public void setSmartOcrId(String smartOcrId) {
+		this.smartOcrId = smartOcrId;
+	}
 	public String getId() {
 		return id;
 	}

@@ -35,13 +35,13 @@ public class SmartOCRDataModel implements Serializable {
 	private String givisionResponse;
 	
 	@Column(name="CROWD_SOURCE_RESPONSE")
-	private String cloudSourceResponse;
+	private String crowdSourceResponse;
 	@Column(name="ABZOOBA_REQUEST_INFO")
 	private String absoobaRequestInfo;
 	@Column(name="ABZOOBA_REQUEST_RESPONSE")
 	private String absoobaResponse;
 	@Column(name="CLOUD_SOURCE_USER_ID")
-	private String cloudSourceUserId;
+	private String crowdSourceUserId;
 	@Column(name="STATUS")
 	private String status;
 	@Column(name="IMAGE_URL")
@@ -93,18 +93,18 @@ public class SmartOCRDataModel implements Serializable {
 
 
 	/**
-	 * @return the cloudSourceResponse
+	 * @return the crowdSourceResponse
 	 */
-	public String getCloudSourceResponse() {
-		return cloudSourceResponse;
+	public String getCrowdSourceResponse() {
+		return crowdSourceResponse;
 	}
 
 
 	/**
-	 * @param cloudSourceResponse the cloudSourceResponse to set
+	 * @param crowdSourceResponse the crowdSourceResponse to set
 	 */
-	public void setCloudSourceResponse(String cloudSourceResponse) {
-		this.cloudSourceResponse = cloudSourceResponse;
+	public void setCrowdSourceResponse(String crowdSourceResponse) {
+		this.crowdSourceResponse = crowdSourceResponse;
 	}
 
 
@@ -140,19 +140,13 @@ public class SmartOCRDataModel implements Serializable {
 	}
 
 
-	/**
-	 * @return the cloudSourceUserId
-	 */
-	public String getCloudSourceUserId() {
-		return cloudSourceUserId;
+	public String getCrowdSourceUserId() {
+		return crowdSourceUserId;
 	}
 
 
-	/**
-	 * @param cloudSourceUserId the cloudSourceUserId to set
-	 */
-	public void setCloudSourceUserId(String cloudSourceUserId) {
-		this.cloudSourceUserId = cloudSourceUserId;
+	public void setCrowdSourceUserId(String crowdSourceUserId) {
+		this.crowdSourceUserId = crowdSourceUserId;
 	}
 
 

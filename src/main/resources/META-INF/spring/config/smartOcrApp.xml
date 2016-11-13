@@ -20,6 +20,9 @@
 	<context:component-scan
 		base-package="com.walmart.ocr.dao.*" />
 		
+		
+	<bean name="ocrInfoDao" class="com.walmart.ocr.dao.impl.OcrInfoDaoImpl">
+	</bean>
 	<!-- Import all resources -->
 
 	<!-- db-sqlite-config.xml file is used to run a ddl command -->

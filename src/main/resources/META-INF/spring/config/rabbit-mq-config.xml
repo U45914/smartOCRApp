@@ -27,16 +27,19 @@
 	<rabbit:template id="amqpTemplate" connection-factory="rabbitMqConnectionFactory"
 		exchange="smartOcrExchange" queue="WM.SMART.OCR" />
 		
-	<rabbit:listener-container
+	<!-- <rabbit:listener-container
         connection-factory="rabbitMqConnectionFactory">
         <rabbit:listener ref="smartOcrMessageListner" queues="WM.SMART.OCR"  />
-    </rabbit:listener-container>
+    </rabbit:listener-container> -->
      
     <context:annotation-config />
     <context:component-scan base-package="com.walmart" />
 <!--     <aop:aspectj-autoproxy /> -->
  
     <bean id="smartOcrMessageListner" class="com.walmart.ocr.rabbit.listner.SmartOCRMessageListner">
+    </bean>
+    
+    <bean id="myTaskProvider" class="com.walmart.ocr.rabbit.listner.MQTaskProvider">
     </bean>
 </beans>
 

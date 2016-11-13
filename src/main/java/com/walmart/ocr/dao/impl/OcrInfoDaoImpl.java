@@ -47,6 +47,13 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 		id = session.save(ocrDataModel);
 		return id;
 	}
+	
+	public SmartOCRDataModel update(SmartOCRDataModel ocrDataModel) {
+		Session session = template.openSession();
+		session.update(ocrDataModel);
+		
+		return ocrDataModel;
+	}
 
 	/*
 	 * (non-Javadoc)

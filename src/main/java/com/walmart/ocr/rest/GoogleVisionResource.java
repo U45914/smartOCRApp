@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +44,7 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.ImageProperties;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.GVisionResponse;
 import com.walmart.ocr.model.OCRResult;
 import com.walmart.ocr.model.ParseRequest;
@@ -63,6 +65,9 @@ public class GoogleVisionResource {
 
 	@Autowired
 	RabbitMQProvider rabbitMqProvider;
+	
+	@Autowired
+	private OcrInfoDao ocrInfoDao;
 
 	@POST
 	@Path("/convertImagesToText")
@@ -71,7 +76,7 @@ public class GoogleVisionResource {
 	public Response uploadMultiFile(@Context HttpServletRequest request) {
 		SmartOCRDataModel ocrDataModel = new SmartOCRDataModel();
 		ocrDataModel.setStatus(SmartOCRStatus.PRODUCT_IMAGE_PARSE_REQUEST_RECEIVED);
-		ocrDataModel.setOcrRequestId(1);
+		//ocrDataModel.setOcrRequestId(1);
 
 		ParseRequest parseRequest = new ParseRequest();
 		try {
@@ -119,8 +124,10 @@ public class GoogleVisionResource {
 			e.printStackTrace();
 		}
 		ocrDataModel.setGivisionResponse(GvisionResponseToOCRResponseConverter.parseRequestObjectTOJsonString(parseRequest));
-		rabbitMqProvider.sendMessage(MessageConverter.convertSmartOcrDataModelToJsonString(ocrDataModel));
-		
+		// Save record to DB
+		Serializable createOcrData = ocrInfoDao.createOcrData(ocrDataModel);
+		String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
+		rabbitMqProvider.sendMessage(smartOcrId);
 		return Response.status(200).entity(parseRequest).build();
 
 	}
@@ -346,4 +353,10 @@ public class GoogleVisionResource {
 	void logger(String log) {
 		logger.debug(log);
 	}
+
+	public void setOcrInfoDao(OcrInfoDao ocrInfoDao) {
+		this.ocrInfoDao = ocrInfoDao;
+	}
+	
+	
 }
