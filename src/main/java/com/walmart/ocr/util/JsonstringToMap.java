@@ -43,6 +43,8 @@ public class JsonstringToMap {
 					String cLevel = (String) confidenceLevel.getString("Confidence_Score_"+key);
 					Double cLevelLongValue = Double.valueOf(cLevel) * 100;					
 					attribute.put("CLevel", cLevelLongValue);				
+				} else {
+					attribute.put("CLevel", 0);	
 				}
 				finalLIst.add(attribute);
 			}
