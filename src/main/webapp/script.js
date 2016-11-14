@@ -166,11 +166,18 @@ $(function() {
 
 	function gettableData(jsonObj) {
 		var html = '<table border="0" class="ocrTable">';
-		$.each(jsonObj, function(obj) {
+		html += "<tr>";
+		html += "<th> Attribute </th>";
+		html += "<th> Value </th>";
+		html += "<th> Confidence Level </th>";
+		
+		html += "</tr>";
+			
+		$.each(jsonObj, function(i) {
 			html += '<tr>';
-			html += '<td>' + obj.Attribute + '</td>';
-			html += '<td>' + obj.Value + '</td>';
-			html += '<td>' + obj.CLevel + '</td>';
+			html += '<td>' + jsonObj[i].Attribute + '</td>';
+			html += '<td>' + jsonObj[i].Value + '</td>';
+			html += '<td>' + jsonObj[i].CLevel + '</td>';
 			html += '</tr>';
 		});
 		html += '</table>';
