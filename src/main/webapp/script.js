@@ -149,6 +149,8 @@ $(function() {
 					hideLoadingScreen();
 
 					var tabledata = gettableData(data);
+					
+					sendAttributeMapToEmi(data);
 				} else {
 					// Handle errors here
 					console.log('ERRORS: ' + data.error);
@@ -164,6 +166,29 @@ $(function() {
 		});
 	}
 
+	function sendAttributeMapToEmi(data) {
+		$.ajax({
+			url : 'http://WVWEA006C0309.homeoffice.Wal-Mart.com:9090/OCRImageToText/rest/Product/create',
+			// url: 'http://localhost:8080/abzooba/parseText',
+			type : 'POST',
+			data : JSON.stringify(data),
+			cache : false,
+			crossDomain : true,
+			// dataType: 'json',
+			processData : false, // Don't process the files
+			contentType : 'application/json', // Set content type to false as
+												// jQuery will tell the server
+												// its a query string request
+			success : function(data, textStatus, jqXHR) {
+				//hideLoadingScreen();
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				// Handle errors here
+				console.log('ERRORS: ' + textStatus);
+			}
+		});
+	}
+	
 	function gettableData(jsonObj) {
 		var html = '<table border="0" class="ocrTable">';
 		html += "<tr>";
