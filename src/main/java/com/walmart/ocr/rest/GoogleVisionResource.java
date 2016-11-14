@@ -125,9 +125,15 @@ public class GoogleVisionResource {
 		}
 		ocrDataModel.setGivisionResponse(GvisionResponseToOCRResponseConverter.parseRequestObjectTOJsonString(parseRequest));
 		// Save record to DB
-		Serializable createOcrData = ocrInfoDao.createOcrData(ocrDataModel);
-		String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
-		rabbitMqProvider.sendMessage(smartOcrId);
+		try {
+			Serializable createOcrData = ocrInfoDao.createOcrData(ocrDataModel);
+			logger("***************** "+ createOcrData);
+			String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
+			logger("***************** ID "+ smartOcrId);
+			rabbitMqProvider.sendMessage(smartOcrId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		return Response.status(200).entity(parseRequest).build();
 
 	}
