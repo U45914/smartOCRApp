@@ -166,10 +166,11 @@ $(function() {
 
 	function gettableData(jsonObj) {
 		var html = '<table border="0" class="ocrTable">';
-		$.each(jsonObj, function(key, value) {
+		$.each(jsonObj, function(obj) {
 			html += '<tr>';
-			html += '<td>' + key + '</td>';
-			html += '<td>' + value + '</td>';
+			html += '<td>' + obj.Attribute + '</td>';
+			html += '<td>' + obj.Value + '</td>';
+			html += '<td>' + obj.CLevel + '</td>';
 			html += '</tr>';
 		});
 		html += '</table>';
