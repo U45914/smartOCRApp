@@ -130,6 +130,7 @@ public class GoogleVisionResource {
 			logger("***************** "+ createOcrData);
 			String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
 			logger("***************** ID "+ smartOcrId);
+			parseRequest.setSmartOcrId(smartOcrId);
 			rabbitMqProvider.sendMessage(smartOcrId);
 		} catch(Exception e) {
 			e.printStackTrace();
