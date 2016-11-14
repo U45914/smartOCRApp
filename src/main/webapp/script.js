@@ -168,7 +168,7 @@ $(function() {
 
 	function sendAttributeMapToEmi(data) {
 		$.ajax({
-			url : 'http://WVWEA006C0309.homeoffice.Wal-Mart.com:9090/OCRImageToText/rest/Product/create',
+			url : 'http://WVWEA004C2483.homeoffice.Wal-Mart.com:8888/OCRImageToText/rest/Product/create',
 			// url: 'http://localhost:8080/abzooba/parseText',
 			type : 'POST',
 			data : JSON.stringify(data),
