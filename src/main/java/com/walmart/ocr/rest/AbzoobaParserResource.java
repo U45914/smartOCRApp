@@ -1,7 +1,9 @@
 package com.walmart.ocr.rest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -11,6 +13,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -21,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.ParseRequest;
@@ -46,7 +48,7 @@ public class AbzoobaParserResource {
 	@Path("/parseText")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Map<String, Object> uploadFile1(ParseRequest parseInput, @HeaderParam("userId") @DefaultValue("smartOcr") String userId) {
+	public Response uploadFile1(ParseRequest parseInput, @HeaderParam("userId") @DefaultValue("smartOcr") String userId) {
 		String output = null;
 		// Only Fake Response.
 		boolean fake = false;
@@ -74,26 +76,30 @@ public class AbzoobaParserResource {
 				jsonInString = jsonInString.replace("frontText", "FrontText");
 				jsonInString = jsonInString.replace("backText", "BackText");
 				//ocrData.setAbsoobaRequestInfo(jsonInString);
-				ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
+				/*ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
 				if (response.getStatus() != 200) {
 					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-				}
+				}*/
 
-				output = response.getEntity(String.class);
+				//output = response.getEntity(String.class);
+				output = "[{\"Brand\":\"Fresh\",\"Product_Name\":\"Fresh  New Look Same Great Smart Mouth \",\"Units_Per_Consumer_Unit\":\"Nil\",\"Product_Short_Description\":\"fresh   herb .\",\"Product_Long_Description\":\"Nil\",\"Ingredients\":\"Nil\",\"Gender\":\"Both\",\"Alcohol_Content\":\"True\",\"Is_Aerosol\":\"False\",\"Manufacturing_Country\":\"NIL\",\"Direction_Of_Use\":\"Nil\",\"Warning\":\"Nil\",\"Back_Side_Color\":\"Nil\",\"Front_Side_Color\":\" Seagreen\",\"Manufacturer\":\"NIL\",\"Age\":\"Nil\",\"Skin_Type\":\"Nil\",\"Hair_Type\":\"Nil\"},{\"Confidence_Score_Brand\":0.88,\"Confidence_Score_Product_Name\":0.88,\"Confidence_Score_Units_Per_Consumer_Unit\":0.95,\"Confidence_Score_Product_Short_Description\":0.47,\"Confidence_Score_Product_Long_Description\":0.0,\"Confidence_Score_Gender\":0.65,\"Confidence_Score_Manufacturing_Country\":1.0,\"Confidence_Score_Direction_Of_Use\":0.52,\"Confidence_Score_Warning\":0.0,\"Confidence_Score_Back_Side_Color\":1.0,\"Confidence_Score_Front_Side_Color\":1.0,\"Confidence_Score_Manufacturer\":1.0,\"Confidence_Score_Age\":0.84,\"Confidence_Score_Ingredients\":0.5,\"Confidence_Score_Skin_Type\":0.65,\"Confidence_Score_Hair_Type\":0.65}] ";
 				logger("***********************************");
 				logger(output);
 				System.out.println(output);
 				logger("***********************************");
 				myMap = new LinkedHashMap<String, Object>();
-				Map<String, Object> myMap1 = JsonstringToMap.jsonString2Map(output);
-				myMap1.remove("id");
-				myMap1.remove("Raw_Data");
-				myMap.put("UPC Number", parseInput.getId());
-				String longDesc = (String) myMap1.get("Product_Long_Description");
-				longDesc = longDesc.replaceAll("\n", "<br/> <br/>");
-				myMap1.put("Product_Long_Description", longDesc);
-				myMap.putAll(myMap1);
+				List<Map<String, Object>> response = JsonstringToMap.jsonToJsonList(output);
+				
+				response.remove("id");
+				response.remove("Raw_Data");
+				Map<String, Object> upc = new HashMap();
+				upc.put("Attribute", "UPC");
+				upc.put("Value", parseInput.getId());
+				
+				response.add(upc);
+				
+				return Response.ok().entity(MessageConverter.getStringForObject(response)).build();
 
 			} else {
 				myMap = new LinkedHashMap<String, Object>();
@@ -137,7 +143,7 @@ public class AbzoobaParserResource {
 		// Final save to Database
 		//ocrData.setAbsoobaResponse(MessageConverter.getStringForObject(myMap));
 		//ocrInfoDao.update(ocrData);
-		return myMap;
+		return  Response.ok().entity(myMap).build();
 	}
 
 	void logger(String log) {
