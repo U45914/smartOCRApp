@@ -96,6 +96,7 @@ public class AbzoobaParserResource {
 				Map<String, Object> upc = new HashMap();
 				upc.put("Attribute", "UPC");
 				upc.put("Value", parseInput.getId());
+				upc.put("CLevel", 100);
 				
 				response.add(upc);
 				
