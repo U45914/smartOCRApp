@@ -18,6 +18,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -29,6 +30,7 @@ import com.walmart.ocr.util.JsonstringToMap;
 import com.walmart.ocr.util.MessageConverter;
 
 @Path("/abzoobaParse")
+@Component
 public class AbzoobaParserResource {
 
 	private static final Logger logger = Logger.getLogger(AbzoobaParserResource.class);
@@ -48,12 +50,15 @@ public class AbzoobaParserResource {
 		String output = null;
 		// Only Fake Response.
 		boolean fake = false;
-		SmartOCRDataModel ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
-		if (ocrData != null) {
-			ocrData.setCrowdSourceUserId(userId);
-			ocrData.setCrowdSourceResponse(MessageConverter.getStringForObject(parseInput));
-			ocrInfoDao.update(ocrData);
+		if (ocrInfoDao != null) {
+			SmartOCRDataModel ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
+			if (ocrData != null) {
+				ocrData.setCrowdSourceUserId(userId);
+				ocrData.setCrowdSourceResponse(MessageConverter.getStringForObject(parseInput));
+				ocrInfoDao.update(ocrData);
+			}
 		}
+		
 		
 		Map<String, Object> myMap = null;
 		try {
@@ -68,7 +73,7 @@ public class AbzoobaParserResource {
 				String jsonInString = mapper.writeValueAsString(parseInput);
 				jsonInString = jsonInString.replace("frontText", "FrontText");
 				jsonInString = jsonInString.replace("backText", "BackText");
-				ocrData.setAbsoobaRequestInfo(jsonInString);
+				//ocrData.setAbsoobaRequestInfo(jsonInString);
 				ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
 				if (response.getStatus() != 200) {
@@ -76,6 +81,10 @@ public class AbzoobaParserResource {
 				}
 
 				output = response.getEntity(String.class);
+				logger("***********************************");
+				logger(output);
+				System.out.println(output);
+				logger("***********************************");
 				myMap = new LinkedHashMap<String, Object>();
 				Map<String, Object> myMap1 = JsonstringToMap.jsonString2Map(output);
 				myMap1.remove("id");
@@ -126,8 +135,8 @@ public class AbzoobaParserResource {
 		}
 
 		// Final save to Database
-		ocrData.setAbsoobaResponse(MessageConverter.getStringForObject(myMap));
-		ocrInfoDao.update(ocrData);
+		//ocrData.setAbsoobaResponse(MessageConverter.getStringForObject(myMap));
+		//ocrInfoDao.update(ocrData);
 		return myMap;
 	}
 
