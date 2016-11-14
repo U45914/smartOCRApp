@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.ParseRequest;
@@ -76,14 +77,14 @@ public class AbzoobaParserResource {
 				jsonInString = jsonInString.replace("frontText", "FrontText");
 				jsonInString = jsonInString.replace("backText", "BackText");
 				//ocrData.setAbsoobaRequestInfo(jsonInString);
-				/*ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonInString);
+				ClientResponse serviceResponse = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-				}*/
+				if (serviceResponse.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : " + serviceResponse.getStatus());
+				}
 
-				//output = response.getEntity(String.class);
-				output = "[{\"Brand\":\"Fresh\",\"Product_Name\":\"Fresh  New Look Same Great Smart Mouth \",\"Units_Per_Consumer_Unit\":\"Nil\",\"Product_Short_Description\":\"fresh   herb .\",\"Product_Long_Description\":\"Nil\",\"Ingredients\":\"Nil\",\"Gender\":\"Both\",\"Alcohol_Content\":\"True\",\"Is_Aerosol\":\"False\",\"Manufacturing_Country\":\"NIL\",\"Direction_Of_Use\":\"Nil\",\"Warning\":\"Nil\",\"Back_Side_Color\":\"Nil\",\"Front_Side_Color\":\" Seagreen\",\"Manufacturer\":\"NIL\",\"Age\":\"Nil\",\"Skin_Type\":\"Nil\",\"Hair_Type\":\"Nil\"},{\"Confidence_Score_Brand\":0.88,\"Confidence_Score_Product_Name\":0.88,\"Confidence_Score_Units_Per_Consumer_Unit\":0.95,\"Confidence_Score_Product_Short_Description\":0.47,\"Confidence_Score_Product_Long_Description\":0.0,\"Confidence_Score_Gender\":0.65,\"Confidence_Score_Manufacturing_Country\":1.0,\"Confidence_Score_Direction_Of_Use\":0.52,\"Confidence_Score_Warning\":0.0,\"Confidence_Score_Back_Side_Color\":1.0,\"Confidence_Score_Front_Side_Color\":1.0,\"Confidence_Score_Manufacturer\":1.0,\"Confidence_Score_Age\":0.84,\"Confidence_Score_Ingredients\":0.5,\"Confidence_Score_Skin_Type\":0.65,\"Confidence_Score_Hair_Type\":0.65}] ";
+				output = serviceResponse.getEntity(String.class);
+				//output = "[{\"Brand\":\"Fresh\",\"Product_Name\":\"Fresh  New Look Same Great Smart Mouth \",\"Units_Per_Consumer_Unit\":\"Nil\",\"Product_Short_Description\":\"fresh   herb .\",\"Product_Long_Description\":\"Nil\",\"Ingredients\":\"Nil\",\"Gender\":\"Both\",\"Alcohol_Content\":\"True\",\"Is_Aerosol\":\"False\",\"Manufacturing_Country\":\"NIL\",\"Direction_Of_Use\":\"Nil\",\"Warning\":\"Nil\",\"Back_Side_Color\":\"Nil\",\"Front_Side_Color\":\" Seagreen\",\"Manufacturer\":\"NIL\",\"Age\":\"Nil\",\"Skin_Type\":\"Nil\",\"Hair_Type\":\"Nil\"},{\"Confidence_Score_Brand\":0.88,\"Confidence_Score_Product_Name\":0.88,\"Confidence_Score_Units_Per_Consumer_Unit\":0.95,\"Confidence_Score_Product_Short_Description\":0.47,\"Confidence_Score_Product_Long_Description\":0.0,\"Confidence_Score_Gender\":0.65,\"Confidence_Score_Manufacturing_Country\":1.0,\"Confidence_Score_Direction_Of_Use\":0.52,\"Confidence_Score_Warning\":0.0,\"Confidence_Score_Back_Side_Color\":1.0,\"Confidence_Score_Front_Side_Color\":1.0,\"Confidence_Score_Manufacturer\":1.0,\"Confidence_Score_Age\":0.84,\"Confidence_Score_Ingredients\":0.5,\"Confidence_Score_Skin_Type\":0.65,\"Confidence_Score_Hair_Type\":0.65}] ";
 				logger("***********************************");
 				logger(output);
 				System.out.println(output);
