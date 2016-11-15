@@ -75,11 +75,13 @@
 						<table class="table table-striped table-bordered table-hover">
 							<tbody>
 								<tr>
+									<th>No</th>
 									<th>ID</th>
 									<th>Task Id</th>
 									<th>Action</th>
 								</tr>
 								<tr ng-repeat="n in alltasks track by $index">
+									<td>{{$index+1}}</td>
 									<td>{{n.id}}</td>
 									<td>{{n.smartOcrId}}</td>
 									<td><a href="#" class="btn btn-primary"
@@ -112,7 +114,7 @@
 										<h3 class="panel-title">Image</h3>
 									</div>
 									<div class="panel-body">
-										<img src="image.jpg" class="img-responsive"
+										<img src="{{selected.imageUrl}}" class="img-responsive"
 											alt="Responsive image">
 									</div>
 								</div>
@@ -191,7 +193,8 @@
 										"frontText" : "Logo Details:  Label Details: herb  Text Details: NEW LOOK  SAME GREAT RORMULA  SmaRT mOUTH ACTIVATED MOUTH WASH\" The Power of 2 Solutions Working Together ORIGINAL FORMULA  12  HOUR  BREATH  CLINICALLY PROVEN To Keep Your Breath Fresh For 12 Hours 2 BOTTLE SYSTEM  ALCOHOL FREE CLEAN MINT. NET WT 16 FL. 0Z. W80 ML  Color Details: SeaGreen ",
 										"backText" : "Text Details: ",
 										"frontTextFormatted" : "NEW&nbsp;LOOK&nbsp;&nbsp;SAME&nbsp;GREAT&nbsp;RORMULA&nbsp;&nbsp;SmaRT&nbsp;mOUTH&nbsp;ACTIVATED&nbsp;MOUTH&nbsp;WASH\"&nbsp;The&nbsp;Power&nbsp;of&nbsp;2&nbsp;Solutions&nbsp;Working&nbsp;Together&nbsp;ORIGINAL&nbsp;FORMULA&nbsp;&nbsp;12&nbsp;&nbsp;HOUR&nbsp;&nbsp;BREATH&nbsp;&nbsp;CLINICALLY&nbsp;PROVEN&nbsp;To&nbsp;Keep&nbsp;Your&nbsp;Breath&nbsp;Fresh&nbsp;For&nbsp;12&nbsp;Hours&nbsp;2&nbsp;BOTTLE&nbsp;SYSTEM&nbsp;&nbsp;ALCOHOL&nbsp;FREE&nbsp;CLEAN&nbsp;MINT.&nbsp;NET&nbsp;WT&nbsp;16&nbsp;FL.&nbsp;0Z.&nbsp;W80&nbsp;ML&nbsp;&nbsp;",
-										"backTextFormatted" : null
+										"backTextFormatted" : null,
+										"imageUrl":"image.jpg"
 									},
 									{
 										"smartOcrId" : "SMART-3",
@@ -199,8 +202,9 @@
 										"frontText" : "Logo Details:  Label Details: herb  Text Details: NEW LOOK  SAME GREAT RORMULA  SmaRT mOUTH ACTIVATED MOUTH WASH\" The Power of 2 Solutions Working Together ORIGINAL FORMULA  12  HOUR  BREATH  CLINICALLY PROVEN To Keep Your Breath Fresh For 12 Hours 2 BOTTLE SYSTEM  ALCOHOL FREE CLEAN MINT. NET WT 16 FL. 0Z. W80 ML  Color Details: SeaGreen ",
 										"backText" : "Text Details: ",
 										"frontTextFormatted" : "NEW&nbsp;LOOK&nbsp;&nbsp;SAME&nbsp;GREAT&nbsp;RORMULA&nbsp;&nbsp;SmaRT&nbsp;mOUTH&nbsp;ACTIVATED&nbsp;MOUTH&nbsp;WASH\"&nbsp;The&nbsp;Power&nbsp;of&nbsp;2&nbsp;Solutions&nbsp;Working&nbsp;Together&nbsp;ORIGINAL&nbsp;FORMULA&nbsp;&nbsp;12&nbsp;&nbsp;HOUR&nbsp;&nbsp;BREATH&nbsp;&nbsp;CLINICALLY&nbsp;PROVEN&nbsp;To&nbsp;Keep&nbsp;Your&nbsp;Breath&nbsp;Fresh&nbsp;For&nbsp;12&nbsp;Hours&nbsp;2&nbsp;BOTTLE&nbsp;SYSTEM&nbsp;&nbsp;ALCOHOL&nbsp;FREE&nbsp;CLEAN&nbsp;MINT.&nbsp;NET&nbsp;WT&nbsp;16&nbsp;FL.&nbsp;0Z.&nbsp;W80&nbsp;ML&nbsp;&nbsp;",
-										"backTextFormatted" : null
-									} ]
+										"backTextFormatted" : null,
+										"imageUrl":"nutella.jpg"
+									} ];
 
 							$scope.app = {};
 							$scope.app.name = "Image To Text";
