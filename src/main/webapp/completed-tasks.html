@@ -133,10 +133,14 @@
 													<th>Attribute</th>
 													<th>Value</th>
 													<th>Confidence</th>
+													<th>Crowd Source Edited Value</th>
+													<td>Confidence After CS</td>
 												</tr>
 												<tr ng-repeat="attr in allTasks">
 													<td>{{$index+1}}</td>
 													<td>{{attr.Attribute}}</td>
+													<td>{{attr.Value}}</td>
+													<td>{{attr.CLevel}}</td>
 													<td>{{attr.Value}}</td>
 													<td>{{attr.CLevel}}</td>
 												</tr>
