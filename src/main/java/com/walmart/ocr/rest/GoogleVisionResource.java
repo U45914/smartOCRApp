@@ -364,6 +364,5 @@ public class GoogleVisionResource {
 	public void setOcrInfoDao(OcrInfoDao ocrInfoDao) {
 		this.ocrInfoDao = ocrInfoDao;
 	}
-	
-	
+
 }
