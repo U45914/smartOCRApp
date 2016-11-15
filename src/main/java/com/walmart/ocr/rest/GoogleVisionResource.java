@@ -53,6 +53,7 @@ import com.walmart.ocr.rabbit.provider.RabbitMQProvider;
 import com.walmart.ocr.util.ColorUtils;
 import com.walmart.ocr.util.GVision;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
+import com.walmart.ocr.util.ImageToByteConverter;
 import com.walmart.ocr.util.MessageConverter;
 import com.walmart.ocr.util.SmartOCRStatus;
 
@@ -93,6 +94,9 @@ public class GoogleVisionResource {
 			logger("******** Saved Files *******");
 			List<File> imageFiles = new ArrayList<File>();
 			imageFiles = (List<File>) FileUtils.listFiles(file, null, false);
+			if(imageFiles!=null && !imageFiles.isEmpty()){
+				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
+			}
 			Collections.sort(imageFiles, new Comparator<File>() {
 
 				@Override
@@ -364,6 +368,5 @@ public class GoogleVisionResource {
 	public void setOcrInfoDao(OcrInfoDao ocrInfoDao) {
 		this.ocrInfoDao = ocrInfoDao;
 	}
-	
-	
+
 }
