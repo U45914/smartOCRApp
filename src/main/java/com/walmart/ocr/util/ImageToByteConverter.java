@@ -20,10 +20,10 @@ public class ImageToByteConverter {
 
 	
 	public static byte [] convertImageToByte (String imageFilePath,String imageFormat){
-		File image=new File(imageFilePath);
+		File imageFile=new File(imageFilePath);
 		byte [] imageInByte=null;
 		try {
-			BufferedImage imageStream=ImageIO.read(image);
+			BufferedImage imageStream=ImageIO.read(imageFile);
 			ByteArrayOutputStream baos=new ByteArrayOutputStream();
 			ImageIO.write(imageStream, imageFormat, baos);
 			baos.flush();
