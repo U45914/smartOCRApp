@@ -105,7 +105,7 @@ public class AbzoobaParserResource {
 				String finalResponse = MessageConverter.getStringForObject(response);
 				
 				if (isCrowd.equalsIgnoreCase("True")) {
-					ocrData.setAbsoobaResponse2(finalResponse);
+					ocrData.setAbzoobaResponse2(finalResponse);
 				} else {
 					ocrData.setAbsoobaResponse(finalResponse);					
 				}
