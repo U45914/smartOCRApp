@@ -75,15 +75,16 @@
 						<table class="table table-striped table-bordered table-hover">
 							<tbody>
 								<tr>
-									<th>No</th>
+									<th>Product</th>
 									<th>ID</th>
 									<th>Task Id</th>
 									<th>Action</th>
 								</tr>
 								<tr ng-repeat="n in alltasks track by $index">
-									<td>{{$index+1}}</td>
-									<td>{{n.id}}</td>
-									<td>{{n.smartOcrId}}</td>
+									<td><img src="data:image/png;base64,{{n.image}}" class="img-responsive"
+											alt="Responsive image" width="50" height="50"></td>
+									<td>{{n.smartId}}</td>
+									<td>{{n.smartId}}</td>
 									<td><a href="#" class="btn btn-primary"
 										ng-click="viewTask($index)">View</a></td>
 								</tr>
@@ -104,7 +105,7 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+						<h4 class="modal-title" id="myModalLabel">Product Detail</h4>
 					</div>
 					<div class="modal-body" style="overflow: scroll;">
 						<div class="row">
@@ -114,7 +115,7 @@
 										<h3 class="panel-title">Image</h3>
 									</div>
 									<div class="panel-body">
-										<img src="{{selected.imageUrl}}" class="img-responsive"
+										<img src="data:image/png;base64,{{selected.image}}" class="img-responsive"
 											alt="Responsive image">
 									</div>
 								</div>
@@ -136,13 +137,13 @@
 													<th>Crowd Source Edited Value</th>
 													<td>Confidence After CS</td>
 												</tr>
-												<tr ng-repeat="attr in allTasks">
+												<tr ng-repeat="attr in selected.abzoobaResponse">
 													<td>{{$index+1}}</td>
-													<td>{{attr.Attribute}}</td>
-													<td>{{attr.Value}}</td>
-													<td>{{attr.CLevel}}</td>
-													<td>{{attr.Value}}</td>
-													<td>{{attr.CLevel}}</td>
+													<td>{{attr.attributeName}}</td>
+													<td>{{attr.valueFromGivision}}</td>
+													<td>{{attr.confidenceLevel}}</td>
+													<td>{{attr.valueFromCrowdSource}}</td>
+													<td>{{attr.confidenceLevelAfterCrowd}}</td>
 												</tr>
 											</tbody>
 										</table>
@@ -181,29 +182,29 @@
 				.module("ghisApp", [])
 				.controller(
 						"ghisAppController",
-						function($scope) {
-							$scope.alltasks = [
-									{
-										"smartOcrId" : "SMART-2",
-										"id" : "79816959325251",
-										"frontText" : "Logo Details:  Label Details: herb  Text Details: NEW LOOK  SAME GREAT RORMULA  SmaRT mOUTH ACTIVATED MOUTH WASH\" The Power of 2 Solutions Working Together ORIGINAL FORMULA  12  HOUR  BREATH  CLINICALLY PROVEN To Keep Your Breath Fresh For 12 Hours 2 BOTTLE SYSTEM  ALCOHOL FREE CLEAN MINT. NET WT 16 FL. 0Z. W80 ML  Color Details: SeaGreen ",
-										"backText" : "Text Details: ",
-										"frontTextFormatted" : "NEW&nbsp;LOOK&nbsp;&nbsp;SAME&nbsp;GREAT&nbsp;RORMULA&nbsp;&nbsp;SmaRT&nbsp;mOUTH&nbsp;ACTIVATED&nbsp;MOUTH&nbsp;WASH\"&nbsp;The&nbsp;Power&nbsp;of&nbsp;2&nbsp;Solutions&nbsp;Working&nbsp;Together&nbsp;ORIGINAL&nbsp;FORMULA&nbsp;&nbsp;12&nbsp;&nbsp;HOUR&nbsp;&nbsp;BREATH&nbsp;&nbsp;CLINICALLY&nbsp;PROVEN&nbsp;To&nbsp;Keep&nbsp;Your&nbsp;Breath&nbsp;Fresh&nbsp;For&nbsp;12&nbsp;Hours&nbsp;2&nbsp;BOTTLE&nbsp;SYSTEM&nbsp;&nbsp;ALCOHOL&nbsp;FREE&nbsp;CLEAN&nbsp;MINT.&nbsp;NET&nbsp;WT&nbsp;16&nbsp;FL.&nbsp;0Z.&nbsp;W80&nbsp;ML&nbsp;&nbsp;",
-										"backTextFormatted" : null,
-										"imageUrl":"image.jpg"
-									},
-									{
-										"smartOcrId" : "SMART-3",
-										"id" : "233344555",
-										"frontText" : "Logo Details:  Label Details: herb  Text Details: NEW LOOK  SAME GREAT RORMULA  SmaRT mOUTH ACTIVATED MOUTH WASH\" The Power of 2 Solutions Working Together ORIGINAL FORMULA  12  HOUR  BREATH  CLINICALLY PROVEN To Keep Your Breath Fresh For 12 Hours 2 BOTTLE SYSTEM  ALCOHOL FREE CLEAN MINT. NET WT 16 FL. 0Z. W80 ML  Color Details: SeaGreen ",
-										"backText" : "Text Details: ",
-										"frontTextFormatted" : "NEW&nbsp;LOOK&nbsp;&nbsp;SAME&nbsp;GREAT&nbsp;RORMULA&nbsp;&nbsp;SmaRT&nbsp;mOUTH&nbsp;ACTIVATED&nbsp;MOUTH&nbsp;WASH\"&nbsp;The&nbsp;Power&nbsp;of&nbsp;2&nbsp;Solutions&nbsp;Working&nbsp;Together&nbsp;ORIGINAL&nbsp;FORMULA&nbsp;&nbsp;12&nbsp;&nbsp;HOUR&nbsp;&nbsp;BREATH&nbsp;&nbsp;CLINICALLY&nbsp;PROVEN&nbsp;To&nbsp;Keep&nbsp;Your&nbsp;Breath&nbsp;Fresh&nbsp;For&nbsp;12&nbsp;Hours&nbsp;2&nbsp;BOTTLE&nbsp;SYSTEM&nbsp;&nbsp;ALCOHOL&nbsp;FREE&nbsp;CLEAN&nbsp;MINT.&nbsp;NET&nbsp;WT&nbsp;16&nbsp;FL.&nbsp;0Z.&nbsp;W80&nbsp;ML&nbsp;&nbsp;",
-										"backTextFormatted" : null,
-										"imageUrl":"nutella.jpg"
-									} ];
-							
-							$scope.allTasks = [{"CLevel":88.0,"Attribute":"Brand","Value":"Fresh"},{"CLevel":91.0,"Attribute":"Product_Name","Value":"Fresh  New Look Same Great Smart Mouth 16.0 Fl Oz"},{"CLevel":95.0,"Attribute":"Units_Per_Consumer_Unit","Value":"16.0 fl oz"},{"CLevel":47.0,"Attribute":"Product_Short_Description","Value":"fresh   herb ."},{"CLevel":0.0,"Attribute":"Product_Long_Description","Value":"Nil"},{"CLevel":50.0,"Attribute":"Ingredients","Value":"Nil"},{"CLevel":65.0,"Attribute":"Gender","Value":"Both"},{"CLevel":83.0,"Attribute":"Alcohol_Content","Value":"True"},{"CLevel":76.0,"Attribute":"Is_Aerosol","Value":"False"},{"CLevel":100.0,"Attribute":"Manufacturing_Country","Value":"NIL"},{"CLevel":52.0,"Attribute":"Direction_Of_Use","Value":"Nil"},{"CLevel":0.0,"Attribute":"Warning","Value":"Nil"},{"CLevel":100.0,"Attribute":"Back_Side_Color","Value":"Nil"},{"CLevel":100.0,"Attribute":"Front_Side_Color","Value":" Seagreen"},{"CLevel":100.0,"Attribute":"Manufacturer","Value":"NIL"},{"CLevel":84.0,"Attribute":"Age","Value":"Nil"},{"CLevel":65.0,"Attribute":"Skin_Type","Value":"Nil"},{"CLevel":65.0,"Attribute":"Hair_Type","Value":"Nil"},{"CLevel":78.0,"Attribute":"Vitamin_And_Supplement","Value":"Nil"},{"CLevel":100.0,"Attribute":"Product_Category","Value":"Health And Beauty"},{"CLevel":100,"Attribute":"UPC","Value":"79816959325251"}];
+						function($scope, $http) {
 
+							$http
+							.get(
+									'https://product-profiling.herokuapp.com/rest/mytask/get/all')
+							.then(
+									function(response) {
+										$scope.alltasks = response.data;
+										if ($scope.myTask.message) {
+											$("#mainPallete")
+													.hide();
+											$("#alertError").fadeTo(2000, 500).slideUp(500, function(){
+											    $("#alertError").slideUp(500);
+											});
+											hideLoadingScreen();
+										} else {
+											$("#mainPallete")
+													.show();
+											$scope.myTask.request.smartOcrId = $scope.myTask.smartId;
+											hideLoadingScreen();
+										}
+									});
+							
 							$scope.app = {};
 							$scope.app.name = "Image To Text";
 
