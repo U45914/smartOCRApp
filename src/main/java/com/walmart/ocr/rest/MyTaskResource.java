@@ -78,9 +78,7 @@ public class MyTaskResource {
 		JSONObject response = null;
 		if (limit != null) {
 			List<SmartOCRDataModel> taskDatas = ocrInfoDao.findAllOcrData();
-			System.out.println("*****************************************************************");
-			System.out.println(taskDatas);
-			System.out.println("*****************************************************************");
+			
 			return Response.ok().entity(getUserTasks(taskDatas)).build();
 		}
 
