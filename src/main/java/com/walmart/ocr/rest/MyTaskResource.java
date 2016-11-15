@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.AbzoobaCompareModel;
 import com.walmart.ocr.model.MyTaskModel;
+import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.model.SmartOCRDataModel;
 import com.walmart.ocr.rabbit.listner.MQTaskProvider;
 import com.walmart.ocr.util.MessageConverter;
@@ -50,10 +51,12 @@ public class MyTaskResource {
 		if (userTask != null) {
 			SmartOCRDataModel taskData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(userTask));
 			
-			response = new JSONObject();
-			response.put("data", new JSONObject(taskData.getGivisionResponse()));
-			response.put("image", taskData.getImage());
-			response.put("message", "1 Record returned");
+			GVisionData myData = new GVisionData();
+			myData.setImage(taskData.getImage());
+			myData.setRequest(MessageConverter.getParseRequestObjectFromJson(taskData.getGivisionResponse()));
+			myData.setSmartId(userTask);
+			
+			Response.ok().type(MediaType.APPLICATION_JSON).entity(myData).build();
 		} else {
 			response = new JSONObject();
 			response.put("message", "No more pending task");
@@ -124,5 +127,48 @@ public class MyTaskResource {
 		this.ocrInfoDao = ocrInfoDao;
 	}
 	
+	class GVisionData {
+		byte[] image;
+		ParseRequest request;
+		String smartId;
+		/**
+		 * @return the image
+		 */
+		public byte[] getImage() {
+			return image;
+		}
+		/**
+		 * @param image the image to set
+		 */
+		public void setImage(byte[] image) {
+			this.image = image;
+		}
+		/**
+		 * @return the request
+		 */
+		public ParseRequest getRequest() {
+			return request;
+		}
+		/**
+		 * @param request the request to set
+		 */
+		public void setRequest(ParseRequest request) {
+			this.request = request;
+		}
+		/**
+		 * @return the smartId
+		 */
+		public String getSmartId() {
+			return smartId;
+		}
+		/**
+		 * @param smartId the smartId to set
+		 */
+		public void setSmartId(String smartId) {
+			this.smartId = smartId;
+		}
+		
+		
+	}
 	
 }
