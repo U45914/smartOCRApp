@@ -103,15 +103,15 @@ public class MyTaskResource {
 			MyTaskModel task = new MyTaskModel();
 			task.setImage(data.getImage());
 			task.setImageName(data.getImageUrls());
-			task.setSmartId(data.getOcrRequestId().toString());
-			task.setAbzoobaResponse(getAbzoobaModel(data));
+			task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
+			task.setAbzoobaResponse(getAbzoobaModel(task, data));
 			tasks.add(task);
 		}
 
 		return tasks;
 	}
 
-	private List<AbzoobaCompareModel> getAbzoobaModel(SmartOCRDataModel data) {
+	private List<AbzoobaCompareModel> getAbzoobaModel(MyTaskModel task, SmartOCRDataModel data) {
 		List<Map<String, Object>> abzoobaResponse = MessageConverter
 				.getListOfMapFromJson(data.getAbsoobaResponse());
 		String abre2 =data.getAbzoobaResponse2();
@@ -130,6 +130,9 @@ public class MyTaskResource {
 					.get("Value")));
 			abzoobaModel.setConfidenceLevel(String.valueOf(attribute
 					.get("CLevel")));
+			if (parentAttributeKey.equalsIgnoreCase("UPC")) {
+				task.setUpc(String.valueOf(attribute.get("Value")));
+			}
 			// add more info to list
 			if(abre2!=null){
 				addAbzooba2ResponseToCompareModel(abzoobaModel, parentAttributeKey, abzoobaResponse2);
