@@ -70,7 +70,8 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 			query.setParameter(8, ocrDataModel.getImageProcessedDate());
 			query.setParameter(9, ocrDataModel.getCloudeSourceSubmitDate());
 			query.setParameter(10, ocrDataModel.getCrowdSourceResponse());
-			query.setParameter(11, ocrDataModel.getOcrRequestId());
+			query.setParameter(11, ocrDataModel.getAbzoobaResponse2());
+			query.setParameter(12, ocrDataModel.getOcrRequestId());
 
 			int updatedCount = query.executeUpdate();
 			System.out.println("----> ******************************************** " + updatedCount);
