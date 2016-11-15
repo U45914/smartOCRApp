@@ -49,12 +49,13 @@ public class AbzoobaParserResource {
 	@Path("/parseText")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response uploadFile1(ParseRequest parseInput, @HeaderParam("userId") @DefaultValue("smartOcr") String userId) {
+	public Response uploadFile1(ParseRequest parseInput, @HeaderParam("userId") @DefaultValue("smartOcr") String userId, @HeaderParam("isCrowd") @DefaultValue("False") String isCrowd) {
 		String output = null;
 		// Only Fake Response.
 		boolean fake = false;
-		if (ocrInfoDao != null) {
-			SmartOCRDataModel ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
+		SmartOCRDataModel ocrData = null;
+		if (ocrInfoDao != null && isCrowd.equalsIgnoreCase("True")) {
+			ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
 			if (ocrData != null) {
 				ocrData.setCrowdSourceUserId(userId);
 				ocrData.setCrowdSourceResponse(MessageConverter.getStringForObject(parseInput));
@@ -76,7 +77,7 @@ public class AbzoobaParserResource {
 				String jsonInString = mapper.writeValueAsString(parseInput);
 				jsonInString = jsonInString.replace("frontText", "FrontText");
 				jsonInString = jsonInString.replace("backText", "BackText");
-				//ocrData.setAbsoobaRequestInfo(jsonInString);
+				ocrData.setAbsoobaRequestInfo(jsonInString);
 				ClientResponse serviceResponse = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
 				if (serviceResponse.getStatus() != 200) {
@@ -101,35 +102,21 @@ public class AbzoobaParserResource {
 				
 				response.add(upc);
 				
+				String finalResponse = MessageConverter.getStringForObject(response);
+				
+				if (isCrowd.equalsIgnoreCase("True")) {
+					ocrData.setAbsoobaResponse2(finalResponse);
+				} else {
+					ocrData.setAbsoobaResponse(finalResponse);					
+				}
 				return Response.ok().entity(MessageConverter.getStringForObject(response)).build();
 
 			} else {
 				myMap = new LinkedHashMap<String, Object>();
-				// myMap.put("id", parseInput.getId());
-				// myMap.put("Raw_Data", parseInput.getText());
 				myMap.put("Brand", "Lego");
 				myMap.put("Age", "7-14");
 				myMap.put("Warning", "choking hazard");
 				myMap.put("Pieces", "248");
-				// Client client = Client.create();
-				//
-				// WebResource webResource =
-				// client.resource("http://ocrsmartreader.herokuapp.com/rest/abzoobaParse/parseText");
-				// ObjectMapper mapper = new ObjectMapper();
-				// String jsonInString = mapper.writeValueAsString(parseInput);
-				// ClientResponse response =
-				// webResource.type("application/json").post(ClientResponse.class,
-				// jsonInString);
-				//
-				// if (response.getStatus() != 200) {
-				// throw new RuntimeException("Failed : HTTP error code : " +
-				// response.getStatus());
-				// }
-				//
-				// output = response.getEntity(String.class);
-				// myMap= new HashMap<String, Object>();
-				// myMap=JsonstringToMap.jsonString2Map(output);
-				// myMap.put("UPC Number", parseInput.getImageFileName());
 			}
 
 		} catch (JsonGenerationException e) {
@@ -144,7 +131,7 @@ public class AbzoobaParserResource {
 
 		// Final save to Database
 		//ocrData.setAbsoobaResponse(MessageConverter.getStringForObject(myMap));
-		//ocrInfoDao.update(ocrData);
+		ocrInfoDao.updateOcrData(ocrData);
 		return  Response.ok().entity(myMap).build();
 	}
 
