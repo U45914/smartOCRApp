@@ -224,6 +224,7 @@
 							}
 
 							$scope.updateTexts = function() {
+								showLoadingScreen();
 								$http
 										.post(
 												"https://product-profiling.herokuapp.com/rest/abzoobaParse/parseText",
@@ -237,6 +238,7 @@
 												})
 										.success(
 												function(responseData) {
+													hideLoadingScreen();
 													$("#alertSuccess")
 															.fadeTo(2000, 500)
 															.slideUp(
