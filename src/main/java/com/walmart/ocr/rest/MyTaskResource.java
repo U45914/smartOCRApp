@@ -105,6 +105,7 @@ public class MyTaskResource {
 			task.setImageName(data.getImageUrls());
 			task.setSmartId(data.getOcrRequestId().toString());
 			task.setAbzoobaResponse(getAbzoobaModel(data));
+			tasks.add(task);
 		}
 
 		return tasks;
