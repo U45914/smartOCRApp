@@ -46,6 +46,7 @@ public class MessageConverter {
 	
 	public static List<Map<String, Object>> getListOfMapFromJson(String json) {
 		try {
+			System.out.println("************************** : " + json);
 			return mapper.readValue(json, List.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
