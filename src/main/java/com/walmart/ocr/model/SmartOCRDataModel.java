@@ -55,6 +55,9 @@ public class SmartOCRDataModel implements Serializable {
 	@Column(name="CROWD_SOURCE_SUBMIT_DATE")
 	private Date cloudeSourceSubmitDate;
 	
+	@Column(name="ABZOOBA_RESPONSE_2")
+	private String abzoobaResponse2;
+	
 	
 	public SmartOCRDataModel() {
 	}
@@ -243,5 +246,15 @@ public class SmartOCRDataModel implements Serializable {
 	 */
 	public void setCloudeSourceSubmitDate(Date cloudeSourceSubmitDate) {
 		this.cloudeSourceSubmitDate = cloudeSourceSubmitDate;
+	}
+
+
+	public String getAbzoobaResponse2() {
+		return abzoobaResponse2;
+	}
+
+
+	public void setAbzoobaResponse2(String abzoobaResponse2) {
+		this.abzoobaResponse2 = abzoobaResponse2;
 	}
 }
