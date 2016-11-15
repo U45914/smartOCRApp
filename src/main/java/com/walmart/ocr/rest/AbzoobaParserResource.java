@@ -54,9 +54,10 @@ public class AbzoobaParserResource {
 		// Only Fake Response.
 		boolean fake = false;
 		SmartOCRDataModel ocrData = null;
-		if (ocrInfoDao != null && isCrowd.equalsIgnoreCase("True")) {
+		
+		if (ocrInfoDao != null) {
 			ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
-			if (ocrData != null) {
+			if (ocrData != null && isCrowd.equalsIgnoreCase("True")) {
 				ocrData.setCrowdSourceUserId(userId);
 				ocrData.setCrowdSourceResponse(MessageConverter.getStringForObject(parseInput));
 				ocrInfoDao.updateOcrData(ocrData);
