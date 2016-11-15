@@ -77,11 +77,9 @@ public class GoogleVisionResource {
 	public Response uploadMultiFile(@Context HttpServletRequest request) {
 		SmartOCRDataModel ocrDataModel = new SmartOCRDataModel();
 		ocrDataModel.setStatus(SmartOCRStatus.PRODUCT_IMAGE_PARSE_REQUEST_RECEIVED);
-		//ocrDataModel.setOcrRequestId(1);
 
 		ParseRequest parseRequest = new ParseRequest();
 		try {
-			//rabbitMqProvider.sendMessage(request.getRemoteHost());
 			logger(" ");
 
 			logger("******** New Conversion Started *******");
