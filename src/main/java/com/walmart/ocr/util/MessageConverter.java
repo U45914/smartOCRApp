@@ -1,6 +1,12 @@
 package com.walmart.ocr.util;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walmart.ocr.model.SmartOCRDataModel;
 
@@ -35,5 +41,22 @@ public class MessageConverter {
 		} catch (JsonProcessingException e) {
 			return null;
 		}
+	}
+	
+	public static List<Map<String, Object>> getListOfMapFromJson(String json) {
+		try {
+			return mapper.readValue(json, List.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }
