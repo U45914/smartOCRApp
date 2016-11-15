@@ -40,6 +40,7 @@ public class MessageConverter {
 		try {
 			return mapper.writeValueAsString(input);
 		} catch (JsonProcessingException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
