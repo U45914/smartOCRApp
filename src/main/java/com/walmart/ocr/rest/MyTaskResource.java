@@ -54,6 +54,7 @@ public class MyTaskResource {
 			GVisionData myData = new GVisionData();
 			myData.setImage(taskData.getImage());
 			myData.setRequest(MessageConverter.getParseRequestObjectFromJson(taskData.getGivisionResponse()));
+			myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
 			myData.setSmartId(userTask);
 			
 			return Response.ok().type(MediaType.APPLICATION_JSON).entity(myData).build();
