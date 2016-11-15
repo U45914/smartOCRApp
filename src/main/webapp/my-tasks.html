@@ -71,7 +71,7 @@
 								<h3 class="panel-title">Image</h3>
 							</div>
 							<div class="panel-body">
-								<img src="image.jpg" class="img-responsive"
+								<img ng-src="{{myTask.imageUrl}}" class="img-responsive"
 									alt="Responsive image">
 							</div>
 						</div>
@@ -87,15 +87,16 @@
 									<tbody>
 										<tr>
 											<th>ID</th>
-											<td><textarea class="form-control" rows="2">consectetur adipisicing elit, sed do </textarea></td>
+											<td><input class="form-control"
+												value="{{myTask.smartOcrId}}" /></td>
 										</tr>
 										<tr>
 											<th>Front Text</th>
-											<td><textarea class="form-control" rows="2">consectetur adipisicing elit, sed do consectetur adipisicing elit, sed do </textarea></td>
+											<td><textarea class="form-control" rows="4">{{myTask.frontText}} </textarea></td>
 										</tr>
 										<tr>
 											<th>Front Text Formatted</th>
-											<td><textarea class="form-control" rows="2">consectetur adipisicing elit, sed do </textarea></td>
+											<td><textarea class="form-control" rows="4">{{myTask.frontTextFormatted}} </textarea></td>
 										</tr>
 									</tbody>
 								</table>
@@ -107,10 +108,13 @@
 						</div>
 					</div>
 
+					<!-- <div ng-repeat="nx in data track by $index">-----------
+						{{nx.Name}}</div> -->
+					
 				</div>
 			</div>
 		</div>
-		
+
 	</div>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -131,11 +135,86 @@
 	<script src="js/sb-admin-2.js"></script>
 
 	<script>
-		angular.module("ghisApp", []).controller("ghisAppController",
-				function($scope) {
-					$scope.app = {};
-					$scope.app.name = "Image To Text";
-				});
+		angular
+				.module("ghisApp", [])
+				.controller(
+						"ghisAppController",
+						function($scope, $http) {
+							$scope.myTask = {
+								"smartOcrId" : "SMART-2",
+								"id" : "79816959325251",
+								"frontText" : "Logo Details:  Label Details: herb  Text Details: NEW LOOK  SAME GREAT RORMULA  SmaRT mOUTH ACTIVATED MOUTH WASH\" The Power of 2 Solutions Working Together ORIGINAL FORMULA  12  HOUR  BREATH  CLINICALLY PROVEN To Keep Your Breath Fresh For 12 Hours 2 BOTTLE SYSTEM  ALCOHOL FREE CLEAN MINT. NET WT 16 FL. 0Z. W80 ML  Color Details: SeaGreen ",
+								"backText" : "Text Details: ",
+								"frontTextFormatted" : "NEW&nbsp;LOOK&nbsp;&nbsp;SAME&nbsp;GREAT&nbsp;RORMULA&nbsp;&nbsp;SmaRT&nbsp;mOUTH&nbsp;ACTIVATED&nbsp;MOUTH&nbsp;WASH\"&nbsp;The&nbsp;Power&nbsp;of&nbsp;2&nbsp;Solutions&nbsp;Working&nbsp;Together&nbsp;ORIGINAL&nbsp;FORMULA&nbsp;&nbsp;12&nbsp;&nbsp;HOUR&nbsp;&nbsp;BREATH&nbsp;&nbsp;CLINICALLY&nbsp;PROVEN&nbsp;To&nbsp;Keep&nbsp;Your&nbsp;Breath&nbsp;Fresh&nbsp;For&nbsp;12&nbsp;Hours&nbsp;2&nbsp;BOTTLE&nbsp;SYSTEM&nbsp;&nbsp;ALCOHOL&nbsp;FREE&nbsp;CLEAN&nbsp;MINT.&nbsp;NET&nbsp;WT&nbsp;16&nbsp;FL.&nbsp;0Z.&nbsp;W80&nbsp;ML&nbsp;&nbsp;",
+								"backTextFormatted" : null,
+								"imageUrl" : "image.jpg"
+							};
+
+							$scope.getConceptsData = function() {
+								return $http
+										.get('http://www.w3schools.com/angular/customers.php')
+										.then(function(response) {
+													$scope.data = response.data.records;
+												});
+							};
+							$scope.app = {};
+							$scope.app.name = "Image To Text";
+							
+							//$scope.examples = $scope.getConceptsData();
+							
+							function base64ArrayBuffer(arrayBuffer) {
+								  var base64    = ''
+								  var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+								
+								  var bytes         = new Uint8Array(arrayBuffer)
+								  var byteLength    = bytes.byteLength
+								  var byteRemainder = byteLength % 3
+								  var mainLength    = byteLength - byteRemainder
+								
+								  var a, b, c, d
+								  var chunk
+								
+								  // Main loop deals with bytes in chunks of 3
+								  for (var i = 0; i < mainLength; i = i + 3) {
+								    // Combine the three bytes into a single integer
+								    chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
+								
+								    // Use bitmasks to extract 6-bit segments from the triplet
+								    a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
+								    b = (chunk & 258048)   >> 12 // 258048   = (2^6 - 1) << 12
+								    c = (chunk & 4032)     >>  6 // 4032     = (2^6 - 1) << 6
+								    d = chunk & 63               // 63       = 2^6 - 1
+								
+								    // Convert the raw binary segments to the appropriate ASCII encoding
+								    base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d]
+								  }
+								
+								  // Deal with the remaining bytes and padding
+								  if (byteRemainder == 1) {
+								    chunk = bytes[mainLength]
+								
+								    a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2
+								
+								    // Set the 4 least significant bits to zero
+								    b = (chunk & 3)   << 4 // 3   = 2^2 - 1
+								
+								    base64 += encodings[a] + encodings[b] + '=='
+								  } else if (byteRemainder == 2) {
+								    chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
+								
+								    a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
+								    b = (chunk & 1008)  >>  4 // 1008  = (2^6 - 1) << 4
+								
+								    // Set the 2 least significant bits to zero
+								    c = (chunk & 15)    <<  2 // 15    = 2^4 - 1
+								
+								    base64 += encodings[a] + encodings[b] + encodings[c] + '='
+								  }
+								  
+								  return base64
+								}
+
+						});
 	</script>
 </body>
 </html>
