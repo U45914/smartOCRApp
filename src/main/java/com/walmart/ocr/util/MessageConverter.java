@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.model.SmartOCRDataModel;
 
 public class MessageConverter {
@@ -58,5 +59,23 @@ public class MessageConverter {
 		}
 		
 		return null;
+	}
+
+	public static ParseRequest getParseRequestObjectFromJson(
+			String givisionResponse) {
+		try {
+			ParseRequest pRequest = mapper.readValue(givisionResponse, ParseRequest.class);
+			return pRequest;
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ParseRequest();
 	}
 }
