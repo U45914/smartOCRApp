@@ -17,5 +17,6 @@ public interface OcrInfoDao {
 	Serializable createOcrData(SmartOCRDataModel ocrDataModel);
 	SmartOCRDataModel findOcrDataById(Serializable id);
 	List<SmartOCRDataModel> findAllOcrData();
+	List<SmartOCRDataModel> findOcrDataByStatus(String status,int start, int limit);
 	void updateOcrData(SmartOCRDataModel ocrDataModel);
 }
