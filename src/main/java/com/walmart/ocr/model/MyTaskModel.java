@@ -17,10 +17,26 @@ public class MyTaskModel implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private String upc;
 	private String smartId;
 	private byte[] image;
 	private String imageName;
 	private List<AbzoobaCompareModel> abzoobaResponse;
+
+	
+	/**
+	 * @return the upc
+	 */
+	public String getUpc() {
+		return upc;
+	}
+
+	/**
+	 * @param upc the upc to set
+	 */
+	public void setUpc(String upc) {
+		this.upc = upc;
+	}
 
 	/**
 	 * @return the smartId
