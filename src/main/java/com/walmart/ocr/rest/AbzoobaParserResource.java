@@ -58,7 +58,7 @@ public class AbzoobaParserResource {
 			if (ocrData != null) {
 				ocrData.setCrowdSourceUserId(userId);
 				ocrData.setCrowdSourceResponse(MessageConverter.getStringForObject(parseInput));
-				ocrInfoDao.update(ocrData);
+				ocrInfoDao.updateOcrData(ocrData);
 			}
 		}
 		

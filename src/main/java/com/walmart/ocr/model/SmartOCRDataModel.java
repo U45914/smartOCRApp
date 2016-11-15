@@ -180,4 +180,68 @@ public class SmartOCRDataModel implements Serializable {
 	public void setImageUrls(String imageUrls) {
 		this.imageUrls = imageUrls;
 	}
+
+
+	/**
+	 * @return the image
+	 */
+	public byte[] getImage() {
+		return image;
+	}
+
+
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+
+	/**
+	 * @return the imageUploadDate
+	 */
+	public Date getImageUploadDate() {
+		return imageUploadDate;
+	}
+
+
+	/**
+	 * @param imageUploadDate the imageUploadDate to set
+	 */
+	public void setImageUploadDate(Date imageUploadDate) {
+		this.imageUploadDate = imageUploadDate;
+	}
+
+
+	/**
+	 * @return the imageProcessedDate
+	 */
+	public Date getImageProcessedDate() {
+		return imageProcessedDate;
+	}
+
+
+	/**
+	 * @param imageProcessedDate the imageProcessedDate to set
+	 */
+	public void setImageProcessedDate(Date imageProcessedDate) {
+		this.imageProcessedDate = imageProcessedDate;
+	}
+
+
+	/**
+	 * @return the cloudeSourceSubmitDate
+	 */
+	public Date getCloudeSourceSubmitDate() {
+		return cloudeSourceSubmitDate;
+	}
+
+
+	/**
+	 * @param cloudeSourceSubmitDate the cloudeSourceSubmitDate to set
+	 */
+	public void setCloudeSourceSubmitDate(Date cloudeSourceSubmitDate) {
+		this.cloudeSourceSubmitDate = cloudeSourceSubmitDate;
+	}
 }
