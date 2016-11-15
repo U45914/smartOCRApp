@@ -56,7 +56,7 @@ public class MyTaskResource {
 			myData.setRequest(MessageConverter.getParseRequestObjectFromJson(taskData.getGivisionResponse()));
 			myData.setSmartId(userTask);
 			
-			Response.ok().type(MediaType.APPLICATION_JSON).entity(myData).build();
+			return Response.ok().type(MediaType.APPLICATION_JSON).entity(myData).build();
 		} else {
 			response = new JSONObject();
 			response.put("message", "No more pending task");
