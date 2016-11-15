@@ -19,8 +19,7 @@ import javax.imageio.ImageIO;
 public class ImageToByteConverter {
 
 	
-	public static byte [] convertImageToByte (String imageFilePath,String imageFormat){
-		File imageFile=new File(imageFilePath);
+	public static byte [] convertImageToByte (File imageFile,String imageFormat){
 		byte [] imageInByte=null;
 		try {
 			BufferedImage imageStream=ImageIO.read(imageFile);
