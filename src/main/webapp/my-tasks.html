@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>Image To Text</title>
+<title>Smart OCR - My Tasks</title>
 
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -19,9 +19,10 @@
 <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 <style type="text/css">
 .loadingScreen {
-	position: fixed; padding : 0; margin : 0; width : 100%; height : 100%;
-	background : rgba( 255, 255, 255, 0.5); display : none; top : 0; left :
-	0; background-size : 5% 5%; background : url(wait.gif) no-repeat;
+	position: fixed;
+	padding: 0; margin : 0; width : 100%; height : 100%; background : rgba(
+	255, 255, 255, 0.5); display : none; top : 0;
+	left: 0; background-size : 5% 5%; background : url(wait.gif) no-repeat;
 	background-position: center center;
 	padding: 0;
 	margin: 0;
@@ -33,6 +34,19 @@
 	left: 0;
 	background-size: 5% 5%;
 	background: url(wait.gif) no-repeat;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.5);
+	display: none;
+	top: 0; left : 0;
+	background-size: 5% 5%;
+	background: url(wait.gif) no-repeat;
+}
+
+.modal-body {
+	height: 800px;
+	overflow-y: scroll;
 }
 </style>
 </head>
@@ -49,7 +63,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="completed-tasks.html">{{app.name}}</a>
+				<a class="navbar-brand" href="my-tasks.html">{{app.name}}</a>
 			</div>
 
 			<div class="navbar-default sidebar" role="navigation">
@@ -73,11 +87,9 @@
 				<div class="row">
 					<h2>My Tasks</h2>
 					<div id="alertSuccess" class="alert alert-success">
-						Succesfully updated!! 
-					</div>
-					<div id="alertError" class="alert alert-danger">
-						No more tasks assigned!! 
-					</div>
+						Succesfully updated!!</div>
+					<div id="alertError" class="alert alert-danger">No more tasks
+						assigned!!</div>
 					<div class="col-lg-12">
 
 						<a class="btn btn-info" style="margin-bottom: 10px;" href="#"
@@ -111,12 +123,12 @@
 											<th>OCR Id</th>
 											<td><input class="form-control"
 												ng-model="myTask.request.smartOcrId"
-												value="{{myTask.smartId}}" /></td>
+												value="{{myTask.smartId}}" readonly="readonly"/></td>
 										</tr>
 										<tr>
 											<th>UPC</th>
 											<td><input class="form-control"
-												ng-model="myTask.request.id" value="{{myTask.request.id}}" /></td>
+												ng-model="myTask.request.id" value="{{myTask.request.id}}" readonly="readonly" /></td>
 										</tr>
 										<tr>
 											<th>Front Text</th>
@@ -125,7 +137,7 @@
 										</tr>
 										<tr>
 											<th>Front Text Formatted</th>
-											<td><textarea class="form-control" rows="4"
+											<td><textarea class="form-control" rows="4" readonly="readonly"
 													ng-model="myTask.request.frontTextFormatted">{{myTask.request.frontTextFormatted}}</textarea></td>
 										</tr>
 									</tbody>
@@ -133,13 +145,10 @@
 							</div>
 							<div class="panel-footer">
 								<a class="btn btn-primary" href="#" role="button"
-									ng-click="updateTexts()">Update Texts</a>
+									ng-click="updateTexts()">Update OCR</a>
 							</div>
 						</div>
 					</div>
-
-					<!-- <div ng-repeat="nx in data track by $index">-----------
-						{{nx.Name}}</div> -->
 
 				</div>
 			</div>
@@ -172,11 +181,12 @@
 				.controller(
 						"ghisAppController",
 						function($scope, $http) {
-							
-							$(".alert").hide();
+
+							$("#alertError").hide();
+							$("#alertSuccess").hide();
 
 							$scope.app = {};
-							$scope.app.name = "Image To Text";
+							$scope.app.name = "Smart OCR";
 
 							$("#mainPallete").hide();
 
@@ -191,9 +201,17 @@
 													if ($scope.myTask.message) {
 														$("#mainPallete")
 																.hide();
-														$("#alertError").fadeTo(2000, 500).slideUp(500, function(){
-														    $("#alertError").slideUp(500);
-														});
+														$("#alertError")
+																.fadeTo(2000,
+																		500)
+																.slideUp(
+																		500,
+																		function() {
+																			$(
+																					"#alertError")
+																					.slideUp(
+																							500);
+																		});
 														hideLoadingScreen();
 													} else {
 														$("#mainPallete")
@@ -216,11 +234,19 @@
 														'Content-Type' : 'application/json',
 														'isCrowd' : 'True'
 													}
-												}).success(
+												})
+										.success(
 												function(responseData) {
-													$("#alertSuccess").fadeTo(2000, 500).slideUp(500, function(){
-													    $("#alertSuccess").slideUp(500);
-													});
+													$("#alertSuccess")
+															.fadeTo(2000, 500)
+															.slideUp(
+																	500,
+																	function() {
+																		$(
+																				"#alertSuccess")
+																				.slideUp(
+																						500);
+																	});
 												});
 
 								/* $http({
