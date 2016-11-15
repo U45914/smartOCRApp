@@ -56,13 +56,9 @@ public class AbzoobaParserResource {
 		SmartOCRDataModel ocrData = null;
 		
 		if (ocrInfoDao != null) {
-			System.out.println("DAO Not Null");
-			System.out.println(parseInput.getSmartOcrId());
-			System.out.println(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
+			
 			ocrData = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(parseInput.getSmartOcrId()));
-			System.out.println("********************************************");
-			System.out.println(ocrData);
-			System.out.println("********************************************");
+			
 			if (ocrData != null && isCrowd.equalsIgnoreCase("True")) {
 				System.out.println("For Crowd Request");
 				ocrData.setCrowdSourceUserId(userId);
@@ -117,8 +113,7 @@ public class AbzoobaParserResource {
 				} else {
 					ocrData.setAbsoobaResponse(finalResponse);					
 				}
-				System.out.println("OCR DATA BEFORE UPDATE");
-				System.out.println(ocrData);
+				
 				ocrInfoDao.updateOcrData(ocrData);
 				return Response.ok().entity(MessageConverter.getStringForObject(response)).build();
 
