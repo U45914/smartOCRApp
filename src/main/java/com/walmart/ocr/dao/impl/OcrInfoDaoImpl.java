@@ -102,14 +102,27 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 	public List<SmartOCRDataModel> findAllOcrData() {
 		Session session = template.openSession();
 		String hql = "From SmartOCRDataModel";
-		List<SmartOCRDataModel> users = null;
+		List<SmartOCRDataModel> ocrData = null;
 		try {
 			Query query = session.createQuery(hql);
-			users = query.list();
+			ocrData = query.list();
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return users;
+		return ocrData;
+	}
+
+	@Override
+	public List<SmartOCRDataModel> findOcrDataByStatus(String status,int start, int limit) {
+		Session session=template.openSession();
+		Criteria criteria=session.createCriteria(SmartOCRDataModel.class);
+		List<SmartOCRDataModel> ocrData=null;
+		criteria.add(Restrictions.eq("status", status))
+				.setFirstResult(start)
+				.setMaxResults(limit);
+		
+		ocrData=criteria.list();
+		return ocrData;
 	}
 
 }

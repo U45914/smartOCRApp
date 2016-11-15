@@ -4,6 +4,7 @@
 package com.walmart.ocr.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -256,5 +257,25 @@ public class SmartOCRDataModel implements Serializable {
 
 	public void setAbzoobaResponse2(String abzoobaResponse2) {
 		this.abzoobaResponse2 = abzoobaResponse2;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SmartOCRDataModel [ocrRequestId=" + ocrRequestId
+				+ ", givisionResponse=" + givisionResponse
+				+ ", crowdSourceResponse=" + crowdSourceResponse
+				+ ", absoobaRequestInfo=" + absoobaRequestInfo
+				+ ", absoobaResponse=" + absoobaResponse
+				+ ", crowdSourceUserId=" + crowdSourceUserId + ", status="
+				+ status + ", imageUrls=" + imageUrls + ", image="
+				+ Arrays.toString(image) + ", imageUploadDate="
+				+ imageUploadDate + ", imageProcessedDate="
+				+ imageProcessedDate + ", cloudeSourceSubmitDate="
+				+ cloudeSourceSubmitDate + ", abzoobaResponse2="
+				+ abzoobaResponse2 + "]";
 	}
 }
