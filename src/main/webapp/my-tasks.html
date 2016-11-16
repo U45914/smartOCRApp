@@ -239,6 +239,7 @@
 										.success(
 												function(responseData) {
 													hideLoadingScreen();
+													$scope.updateDB(responseData);
 													$("#alertSuccess")
 															.fadeTo(2000, 500)
 															.slideUp(
@@ -261,6 +262,32 @@
 									data : JSON
 											.stringify($scope.myTask.request)
 								}); */
+							}
+							
+							$scope.updateDB = function(data){
+								$http
+								.post(
+										"http://WVWEA004C2483.homeoffice.Wal-Mart.com:8888/OCRImageToText/rest/Product/create",
+										data,
+										{
+											headers : {
+												'Content-Type' : 'application/json'
+											}
+										})
+								.success(
+										function(responseData) {
+											hideLoadingScreen();
+											$("#alertSuccess")
+													.fadeTo(2000, 500)
+													.slideUp(
+															500,
+															function() {
+																$(
+																		"#alertSuccess")
+																		.slideUp(
+																				500);
+															});
+										});
 							}
 
 						});
