@@ -11,7 +11,7 @@ public class HQLQueryConstants {
 			+ "SET socr.givisionResponse=?,socr.absoobaRequestInfo=?,socr.absoobaResponse=?,socr.crowdSourceUserId=?,"
 			+ "socr.status=?,socr.imageUrls =?, socr.image=?,socr.imageUploadDate=?,socr.imageProcessedDate=?,"
 			+ "socr.cloudeSourceSubmitDate=?,socr.crowdSourceResponse=?,socr.abzoobaResponse2=?"
-			+ " WHERE socr.ocrRequestId = ?";
+			+ "socr.backImage=? WHERE socr.ocrRequestId = ?";
 
 	/**
 	 * To prevent instantiation
