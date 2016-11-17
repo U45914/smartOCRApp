@@ -20,6 +20,7 @@ public class MyTaskModel implements Serializable {
 	private String upc;
 	private String smartId;
 	private byte[] image;
+	private byte [] backImage;
 	private String imageName;
 	private List<AbzoobaCompareModel> abzoobaResponse;
 
@@ -95,6 +96,20 @@ public class MyTaskModel implements Serializable {
 	 */
 	public void setAbzoobaResponse(List<AbzoobaCompareModel> abzoobaResponse) {
 		this.abzoobaResponse = abzoobaResponse;
+	}
+
+	/**
+	 * @return the backImage
+	 */
+	public byte[] getBackImage() {
+		return backImage;
+	}
+
+	/**
+	 * @param backImage the backImage to set
+	 */
+	public void setBackImage(byte[] backImage) {
+		this.backImage = backImage;
 	}
 
 	
