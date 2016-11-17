@@ -177,17 +177,17 @@ public class GvisionResponseToOCRResponseConverter {
 		StringBuilder ocrStringBuilder = new StringBuilder();
 		ocrStringBuilder.append("LogoDetails: ");
 		for (String logo : gVisionResponse.getLogoDetails()) {
-			ocrStringBuilder.append(logo);
+			ocrStringBuilder.append(logo.replaceAll("\n", "<br/>"));
 			ocrStringBuilder.append(" ");
 		}
 		ocrStringBuilder.append("LabelDetails: ");
 		for (String label : gVisionResponse.getLabelDetails()) {
-			ocrStringBuilder.append(label);
+			ocrStringBuilder.append(label.replaceAll("\n", "<br/>"));
 			ocrStringBuilder.append(" ");
 		}
 		ocrStringBuilder.append("TextDetails: ");
 		for (String text : gVisionResponse.getTextDeatils()) {
-			ocrStringBuilder.append(text);
+			ocrStringBuilder.append(text.replaceAll("\n", "<br/>"));
 			ocrStringBuilder.append(" ");
 		}
 		return ocrStringBuilder.toString();
@@ -202,12 +202,12 @@ public class GvisionResponseToOCRResponseConverter {
 		for (String logo : gVisionResponse.getLogoDetails()) {
 			if (count == 1) {
 				ocrStringBuilder.append("Logo Details: ");
-				ocrStringBuilder.append(logo);
+				ocrStringBuilder.append(logo.replaceAll("\n", "<br/>"));
 				ocrStringBuilder.append(" ");
 				count = 0;
 			} else {
 				ocrStringBuilder1.append("Logo Details: ");
-				ocrStringBuilder1.append(logo);
+				ocrStringBuilder1.append(logo.replaceAll("\n", "<br/>"));
 				ocrStringBuilder1.append(" ");
 			}
 		}
@@ -216,12 +216,13 @@ public class GvisionResponseToOCRResponseConverter {
 		for (String label : gVisionResponse.getLabelDetails()) {
 			if (count == 1) {
 				ocrStringBuilder.append("Label Details: ");
-				ocrStringBuilder.append(label);
+				
+				ocrStringBuilder.append(label.replaceAll("\n", "<br/>"));
 				ocrStringBuilder.append(" ");
 				count = 0;
 			} else {
 				ocrStringBuilder1.append("Label Details: ");
-				ocrStringBuilder1.append(label);
+				ocrStringBuilder1.append(label.replaceAll("\n", "<br/>"));
 				ocrStringBuilder1.append(" ");
 
 			}
@@ -265,15 +266,16 @@ public class GvisionResponseToOCRResponseConverter {
 		for (String color : gVisionResponse.getColorDeatils()) {
 			if (count == 1) {
 				ocrStringBuilder.append("Color Details: ");
-				ocrStringBuilder.append(color);
+				ocrStringBuilder.append(color.replaceAll("\n", "<br/>"));
 				ocrStringBuilder.append(" ");
 				count = 0;
 			} else {
 				ocrStringBuilder1.append("Color Details: ");
-				ocrStringBuilder1.append(color);
+				ocrStringBuilder1.append(color.replaceAll("\n", "<br/>"));
 				ocrStringBuilder1.append(" ");
 			}
 		}
+
 		parseRequest.setFrontText(ocrStringBuilder.toString());
 		parseRequest.setBackText(ocrStringBuilder1.toString());
 		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
