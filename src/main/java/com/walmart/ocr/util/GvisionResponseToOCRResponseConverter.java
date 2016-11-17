@@ -276,8 +276,8 @@ public class GvisionResponseToOCRResponseConverter {
 			}
 		}
 
-		parseRequest.setFrontText(ocrStringBuilder.toString());
-		parseRequest.setBackText(ocrStringBuilder1.toString());
+		parseRequest.setFrontText(ocrStringBuilder.toString().replaceAll("\n", "<br/>"));
+		parseRequest.setBackText(ocrStringBuilder1.toString().replaceAll("\n", "<br/>"));
 		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
 		return parseRequest;
 	}
