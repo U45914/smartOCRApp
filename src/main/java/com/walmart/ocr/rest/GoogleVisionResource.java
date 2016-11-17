@@ -96,6 +96,9 @@ public class GoogleVisionResource {
 			imageFiles = (List<File>) FileUtils.listFiles(file, null, false);
 			if(imageFiles!=null && !imageFiles.isEmpty()){
 				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
+				if(imageFiles.size()==2){
+					ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(1), "jpg"));
+				}
 			}
 			Collections.sort(imageFiles, new Comparator<File>() {
 
