@@ -122,7 +122,11 @@
 								</tr>
 								<tr ng-repeat="n in alltasks track by $index">
 									<td class="tableCol first_td_img text-center"><img src="data:image/png;base64,{{n.image}}" class="img-responsive"
-											alt="Responsive image" width="75" height="75"></td>
+											alt="Responsive image" width="75" height="75">
+									<img ng-if="n.backImage != undefined && n.backImage != null"
+									 src="data:image/png;base64,{{n.backImage}}" class="img-responsive"
+											alt="Responsive image" width="75" height="75">
+									</td>
 									<td class="tableCol"><b>{{n.smartId}}</b></td>
 									<td><b>{{n.upc}}</b></td>
 									<td><a href="#" class="btn btn-primary"
