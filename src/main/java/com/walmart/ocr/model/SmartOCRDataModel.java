@@ -59,6 +59,8 @@ public class SmartOCRDataModel implements Serializable {
 	@Column(name="ABZOOBA_RESPONSE_2")
 	private String abzoobaResponse2;
 	
+	@Column(name="BACK_IMAGE")
+	private byte [] backImage;
 	
 	public SmartOCRDataModel() {
 	}
@@ -260,6 +262,22 @@ public class SmartOCRDataModel implements Serializable {
 	}
 
 
+	/**
+	 * @return the backImage
+	 */
+	public byte[] getBackImage() {
+		return backImage;
+	}
+
+
+	/**
+	 * @param backImage the backImage to set
+	 */
+	public void setBackImage(byte[] backImage) {
+		this.backImage = backImage;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -276,6 +294,9 @@ public class SmartOCRDataModel implements Serializable {
 				+ imageUploadDate + ", imageProcessedDate="
 				+ imageProcessedDate + ", cloudeSourceSubmitDate="
 				+ cloudeSourceSubmitDate + ", abzoobaResponse2="
-				+ abzoobaResponse2 + "]";
+				+ abzoobaResponse2 + ", backImage="
+				+ Arrays.toString(backImage) + "]";
 	}
+
+
 }
