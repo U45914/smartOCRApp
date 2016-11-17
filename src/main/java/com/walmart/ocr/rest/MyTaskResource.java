@@ -52,10 +52,14 @@ public class MyTaskResource {
 
 			GVisionData myData = new GVisionData();
 			myData.setImage(taskData.getImage());
+			myData.setBackImage(taskData.getBackImage());
 			myData.setRequest(MessageConverter
 					.getParseRequestObjectFromJson(taskData
 							.getGivisionResponse()));
 			myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
+			if(myData.getRequest().getFrontTextFormatted()!=null){
+				myData.getRequest().setBackTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
+			}
 			myData.setSmartId(userTask);
 
 			return Response.ok().type(MediaType.APPLICATION_JSON)
@@ -101,6 +105,7 @@ public class MyTaskResource {
 			MyTaskModel task = new MyTaskModel();
 			task.setImage(data.getImage());
 			task.setImageName(data.getImageUrls());
+			task.setBackImage(data.getBackImage());
 			task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
 			task.setAbzoobaResponse(getAbzoobaModel(task, data));
 			tasks.add(task);
@@ -170,6 +175,7 @@ public class MyTaskResource {
 		byte[] image;
 		ParseRequest request;
 		String smartId;
+		byte [] backImage;
 
 		/**
 		 * @return the image
@@ -214,6 +220,20 @@ public class MyTaskResource {
 		 */
 		public void setSmartId(String smartId) {
 			this.smartId = smartId;
+		}
+
+		/**
+		 * @return the backImage
+		 */
+		public byte[] getBackImage() {
+			return backImage;
+		}
+
+		/**
+		 * @param backImage the backImage to set
+		 */
+		public void setBackImage(byte[] backImage) {
+			this.backImage = backImage;
 		}
 
 	}
