@@ -104,10 +104,7 @@ public class AbzoobaParserResource {
 				upc.put("Value", parseInput.getId());
 				upc.put("CLevel", 100);
 				
-				String longDesc = (String) response.get("Product_Long_Description");
-				longDesc= longDesc.replaceAll("\n", "<br/> <br/>")
-				response.put("Product_Long_Description",longDesc);
-				
+								
 				response.add(upc);
 				
 				String finalResponse = MessageConverter.getStringForObject(response);
