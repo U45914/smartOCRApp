@@ -38,7 +38,13 @@ public class JsonstringToMap {
 				Map<String, Object> attribute = new HashMap<String, Object>();
 				String key = (String) keys.next();
 				attribute.put("Attribute", key);
-				attribute.put("Value", attributes.get(key));
+				if (key.equalsIgnoreCase("Product_Long_Description")) {
+					String longDesc = String.valueOf(attributes.get(key));
+					longDesc= longDesc.replaceAll("\n", "<br/> <br/>");					
+					attribute.put("Value", longDesc);
+				} else {
+					attribute.put("Value", attributes.get(key));
+				}
 				if (confidenceLevel.has("Confidence_Score_"+key)) {
 					String cLevel = (String) confidenceLevel.getString("Confidence_Score_"+key);
 					Double cLevelLongValue = Double.valueOf(cLevel) * 100;					
