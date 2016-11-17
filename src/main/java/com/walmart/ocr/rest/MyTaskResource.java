@@ -58,7 +58,7 @@ public class MyTaskResource {
 							.getGivisionResponse()));
 			myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
 			if(myData.getRequest().getFrontTextFormatted()!=null){
-				myData.getRequest().setBackTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
+				myData.getRequest().setBackTextFormatted(myData.getRequest().getBackTextFormatted().replaceAll("&nbsp;", " "));
 			}
 			myData.setSmartId(userTask);
 
