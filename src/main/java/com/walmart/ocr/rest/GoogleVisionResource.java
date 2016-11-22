@@ -369,5 +369,51 @@ public class GoogleVisionResource {
 	public void setOcrInfoDao(OcrInfoDao ocrInfoDao) {
 		this.ocrInfoDao = ocrInfoDao;
 	}
+	
+	public ParseRequest parseFileRequest(List<File> files) {
+		
+		
+		ParseRequest parseRequest = new ParseRequest();
+		try {
+			logger(" ");
+
+			logger("******** New Conversion Started *******");
+
+			logger("******** Saved Files *******");
+			List<File> imageFiles = files;
+			
+			Collections.sort(imageFiles, new Comparator<File>() {
+
+				@Override
+				public int compare(File o1, File o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+			String upscString = "12345";
+			if (null != imageFiles.get(0)) {
+				upscString = imageFiles.get(0).getName();
+				System.out.println("Creating UPSC string using file :" + upscString);
+				upscString = upscString.substring(0, upscString.indexOf("-"));
+			}
+			GVision gvision = new GVision();
+			BatchAnnotateImagesResponse batchImageResponse = gvision.doOCR(imageFiles);
+			
+			GVisionResponse gVisionResponse = GvisionResponseToOCRResponseConverter.convert(batchImageResponse);
+
+			// result =
+			// GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
+			parseRequest = GvisionResponseToOCRResponseConverter.toParseRequest(gVisionResponse);
+			parseRequest.setId(upscString);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return parseRequest;
+	}
 
 }

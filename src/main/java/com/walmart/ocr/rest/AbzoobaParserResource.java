@@ -145,4 +145,65 @@ public class AbzoobaParserResource {
 	void logger(String log) {
 		logger.debug(log);
 	}
+	
+	ObjectMapper mapper = new ObjectMapper();
+	
+	public List<Map<String,Object>> processParseRequestWithAbzooba(ParseRequest pRequest) {
+		Map<String, Object> myMap = null;
+		String output = null;
+		try {
+			logger("Parsing With  Abzooba ....");
+			
+				Client client = Client.create();
+
+				// WebResource webResource =
+				// client.resource("http://52.23.170.75:5000/model2");
+				WebResource webResource = client.resource("http://52.23.170.75:5000/beauty");
+				String jsonInString = mapper.writeValueAsString(pRequest);
+				jsonInString = jsonInString.replace("frontText", "FrontText");
+				jsonInString = jsonInString.replace("backText", "BackText");
+				ClientResponse serviceResponse = webResource.type("application/json").post(ClientResponse.class, jsonInString);
+
+				if (serviceResponse.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : " + serviceResponse.getStatus());
+				}
+
+				output = serviceResponse.getEntity(String.class);
+				//output = "[{\"Brand\":\"Fresh\",\"Product_Name\":\"Fresh  New Look Same Great Smart Mouth \",\"Units_Per_Consumer_Unit\":\"Nil\",\"Product_Short_Description\":\"fresh   herb .\",\"Product_Long_Description\":\"Nil\",\"Ingredients\":\"Nil\",\"Gender\":\"Both\",\"Alcohol_Content\":\"True\",\"Is_Aerosol\":\"False\",\"Manufacturing_Country\":\"NIL\",\"Direction_Of_Use\":\"Nil\",\"Warning\":\"Nil\",\"Back_Side_Color\":\"Nil\",\"Front_Side_Color\":\" Seagreen\",\"Manufacturer\":\"NIL\",\"Age\":\"Nil\",\"Skin_Type\":\"Nil\",\"Hair_Type\":\"Nil\"},{\"Confidence_Score_Brand\":0.88,\"Confidence_Score_Product_Name\":0.88,\"Confidence_Score_Units_Per_Consumer_Unit\":0.95,\"Confidence_Score_Product_Short_Description\":0.47,\"Confidence_Score_Product_Long_Description\":0.0,\"Confidence_Score_Gender\":0.65,\"Confidence_Score_Manufacturing_Country\":1.0,\"Confidence_Score_Direction_Of_Use\":0.52,\"Confidence_Score_Warning\":0.0,\"Confidence_Score_Back_Side_Color\":1.0,\"Confidence_Score_Front_Side_Color\":1.0,\"Confidence_Score_Manufacturer\":1.0,\"Confidence_Score_Age\":0.84,\"Confidence_Score_Ingredients\":0.5,\"Confidence_Score_Skin_Type\":0.65,\"Confidence_Score_Hair_Type\":0.65}] ";
+				logger("***********************************");
+				logger(output);
+				System.out.println(output);
+				logger("***********************************");
+				myMap = new LinkedHashMap<String, Object>();
+				List<Map<String, Object>> response = JsonstringToMap.jsonToJsonList(output);
+				
+				response.remove("id");
+				response.remove("Raw_Data");
+				Map<String, Object> upc = new HashMap();
+				upc.put("Attribute", "UPC");
+				upc.put("Value", pRequest.getId());
+				upc.put("CLevel", 100);
+				
+								
+				response.add(upc);
+				
+				String finalResponse = MessageConverter.getStringForObject(response);
+				
+				
+				return response;
+
+			
+
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

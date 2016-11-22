@@ -19,6 +19,9 @@
 	<bean id="abzoobaParserResource" class="com.walmart.ocr.rest.AbzoobaParserResource" >
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
+	
+	<bean id="automation" class="com.walmart.ocr.rest.automation.SmartOCRRun">
+	</bean>
 			
 	<!-- Tell Spring where to scan for components -->
 	<context:component-scan

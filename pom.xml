@@ -152,7 +152,13 @@
 			<artifactId>commons-collections</artifactId>
 			<version>3.0</version>
 		</dependency>
-
+		
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.8</version>
+		</dependency>
 
 
 
