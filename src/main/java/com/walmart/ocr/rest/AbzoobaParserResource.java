@@ -84,8 +84,7 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 				WebResource webResource = client.resource("http://52.23.170.75:5000/beauty");
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(parseInput);
-				jsonInString = jsonInString.replace("frontText", "FrontText");
-				jsonInString = jsonInString.replace("backText", "BackText");
+				jsonInString = processStringForAbzooba(jsonInString);
 				ocrData.setAbsoobaRequestInfo(jsonInString);
 				ClientResponse serviceResponse = webResource.type("application/json").post(ClientResponse.class, jsonInString);
 
@@ -220,5 +219,16 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 		}
 
 		return null;
+	}
+	
+	public String processStringForAbzooba(String source) {
+		source = source.replace("frontText", "FrontText");
+		source = source.replace("backText", "BackText");
+		source = source.replace("leftSideText", "LeftSideText");
+		source = source.replace("rightSideText", "RightSideText");
+		source = source.replace("topSideText", "TopSideText");
+		source = source.replace("bottomSideText", "BottomSideText");
+		
+		return source;
 	}
 }
