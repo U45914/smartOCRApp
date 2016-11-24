@@ -183,9 +183,19 @@ public class AbzoobaParserResource {
 				upc.put("Attribute", "UPC");
 				upc.put("Value", pRequest.getId());
 				upc.put("CLevel", 100);
-				
-								
 				response.add(upc);
+
+				Map<String, Object> frontText = new HashMap();
+				frontText.put("Attribute", "FrontText");
+				frontText.put("Value", pRequest.getFrontText());
+				frontText.put("CLevel", 100);
+				response.add(frontText);
+
+				Map<String, Object> backText = new HashMap();
+				backText.put("Attribute", "BackText");
+				backText.put("Value", String.valueOf(pRequest.getFrontText()));
+				backText.put("CLevel", 100);
+				response.add(backText);
 				
 				String finalResponse = MessageConverter.getStringForObject(response);
 				
