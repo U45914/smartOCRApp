@@ -38,6 +38,7 @@ public class SmartOCRRun {
 	public Response startSmartOCR() {
 		
 		File file = new File(SOURCE_LOCATION);
+		List<String> failedProducts = new ArrayList<String>();
 		
 		List<File> listFiles = (List<File>) FileUtils.listFiles(file, null, false);
 		Collections.sort(listFiles);
@@ -89,13 +90,18 @@ public class SmartOCRRun {
 					gtinsAttribMap.put(upc, attribForGTIN);
 					
 				} catch (Exception e) {
+					failedProducts.add(upc);
 					System.out.println("Parsing UPC Images caused some issue : "+ upc);
 					e.printStackTrace();
 				}
 				
+				System.out.println(">>>>>>>>>>>>>>>>>>>> " + upc);
 			}
 			GenerateExcel.generateReport(gtinsAttribMap);
 		} catch (Exception e) {
+			System.out.println("*****************************************");
+			System.out.println(failedProducts.toString());
+			System.out.println("*****************************************");
 			GenerateExcel.generateReport(gtinsAttribMap);
 			e.printStackTrace();
 			
