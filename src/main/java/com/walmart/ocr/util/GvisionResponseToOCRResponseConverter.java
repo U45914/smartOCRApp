@@ -282,6 +282,53 @@ public class GvisionResponseToOCRResponseConverter {
 		return parseRequest;
 	}
 	
+	public static ParseRequest parseResponse(GVisionResponse gVisionResponse) {
+		ParseRequest parseRequest = new ParseRequest();
+		int size = gVisionResponse.getTextDeatils().size();
+		for (int index = 0; index < size; index++) {
+			StringBuilder parseText = new StringBuilder();
+			parseText.append("Logo Details : ");
+			parseText.append(gVisionResponse.getLogoDetails().get(index).toString());
+			parseText.append("<br/> ");
+			
+			parseText.append("Label Details : ");
+			parseText.append(gVisionResponse.getLabelDetails().get(index).toString());
+			parseText.append("<br/> ");
+			
+			parseText.append("Text Details : ");
+			parseText.append(gVisionResponse.getTextDeatils().get(index).toString());
+			parseText.append("<br/> ");
+			
+			parseText.append("Color Details : ");
+			parseText.append(gVisionResponse.getColorDeatils().get(index).toString());
+			parseText.append("<br/> ");
+			parseText.toString().replaceAll("\n", "<br/>");
+			parseText.toString().replaceAll(" ", "&nbsp;");
+			if((size>=2 && index==0) || (size==1 && index==0)){
+				//set front text
+				parseRequest.setFrontText(parseText.toString());
+			}
+			else if(size>=2 && index==1){
+				//set back side text
+				parseRequest.setBackText(parseText.toString());
+			}
+			else if(size>2){
+				if(index==2)
+					parseRequest.setLeftSideText(parseText.toString());		//Set left side text
+				if(index==3)
+					parseRequest.setRightSideText(parseText.toString());	//Set right side text
+				if(index==4)
+					parseRequest.setTopSideText(parseText.toString());	//Set top side text
+				if(index==5)
+					parseRequest.setBottomSideText(parseText.toString());	//Set bottom side text
+			}
+		}
+		
+		parseRequest.setId(Long.toHexString(Double.doubleToLongBits(Math.random())));
+		
+		return parseRequest;
+	}
+	
 	final static ObjectMapper mapper = new ObjectMapper();
 	public static String parseRequestObjectTOJsonString(ParseRequest request) {
 		String response = null; 

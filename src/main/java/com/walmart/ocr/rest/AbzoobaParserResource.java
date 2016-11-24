@@ -35,9 +35,14 @@ import com.walmart.ocr.util.MessageConverter;
 @Path("/abzoobaParse")
 @Component
 public class AbzoobaParserResource {
-
+private final static int _TIMEOUT = 2 * 60 * 1000; 
 	private static final Logger logger = Logger.getLogger(AbzoobaParserResource.class);
-
+	private static Client client = Client.create();
+	
+	public AbzoobaParserResource() {
+		client.setConnectTimeout(_TIMEOUT);
+		client.setReadTimeout(_TIMEOUT);
+	}
 	@Autowired
 	private OcrInfoDao ocrInfoDao;
 	
@@ -72,7 +77,7 @@ public class AbzoobaParserResource {
 		try {
 			logger("Parsing With  Abzooba ....");
 			if (!fake) {
-				Client client = Client.create();
+				
 
 				// WebResource webResource =
 				// client.resource("http://52.23.170.75:5000/model2");
@@ -183,9 +188,19 @@ public class AbzoobaParserResource {
 				upc.put("Attribute", "UPC");
 				upc.put("Value", pRequest.getId());
 				upc.put("CLevel", 100);
-				
-								
 				response.add(upc);
+
+				Map<String, Object> frontText = new HashMap();
+				frontText.put("Attribute", "FrontText");
+				frontText.put("Value", pRequest.getFrontText());
+				frontText.put("CLevel", 100);
+				response.add(frontText);
+
+				Map<String, Object> backText = new HashMap();
+				backText.put("Attribute", "BackText");
+				backText.put("Value", String.valueOf(pRequest.getFrontText()));
+				backText.put("CLevel", 100);
+				response.add(backText);
 				
 				String finalResponse = MessageConverter.getStringForObject(response);
 				

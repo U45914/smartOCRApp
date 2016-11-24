@@ -118,7 +118,7 @@ public class GoogleVisionResource {
 
 			// result =
 			// GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
-			parseRequest = GvisionResponseToOCRResponseConverter.toParseRequest(gVisionResponse);
+			parseRequest = GvisionResponseToOCRResponseConverter.parseResponse(gVisionResponse);
 			parseRequest.setId(upscString);
 
 		} catch (IOException e) {
