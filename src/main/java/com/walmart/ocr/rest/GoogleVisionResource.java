@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -46,6 +49,7 @@ import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.GVisionResponse;
+import com.walmart.ocr.model.ImageBarcodeRunner;
 import com.walmart.ocr.model.OCRResult;
 import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.model.SmartOCRDataModel;
@@ -62,7 +66,7 @@ import com.walmart.ocr.util.SmartOCRStatus;
 public class GoogleVisionResource {
 
 	private static final Logger logger = Logger.getLogger(GoogleVisionResource.class);
-	private static final String FILE_UPLOAD_PATH = "ImagesToProcess/";
+	private static final String FILE_UPLOAD_PATH = "ImagesToProcess";
 
 	@Autowired
 	RabbitMQProvider rabbitMqProvider;
@@ -75,24 +79,32 @@ public class GoogleVisionResource {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response uploadMultiFile(@Context HttpServletRequest request) {
+		String pathToSaveFiles = FILE_UPLOAD_PATH + File.separator + System.currentTimeMillis() + File.separator;
 		SmartOCRDataModel ocrDataModel = new SmartOCRDataModel();
 		ocrDataModel.setStatus(SmartOCRStatus.PRODUCT_IMAGE_PARSE_REQUEST_RECEIVED);
+        //ExecutorService executor = Executors.newFixedThreadPool(1);
+        //Future<String> future = null;
 
 		ParseRequest parseRequest = new ParseRequest();
+		File file = new File(pathToSaveFiles);
 		try {
+			file.mkdirs();
 			logger(" ");
 
 			logger("******** New Conversion Started *******");
-			File file = new File(FILE_UPLOAD_PATH);
-			FileUtils.cleanDirectory(file);
-			String locationOfImage = saveFiles(request);
+			String locationOfImage = saveFiles(request, pathToSaveFiles);
 
 			ocrDataModel.setImageUrls(locationOfImage);
 
 			logger("******** Saved Files *******");
 			List<File> imageFiles = new ArrayList<File>();
 			imageFiles = (List<File>) FileUtils.listFiles(file, null, false);
+			ImageBarcodeRunner barcodeRunner = new ImageBarcodeRunner(imageFiles);
+			String resultBarcode = barcodeRunner.call();
 			if(imageFiles!=null && !imageFiles.isEmpty()){
+
+				//future = executor.submit(new ImageBarcodeRunner(imageFiles));
+				
 				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
 				if(imageFiles.size()==2){
 					ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(1), "jpg"));
@@ -120,7 +132,9 @@ public class GoogleVisionResource {
 			// GvisionResponseToOCRResponseConverter.toOCRString(gVisionResponse);
 			parseRequest = GvisionResponseToOCRResponseConverter.parseResponse(gVisionResponse);
 			parseRequest.setId(upscString);
-
+			
+			parseRequest.setExtractedUpc(resultBarcode);
+			//executor.shutdown();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,6 +145,7 @@ public class GoogleVisionResource {
 		ocrDataModel.setGivisionResponse(GvisionResponseToOCRResponseConverter.parseRequestObjectTOJsonString(parseRequest));
 		// Save record to DB
 		try {
+			FileUtils.cleanDirectory(file);
 			Serializable createOcrData = ocrInfoDao.createOcrData(ocrDataModel);
 			logger("***************** "+ createOcrData);
 			String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
@@ -148,7 +163,7 @@ public class GoogleVisionResource {
 		this.rabbitMqProvider = rabbitMqProvider;
 	}
 
-	private String saveFiles(HttpServletRequest request) {
+	private String saveFiles(HttpServletRequest request, String pathToSaveFiles) {
 		StringBuilder imagePathBuilder = new StringBuilder();
 		String name = null;
 		/* Check whether request is multipart or not. */
@@ -174,7 +189,7 @@ public class GoogleVisionResource {
 							System.out.println("Field Name: " + fieldName + ", Field Value: " + fieldValue);
 							System.out.println("Candidate Name: " + name);
 						} else {
-							final File file = new File(FILE_UPLOAD_PATH + item.getName());
+							final File file = new File(pathToSaveFiles + item.getName());
 
 							System.out.println("Saving the file: " + file.getName());
 							item.write(file);
