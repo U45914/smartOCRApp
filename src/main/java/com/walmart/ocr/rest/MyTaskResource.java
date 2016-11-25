@@ -56,10 +56,10 @@ public class MyTaskResource {
 			myData.setRequest(MessageConverter
 					.getParseRequestObjectFromJson(taskData
 							.getGivisionResponse()));
-			myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
+			/*myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
 			if(myData.getRequest().getBackTextFormatted()!=null){
 				myData.getRequest().setBackTextFormatted(myData.getRequest().getBackTextFormatted().replaceAll("&nbsp;", " "));
-			}
+			}*/
 			myData.setSmartId(userTask);
 
 			return Response.ok().type(MediaType.APPLICATION_JSON)
