@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="images/favicon.ico">
+<title>Smart OCR</title>
+<link href="css/style.css" rel="stylesheet">
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+	rel="stylesheet">
+
+</head>
+<body>
+
+	<header id="header-section">
+		<div class="container-fluid">
+			<div class="row">
+				<nav class="navbar navbar-default">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target="#myNavbar">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand logo_txt" href="#">Smart<span>OCR</span></a>
+					</div>
+					<div class="collapse navbar-collapse" id="myNavbar">
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#"> My Tasks</a></li>
+							<li><a href="#">Completed Tasks</a></li>
+						</ul>
+
+					</div>
+				</nav>
+			</div>
+		</div>
+	</header>
+	<div class="content_wrapper">
+	<section id="container-section">
+		
+		<div class="attach_warp attach_button" id="bn-item" >
+			<label class="btn btn-default btn-file"> <i
+				class="fa fa-upload" aria-hidden="true"></i> Attach Files <input
+				id="imagefile" fileread="myFile" type="file" style="display: none;"
+				multiple="multiple">
+			</label>
+		</div>
+		<!-- <div class="spinner_div" ng-show="mocvm.isSpinnerVisible">
+				<img src="images/spinner.gif">
+		</div> -->
+		 <!-- <div class="modal fade" id="myModal" role="dialog" ng-show="mocvm.isSpinnerVisible">
+		    <div class="modal-dialog">
+		    <div class="spinner_div" >
+					<img src="images/spinner.gif">
+			</div>
+		    </div> 
+	  	</div> -->
+		<div class="col-md-12" id="gallery_section">			
+			<div class="col-md-5  margin_left text-center ">
+				<div id="gallery_carousel" class="carousel slide"
+					data-ride="carousel">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+						<li ng-repeat="picFile in mocvm.picFiles" data-target="#gallery_carousel" data-slide-to="{{$index}}" ng-class="picFile.dot"></li>						
+					</ol>
+
+					<!-- Wrapper for slides -->
+					<div id="carousel" class="carousel-inner" role="listbox">
+						<div ng-repeat="picFile in mocvm.picFiles"class="{{picFile.classAttr}}">
+							<img src="{{picFile.result}}">
+						</div>
+					</div>
+				</div>
+				<button data-toggle="modal" data-target="#myModal" ng-show="mocvm.isExtactButtonVisible" class="btn btn-default btn_style" id="ext_btn" ng-click="mocvm.parseText()"><i class="fa fa-cog" aria-hidden="true" ></i>Smart Read</button>
+			</div>
+			
+			<!-- <output id="result" /> -->
+			
+	
+	</div>
+	<ocr-spinner></ocr-spinner>
+	
+	<div class="col-md-12" id="extract_wrap">
+		<div class="col-md-6 margin_left" id="parse-text-div"  ng-show="mocvm.isParseImageContentVisible">
+			<div class="heading-top">
+				<h2>Smart Text</h2>
+			</div>
+				<div class="table-responsive tble_cntr">
+					  <table class="table extract_tble table-bordered ">
+					   	<tbody>
+					      <tr>
+					        <td>Smart OCR ID</td>
+					        <td><p ng-bind-html="mocvm.responseText.smartOcrId"/></td>
+					      </tr>
+					      <tr ng-if="mocvm.responseText.frontText != null">
+					        <td>Front Image Text</td>
+					        <td> <p ng-bind-html="mocvm.responseText.frontText"/> </td>
+					      </tr>
+					      <tr ng-if="mocvm.responseText.backText != null">
+					        <td>Back Image Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.backText"/></td>
+					       </tr>
+					      <tr ng-if="mocvm.responseText.leftSideText != null">
+					        <td>Left Side Image Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.leftSideText"/></td>
+					      </tr>
+					       <tr ng-if="mocvm.responseText.rightSideText != null">
+					        <td>Right Side Image Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.rightSideText"/></td>
+					      </tr>
+					       <tr ng-if="mocvm.responseText.topSideText != null">
+					        <td>Top Side Image Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.topSideText"/></td>
+					      </tr>
+					       <tr ng-if="mocvm.responseText.bottomSideText != null">
+					        <td>Bottom Side Image Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.bottomSideText"/></td>
+					      </tr>
+					       <tr ng-if="mocvm.responseText.extractedUpc != null">
+					        <td>Extracted UPC Text</td>
+					        <td><p ng-bind-html="mocvm.responseText.extractedUpc"/></td>
+					      </tr>
+					    </tbody>
+					   </table>
+					</div>
+				
+			</div>
+		<div class="col-md-6"  ng-show="mocvm.isAbzoobaContentVisible">
+			<div class="heading-top">
+				<h2>Smart Product</h2>
+			</div>
+				<div class="table-responsive tble_cntr">
+					  <table class="table attr_tbl table-bordered">
+					   	<thead>
+					   	<tr>
+					   		 <td>Attribute</td>
+						      <td>Value</td>
+						      <td>Score</td>
+					   	</tr>
+					   	</thead>
+						    <tbody>
+						      <tr ng-repeat="resp in mocvm.abzoobaResponse">
+						        <td>{{resp.Attribute}}</td>
+						        <td><p ng-bind-html="resp.Value"/></td>
+						        <td>{{resp.CLevel | number:2}}</td>
+						      </tr>						      
+						    </tbody>
+					  </table>
+					</div>
+				
+			</div>
+		
+		
+		
+		<!-- <div class="col-md-12" ng-show = "mocvm.isGridVisible">
+			<div class="gridStyle" ui-grid="mocvm.gridOptions"></div>
+		</div> -->
+		
+		
+	</div>
+	</section>
+	
+	
+	</div>
+	<footer >
+	<div class="col-md-12" id="footer-section">
+		<div class="col-md-8">
+			<p class="copy-txt">Copyright &copy; Your Website 2016</p>
+		</div>
+		<div class="col-md-4">
+			<div class="pull-right">
+				<img src="images/ust_logo.png" alt=""
+					class="img-responsive ust-logo">
+			</div>
+		</div>
+		</div>
+	</footer>
+	<script src="js/jquery-1.11.1.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/script.js"></script>
+
+
+</body>
+</html>
