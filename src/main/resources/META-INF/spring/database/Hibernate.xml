@@ -15,6 +15,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		</property>
 		<property name="hibernateProperties">
 			<props>
+				<prop key="hibernate.hbm2ddl.auto">CREATE</prop>
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
 			</props>
