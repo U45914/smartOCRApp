@@ -53,6 +53,10 @@ public class MyTaskResource {
 			GVisionData myData = new GVisionData();
 			myData.setImage(taskData.getImage());
 			myData.setBackImage(taskData.getBackImage());
+			myData.setBackImage(taskData.getBackImage());
+			myData.setLeftImage(taskData.getLeftImage());
+			myData.setRightImage(taskData.getRightImage());
+			myData.setTopImage(taskData.getTopImage());
 			myData.setRequest(MessageConverter
 					.getParseRequestObjectFromJson(taskData
 							.getGivisionResponse()));
@@ -106,6 +110,9 @@ public class MyTaskResource {
 			task.setImage(data.getImage());
 			task.setImageName(data.getImageUrls());
 			task.setBackImage(data.getBackImage());
+			task.setLeftImage(data.getLeftImage());
+			task.setRightImage(data.getRightImage());
+			task.setTopImage(data.getTopImage());
 			task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
 			task.setAbzoobaResponse(getAbzoobaModel(task, data));
 			tasks.add(task);
@@ -176,6 +183,9 @@ public class MyTaskResource {
 		ParseRequest request;
 		String smartId;
 		byte [] backImage;
+		byte[] leftImage;
+		byte [] rightImage;
+		byte[] topImage;
 
 		/**
 		 * @return the image
@@ -234,6 +244,30 @@ public class MyTaskResource {
 		 */
 		public void setBackImage(byte[] backImage) {
 			this.backImage = backImage;
+		}
+
+		public byte[] getLeftImage() {
+			return leftImage;
+		}
+
+		public void setLeftImage(byte[] leftImage) {
+			this.leftImage = leftImage;
+		}
+
+		public byte[] getRightImage() {
+			return rightImage;
+		}
+
+		public void setRightImage(byte[] rightImage) {
+			this.rightImage = rightImage;
+		}
+
+		public byte[] getTopImage() {
+			return topImage;
+		}
+
+		public void setTopImage(byte[] topImage) {
+			this.topImage = topImage;
 		}
 
 	}

@@ -114,6 +114,18 @@
     <div class="item" ng-if="myTask.backImage != undefined && myTask.backImage != null">
       <img src="data:image/png;base64,{{myTask.backImage}}" class="img-responsive" alt="Responsive image">
     </div>
+    
+    <div class="item" ng-if="myTask.rightImage != undefined && myTask.rightImage != null">
+      <img src="data:image/png;base64,{{myTask.rightImage}}" class="img-responsive" alt="Responsive image">
+    </div>
+    
+    <div class="item" ng-if="myTask.leftImage != undefined && myTask.leftImage != null">
+      <img src="data:image/png;base64,{{myTask.leftImage}}" class="img-responsive" alt="Responsive image">
+    </div>
+    
+    <div class="item" ng-if="myTask.topImage != undefined && myTask.topImage != null">
+      <img src="data:image/png;base64,{{myTask.topImage}}" class="img-responsive" alt="Responsive image">
+    </div>
 
    
 
@@ -227,7 +239,7 @@
 								showLoadingScreen();
 								$http
 										.get(
-												'https://product-profiling.herokuapp.com/rest/mytask/get')
+												'rest/mytask/get')
 										.then(
 												function(response) {
 													$scope.myTask = response.data;
@@ -260,7 +272,7 @@
 								showLoadingScreen();
 								$http
 										.post(
-												"https://product-profiling.herokuapp.com/rest/abzoobaParse/parseText",
+												"rest/abzoobaParse/parseText",
 												JSON
 														.stringify($scope.myTask.request),
 												{

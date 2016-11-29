@@ -23,6 +23,9 @@ public class MyTaskModel implements Serializable {
 	private byte [] backImage;
 	private String imageName;
 	private List<AbzoobaCompareModel> abzoobaResponse;
+	private byte[] leftImage;
+	private byte [] rightImage;
+	private byte[] topImage;
 
 	
 	/**
@@ -96,6 +99,30 @@ public class MyTaskModel implements Serializable {
 	 */
 	public void setAbzoobaResponse(List<AbzoobaCompareModel> abzoobaResponse) {
 		this.abzoobaResponse = abzoobaResponse;
+	}
+
+	public byte[] getLeftImage() {
+		return leftImage;
+	}
+
+	public void setLeftImage(byte[] leftImage) {
+		this.leftImage = leftImage;
+	}
+
+	public byte[] getRightImage() {
+		return rightImage;
+	}
+
+	public void setRightImage(byte[] rightImage) {
+		this.rightImage = rightImage;
+	}
+
+	public byte[] getTopImage() {
+		return topImage;
+	}
+
+	public void setTopImage(byte[] topImage) {
+		this.topImage = topImage;
 	}
 
 	/**

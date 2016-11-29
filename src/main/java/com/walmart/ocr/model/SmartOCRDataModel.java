@@ -62,6 +62,15 @@ public class SmartOCRDataModel implements Serializable {
 	@Column(name="BACK_IMAGE")
 	private byte [] backImage;
 	
+	@Column(name="LEFT_IMAGE")
+	private byte [] leftImage;
+	
+	@Column(name="RIGHT_IMAGE")
+	private byte [] rightImage;
+	
+	@Column(name="TOP_IMAGE")
+	private byte [] topImage;
+	
 	public SmartOCRDataModel() {
 	}
 
@@ -278,25 +287,48 @@ public class SmartOCRDataModel implements Serializable {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public byte[] getLeftImage() {
+		return leftImage;
+	}
+
+
+	public void setLeftImage(byte[] leftImage) {
+		this.leftImage = leftImage;
+	}
+
+
+	public byte[] getRightImage() {
+		return rightImage;
+	}
+
+
+	public void setRightImage(byte[] rightImage) {
+		this.rightImage = rightImage;
+	}
+
+
+	public byte[] getTopImage() {
+		return topImage;
+	}
+
+
+	public void setTopImage(byte[] topImage) {
+		this.topImage = topImage;
+	}
+
+
 	@Override
 	public String toString() {
-		return "SmartOCRDataModel [ocrRequestId=" + ocrRequestId
-				+ ", givisionResponse=" + givisionResponse
-				+ ", crowdSourceResponse=" + crowdSourceResponse
-				+ ", absoobaRequestInfo=" + absoobaRequestInfo
-				+ ", absoobaResponse=" + absoobaResponse
-				+ ", crowdSourceUserId=" + crowdSourceUserId + ", status="
-				+ status + ", imageUrls=" + imageUrls + ", image="
-				+ Arrays.toString(image) + ", imageUploadDate="
-				+ imageUploadDate + ", imageProcessedDate="
-				+ imageProcessedDate + ", cloudeSourceSubmitDate="
-				+ cloudeSourceSubmitDate + ", abzoobaResponse2="
-				+ abzoobaResponse2 + ", backImage="
-				+ Arrays.toString(backImage) + "]";
+		return "SmartOCRDataModel [ocrRequestId=" + ocrRequestId + ", givisionResponse=" + givisionResponse
+				+ ", crowdSourceResponse=" + crowdSourceResponse + ", absoobaRequestInfo=" + absoobaRequestInfo
+				+ ", absoobaResponse=" + absoobaResponse + ", crowdSourceUserId=" + crowdSourceUserId + ", status="
+				+ status + ", imageUrls=" + imageUrls + ", image=" + Arrays.toString(image) + ", imageUploadDate="
+				+ imageUploadDate + ", imageProcessedDate=" + imageProcessedDate + ", cloudeSourceSubmitDate="
+				+ cloudeSourceSubmitDate + ", abzoobaResponse2=" + abzoobaResponse2 + ", backImage="
+				+ Arrays.toString(backImage) + ", leftImage=" + Arrays.toString(leftImage) + ", rightImage="
+				+ Arrays.toString(rightImage) + ", topImage=" + Arrays.toString(topImage) + "]";
 	}
+
 
 
 }

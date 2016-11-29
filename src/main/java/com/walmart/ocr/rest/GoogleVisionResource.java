@@ -101,15 +101,7 @@ public class GoogleVisionResource {
 			imageFiles = (List<File>) FileUtils.listFiles(file, null, false);
 			ImageBarcodeRunner barcodeRunner = new ImageBarcodeRunner(imageFiles);
 			String resultBarcode = barcodeRunner.call();
-			if(imageFiles!=null && !imageFiles.isEmpty()){
-
-				//future = executor.submit(new ImageBarcodeRunner(imageFiles));
-				
-				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
-				if(imageFiles.size()==2){
-					ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(1), "jpg"));
-				}
-			}
+			
 			Collections.sort(imageFiles, new Comparator<File>() {
 
 				@Override
@@ -117,6 +109,37 @@ public class GoogleVisionResource {
 					return o1.getName().compareTo(o2.getName());
 				}
 			});
+			
+			if(imageFiles!=null && !imageFiles.isEmpty()){
+
+				//future = executor.submit(new ImageBarcodeRunner(imageFiles));
+				
+//				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
+//				if(imageFiles.size()==2){
+//					ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(1), "jpg"));
+//				}
+			
+				for (int i = 0; i < imageFiles.size(); i++) {
+					if(i==0){
+						ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
+					else if(i==1){
+						ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
+					else if(i==2){
+						ocrDataModel.setLeftImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
+					else if(i==3){
+						ocrDataModel.setRightImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
+					else if(i==4){
+						ocrDataModel.setTopImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
+				}
+			}
+			
+			
+			
 			String upscString = "12345";
 			if (null != imageFiles.get(0)) {
 				upscString = imageFiles.get(0).getName();
