@@ -50,24 +50,30 @@ public class MyTaskResource {
 			SmartOCRDataModel taskData = ocrInfoDao
 					.findOcrDataById(MessageConverter.getIdForTask(userTask));
 
-			GVisionData myData = new GVisionData();
-			myData.setImage(taskData.getImage());
-			myData.setBackImage(taskData.getBackImage());
-			myData.setBackImage(taskData.getBackImage());
-			myData.setLeftImage(taskData.getLeftImage());
-			myData.setRightImage(taskData.getRightImage());
-			myData.setTopImage(taskData.getTopImage());
-			myData.setRequest(MessageConverter
-					.getParseRequestObjectFromJson(taskData
-							.getGivisionResponse()));
-			/*myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
-			if(myData.getRequest().getBackTextFormatted()!=null){
-				myData.getRequest().setBackTextFormatted(myData.getRequest().getBackTextFormatted().replaceAll("&nbsp;", " "));
-			}*/
-			myData.setSmartId(userTask);
+			if(taskData!=null){
+				GVisionData myData = new GVisionData();
+				myData.setImage(taskData.getImage());
+				myData.setBackImage(taskData.getBackImage());
+				myData.setBackImage(taskData.getBackImage());
+				myData.setLeftImage(taskData.getLeftImage());
+				myData.setRightImage(taskData.getRightImage());
+				myData.setTopImage(taskData.getTopImage());
+				myData.setRequest(MessageConverter
+						.getParseRequestObjectFromJson(taskData
+								.getGivisionResponse()));
+				/*myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
+				if(myData.getRequest().getBackTextFormatted()!=null){
+					myData.getRequest().setBackTextFormatted(myData.getRequest().getBackTextFormatted().replaceAll("&nbsp;", " "));
+				}*/
+				myData.setSmartId(userTask);
 
-			return Response.ok().type(MediaType.APPLICATION_JSON)
-					.entity(myData).build();
+				return Response.ok().type(MediaType.APPLICATION_JSON)
+						.entity(myData).build();
+			}
+			else{
+				response = new JSONObject();
+				response.put("message", "No such task in DB");
+			}
 		} else {
 			response = new JSONObject();
 			response.put("message", "No more pending task");
@@ -106,22 +112,26 @@ public class MyTaskResource {
 	private List<MyTaskModel> getUserTasks(List<SmartOCRDataModel> taskDatas) {
 		List<MyTaskModel> tasks = new ArrayList<MyTaskModel>();
 		for (SmartOCRDataModel data : taskDatas) {
-			MyTaskModel task = new MyTaskModel();
-			task.setImage(data.getImage());
-			task.setImageName(data.getImageUrls());
-			task.setBackImage(data.getBackImage());
-			task.setLeftImage(data.getLeftImage());
-			task.setRightImage(data.getRightImage());
-			task.setTopImage(data.getTopImage());
-			task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
-			task.setAbzoobaResponse(getAbzoobaModel(task, data));
-			tasks.add(task);
+			if(data.getAbsoobaResponse()!=null){
+				MyTaskModel task = new MyTaskModel();
+				task.setImage(data.getImage());
+				task.setImageName(data.getImageUrls());
+				task.setBackImage(data.getBackImage());
+				task.setLeftImage(data.getLeftImage());
+				task.setRightImage(data.getRightImage());
+				task.setTopImage(data.getTopImage());
+				task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
+				task.setAbzoobaResponse(getAbzoobaModel(task, data));
+				tasks.add(task);
+			}
 		}
 
 		return tasks;
 	}
 
 	private List<AbzoobaCompareModel> getAbzoobaModel(MyTaskModel task, SmartOCRDataModel data) {
+		List<AbzoobaCompareModel> listOfAttributes = new ArrayList<AbzoobaCompareModel>();
+		if(data.getAbsoobaResponse()!=null){
 		List<Map<String, Object>> abzoobaResponse = MessageConverter
 				.getListOfMapFromJson(data.getAbsoobaResponse());
 		String abre2 =data.getAbzoobaResponse2();
@@ -130,8 +140,7 @@ public class MyTaskResource {
 			abzoobaResponse2 = MessageConverter
 					.getListOfMapFromJson(abre2);
 		}
-		List<AbzoobaCompareModel> listOfAttributes = new ArrayList<AbzoobaCompareModel>();
-
+		
 		for (Map<String, Object> attribute : abzoobaResponse) {
 			AbzoobaCompareModel abzoobaModel = new AbzoobaCompareModel();
 			String parentAttributeKey = String.valueOf(attribute.get("Attribute"));
@@ -149,6 +158,7 @@ public class MyTaskResource {
 			}
 
 			listOfAttributes.add(abzoobaModel);
+		}
 		}
 
 		return listOfAttributes;

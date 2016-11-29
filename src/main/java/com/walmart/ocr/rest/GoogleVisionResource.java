@@ -168,13 +168,13 @@ public class GoogleVisionResource {
 		ocrDataModel.setGivisionResponse(GvisionResponseToOCRResponseConverter.parseRequestObjectTOJsonString(parseRequest));
 		// Save record to DB
 		try {
-			FileUtils.cleanDirectory(file);
 			Serializable createOcrData = ocrInfoDao.createOcrData(ocrDataModel);
 			logger("***************** "+ createOcrData);
 			String smartOcrId = MessageConverter.getSmartOCRId((Integer) createOcrData);
 			logger("***************** ID "+ smartOcrId);
 			parseRequest.setSmartOcrId(smartOcrId);
 			rabbitMqProvider.sendMessage(smartOcrId);
+			FileUtils.cleanDirectory(file);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

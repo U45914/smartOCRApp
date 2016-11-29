@@ -302,7 +302,7 @@ public class GvisionResponseToOCRResponseConverter {
 			parseText.append("Color Details : ");
 			parseText.append(gVisionResponse.getColorDeatils().get(index).toString());
 			parseText.append("<br/> ");
-			parseText.toString().replaceAll("\n", "<br/>");
+			parseText.toString().replaceAll("\n", "&nbsp;");
 			parseText.toString().replaceAll(" ", "&nbsp;");
 			if((size>=2 && index==0) || (size==1 && index==0)){
 				//set front text

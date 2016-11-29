@@ -122,39 +122,39 @@
 								</tr>
 								<tr ng-repeat="n in alltasks track by $index">
 									<td class="tableCol first_td_img text-center">
-										<div id="myCarousel1" class="carousel slide" data-ride="carousel">
+										<div id="myCarousel{{$index}}" class="carousel slide" data-ride="carousel">
 											<div class="carousel-inner" role="listbox">
 												<div class="item active">
 													<img src="data:image/png;base64,{{n.image}}" class="img-responsive"
 															alt="Responsive image" width="75" height="75">
 												</div>
-												<div class="item">
-													<img ng-if="n.backImage != undefined && n.backImage != null"
+												<div class="item" ng-if="n.backImage != undefined && n.backImage != null && n.backImage != ''">
+													<img 
 													 src="data:image/png;base64,{{n.backImage}}" class="img-responsive"
 															alt="Responsive image" width="75" height="75">
 												</div>
-												<div class="item">		
-													<img ng-if="n.leftImage != undefined && n.leftImage != null"
+												<div class="item" ng-if="n.leftImage != undefined && n.leftImage != null && n.leftImage != ''">		
+													<img 
 													 src="data:image/png;base64,{{n.leftImage}}" class="img-responsive"
 															alt="Responsive image" width="75" height="75">
 												</div>
-												<div class="item">			
-													<img ng-if="n.rightImage != undefined && n.rightImage != null"
+												<div class="item" ng-if="n.rightImage != undefined && n.rightImage != null && n.rightImage != ''">			
+													<img 
 													 src="data:image/png;base64,{{n.rightImage}}" class="img-responsive"
 															alt="Responsive image" width="75" height="75">
 												</div>
-												<div class="item">			
-													<img ng-if="n.topImage != undefined && n.topImage != null"
+												<div class="item" ng-if="n.topImage != undefined && n.topImage != null && n.topImage != ''">			
+													<img 
 													 src="data:image/png;base64,{{n.topImage}}" class="img-responsive"
 															alt="Responsive image" width="75" height="75">
 												</div>			
 											</div>
 											<!-- Left and right controls -->
-											  <a class="left carousel-control" href="#myCarousel1" role="button" data-slide="prev">
+											  <a class="left carousel-control" href="#myCarousel{{$index}}" role="button" data-slide="prev">
 											    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
 											    <span class="sr-only">Previous</span>
 											  </a>
-											  <a class="right carousel-control" href="#myCarousel1" role="button" data-slide="next">
+											  <a class="right carousel-control" href="#myCarousel{{$index}}" role="button" data-slide="next">
 											    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 											    <span class="sr-only">Next</span>
 											  </a>	

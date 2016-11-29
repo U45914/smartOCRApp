@@ -5,12 +5,12 @@ public class ParseRequest {
 	private String extractedUpc;
 
 	private String id;
-	private String FrontText;
-	private String BackText;
-	private String leftSideText;
-	private String rightSideText;
-	private String topSideText;
-	private String bottomSideText;
+	private String FrontText = "";
+	private String BackText = "";
+	private String leftSideText = "";
+	private String rightSideText = "";
+	private String topSideText = "";
+	private String bottomSideText = "";
 
 	public String getSmartOcrId() {
 		return smartOcrId;
