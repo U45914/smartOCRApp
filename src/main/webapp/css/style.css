@@ -25,6 +25,14 @@ color:#ddd;
 #header-section .navbar-default .navbar-brand{
 font-size:20px;
 }
+#header-section .navbar-default .navbar-nav>.active>a{
+	    background: #007dc1;
+    color: #fff;
+    font-weight:bold
+}
+.attach_warp .btn .fa{
+    padding-right: 5px;
+}
 .heading-top h2 {
        margin: 5px 10px;
     padding-bottom: 5px;
@@ -171,4 +179,8 @@ font-weight: bold;
 	margin-left: -50px;
 	margin-top: -50px;
 	display: block;
+}
+
+#mainPallete{
+	margin-top:10px
 }

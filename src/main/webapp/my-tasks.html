@@ -115,16 +115,20 @@
       <img src="data:image/png;base64,{{myTask.backImage}}" class="img-responsive" alt="Responsive image">
     </div>
     
-    <div class="item" ng-if="myTask.rightImage != undefined && myTask.rightImage != null">
-      <img src="data:image/png;base64,{{myTask.rightImage}}" class="img-responsive" alt="Responsive image">
-    </div>
-    
     <div class="item" ng-if="myTask.leftImage != undefined && myTask.leftImage != null">
       <img src="data:image/png;base64,{{myTask.leftImage}}" class="img-responsive" alt="Responsive image">
     </div>
     
+    <div class="item" ng-if="myTask.rightImage != undefined && myTask.rightImage != null">
+      <img src="data:image/png;base64,{{myTask.rightImage}}" class="img-responsive" alt="Responsive image">
+    </div>
+    
     <div class="item" ng-if="myTask.topImage != undefined && myTask.topImage != null">
       <img src="data:image/png;base64,{{myTask.topImage}}" class="img-responsive" alt="Responsive image">
+    </div>
+    
+    <div class="item" ng-if="myTask.bottomImage != undefined && myTask.bottomImage != null">
+      <img src="data:image/png;base64,{{myTask.bottomImage}}" class="img-responsive" alt="Responsive image">
     </div>
 
    
@@ -171,24 +175,19 @@
 													ng-model="myTask.request.frontText">{{myTask.request.frontText}} </textarea></td>
 										</tr>
 										<tr>
+											<th>Front Text Formatted</th>
+											<td><textarea class="form-control" rows="4" readonly="readonly"
+													ng-model="myTask.request.frontTextFormatted">{{myTask.request.frontTextFormatted}}</textarea></td>
+										</tr>
+										<tr>
 											<th>Back Text</th>
 											<td><textarea class="form-control" rows="4"
 													ng-model="myTask.request.backText">{{myTask.request.backText}} </textarea></td>
 										</tr>
 										<tr>
-											<th>Left Text</th>
-											<td><textarea class="form-control" rows="4"
-													ng-model="myTask.request.leftSideText">{{myTask.request.leftSideText}} </textarea></td>
-										</tr>
-										<tr>
-											<th>Side Text</th>
-											<td><textarea class="form-control" rows="4"
-													ng-model="myTask.request.rightSideText">{{myTask.request.rightSideText}} </textarea></td>
-										</tr>
-										<tr>
-											<th>Top Text</th>
-											<td><textarea class="form-control" rows="4"
-													ng-model="myTask.request.topSideText">{{myTask.request.topSideText}} </textarea></td>
+											<th>Back Text Formatted</th>
+											<td><textarea class="form-control" rows="4" readonly="readonly"
+													ng-model="myTask.request.backTextFormatted">{{myTask.request.backTextFormatted}}</textarea></td>
 										</tr>
 									</tbody>
 								</table>
@@ -236,7 +235,7 @@
 							$("#alertSuccess").hide();
 
 							$scope.app = {};
-							$scope.app.name = "Smart OCR";
+							$scope.app.name = "Smart OCR";							
 
 							$("#mainPallete").hide();
 
@@ -244,9 +243,10 @@
 								showLoadingScreen();
 								$http
 										.get(
-												'rest/mytask/get')
+												'https://product-profiling.herokuapp.com/rest/mytask/get')
 										.then(
 												function(response) {
+													
 													$scope.myTask = response.data;
 													if ($scope.myTask.message) {
 														$("#mainPallete")
@@ -277,7 +277,7 @@
 								showLoadingScreen();
 								$http
 										.post(
-												"rest/abzoobaParse/parseText",
+												"https://product-profiling.herokuapp.com/rest/abzoobaParse/parseText",
 												JSON
 														.stringify($scope.myTask.request),
 												{

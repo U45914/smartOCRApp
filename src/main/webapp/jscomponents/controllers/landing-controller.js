@@ -9,8 +9,8 @@
 	 
 	 function LandingController($scope, $location){
 		 
-		 var lcvm=this;	
-		 //$location.path = '/multiOCR'
+		 var lcvm = this;	
+		 
 		 
 	}
 	

@@ -1,19 +1,28 @@
 angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize'])
 .config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
-	.when('/', {
+	/*.when('/', {
 		templateUrl : 'partials/landing-page.html',
 		controller: 'LandingController',
 		controllerAs:'lcvm'
-		
-	})	
+	})*/
 	.when('/multiOCR', {
 		templateUrl : 'partials/multi-ocr-page.html',
 		controller: 'MultiOcrController',
 		controllerAs:'mocvm'
 		
-	})	
-	.otherwise({redirectTo: '/'});
+	})
+	.when('/myTasks',{
+		templateUrl : 'partials/my-tasks.html',
+		controller: 'MyTaskController',
+		controllerAs:'mtcvm'
+	})
+	/*.when('/completedTasks', {
+		templateUrl : 'partials/completed-tasks.html',
+		controller: 'CompletedTasksController',
+		controllerAs:'ctcvm'
+	})*/
+	.otherwise({redirectTo: '/multiOCR'});
 }]).directive("ocrSpinner",function(){
 	 return{
          link: linkFunction

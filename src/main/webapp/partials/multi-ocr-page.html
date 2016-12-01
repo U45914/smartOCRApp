@@ -9,11 +9,6 @@
 <link rel="icon" href="images/favicon.ico">
 <title>Smart OCR</title>
 <link href="css/style.css" rel="stylesheet">
-<link
-	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
-	rel="stylesheet">
-
-</head>
 <body>
 
 	<header id="header-section">
@@ -22,16 +17,17 @@
 				<nav class="navbar navbar-default">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle" data-toggle="collapse"
-							data-target="#myNavbar">
+							>
 							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 								class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand logo_txt" href="#">Smart<span>OCR</span></a>
+						<a class="navbar-brand logo_txt" >Smart<span>OCR</span></a>
 					</div>
 					<div class="collapse navbar-collapse" id="myNavbar">
 						<ul class="nav navbar-nav navbar-right">
-							<li><a href="#"> My Tasks</a></li>
-							<li><a href="#">Completed Tasks</a></li>
+							<li ><a href="./#/multiOCR">Home</a></li>
+							<li ><a href="./#/myTasks"> My Tasks</a></li>
+							<li><a href="./#/completedTasks">Completed Tasks</a></li>
 						</ul>
 
 					</div>
@@ -48,21 +44,10 @@
 				id="imagefile" fileread="myFile" type="file" style="display: none;"
 				multiple="multiple">
 			</label>
-		</div>
-		<!-- <div class="spinner_div" ng-show="mocvm.isSpinnerVisible">
-				<img src="images/spinner.gif">
-		</div> -->
-		 <!-- <div class="modal fade" id="myModal" role="dialog" ng-show="mocvm.isSpinnerVisible">
-		    <div class="modal-dialog">
-		    <div class="spinner_div" >
-					<img src="images/spinner.gif">
-			</div>
-		    </div> 
-	  	</div> -->
+		</div>		
 		<div class="col-md-12" id="gallery_section">			
 			<div class="col-md-5  margin_left text-center ">
-				<div id="gallery_carousel" class="carousel slide"
-					data-ride="carousel">
+				<div id="gallery_carousel" class="carousel slide" data-ride="carousel">
 					<!-- Indicators -->
 					<ol class="carousel-indicators">
 						<li ng-repeat="picFile in mocvm.picFiles" data-target="#gallery_carousel" data-slide-to="{{$index}}" ng-class="picFile.dot"></li>						
@@ -75,14 +60,12 @@
 						</div>
 					</div>
 				</div>
-				<button data-toggle="modal" data-target="#myModal" ng-show="mocvm.isExtactButtonVisible" class="btn btn-default btn_style" id="ext_btn" ng-click="mocvm.parseText()"><i class="fa fa-cog" aria-hidden="true" ></i>Smart Read</button>
-			</div>
-			
-			<!-- <output id="result" /> -->
-			
+				<button ng-show="mocvm.isExtactButtonVisible" class="btn btn-default btn_style" id="ext_btn" ng-click="mocvm.parseText()"><i class="fa fa-cog" aria-hidden="true" ></i>Smart Read</button>
+			</div>			
 	
 	</div>
-	<ocr-spinner></ocr-spinner>
+	
+		<ocr-spinner></ocr-spinner>
 	
 	<div class="col-md-12" id="extract_wrap">
 		<div class="col-md-6 margin_left" id="parse-text-div"  ng-show="mocvm.isParseImageContentVisible">
@@ -145,8 +128,14 @@
 						    <tbody>
 						      <tr ng-repeat="resp in mocvm.abzoobaResponse">
 						        <td>{{resp.Attribute}}</td>
-						        <td><p ng-bind-html="resp.Value"/></td>
-						        <td>{{resp.CLevel | number:2}}</td>
+						        <td><p ng-bind-html="resp.Value"/></td>						       
+						        <td>
+									 <div class="progress">
+										 <div class="progress-bar progress-bar-success" role="progressbar " aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{resp.CLevel}}%">
+											{{resp.CLevel | number:2}}
+										</div>
+									 </div>
+								</td>
 						      </tr>						      
 						    </tbody>
 					  </table>
@@ -169,7 +158,7 @@
 	<footer >
 	<div class="col-md-12" id="footer-section">
 		<div class="col-md-8">
-			<p class="copy-txt">Copyright &copy; Your Website 2016</p>
+			<p class="copy-txt">Copyright &copy; SmartOCR</p>
 		</div>
 		<div class="col-md-4">
 			<div class="pull-right">
