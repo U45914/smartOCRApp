@@ -71,12 +71,13 @@ public class GvisionResponseToOCRResponseConverter {
 	private static void getTextDeatils(AnnotateImageResponse annotateImageResponse, GVisionResponse gVR) {
 		StringBuilder textBuilder = new StringBuilder();
 		if (null != annotateImageResponse.getTextAnnotations()) {
-			for (EntityAnnotation entity : annotateImageResponse.getTextAnnotations()) {
-				textBuilder.append(entity.getDescription());
-				textBuilder.append(" ");
-			}
+//			for (EntityAnnotation entity : annotateImageResponse.getTextAnnotations()) {
+//				textBuilder.append(entity.getDescription());
+//				textBuilder.append(" ");
+//			}
+			gVR.getTextDeatils().add(annotateImageResponse.getTextAnnotations().get(0).getDescription().replaceAll("\n", " "));
 		}
-		gVR.getTextDeatils().add(textBuilder.toString());
+		
 		List<EntityAnnotation> textAnnos = annotateImageResponse.getTextAnnotations();
 		String fullText = textAnnos.get(0).getDescription();
 		gVR.getTextDeatilsFormatted().add(processOCRText(fullText, annotateImageResponse));
@@ -289,21 +290,21 @@ public class GvisionResponseToOCRResponseConverter {
 			StringBuilder parseText = new StringBuilder();
 			parseText.append("Logo Details : ");
 			parseText.append(gVisionResponse.getLogoDetails().get(index).toString());
-			parseText.append("<br/> ");
+			parseText.append(" ");
 			
 			parseText.append("Label Details : ");
 			parseText.append(gVisionResponse.getLabelDetails().get(index).toString());
-			parseText.append("<br/> ");
+			parseText.append(" ");
 			
 			parseText.append("Text Details : ");
 			parseText.append(gVisionResponse.getTextDeatils().get(index).toString());
-			parseText.append("<br/> ");
+			parseText.append(" ");
 			
 			parseText.append("Color Details : ");
 			parseText.append(gVisionResponse.getColorDeatils().get(index).toString());
-			parseText.append("<br/> ");
-			parseText.toString().replaceAll("\n", "&nbsp;");
-			parseText.toString().replaceAll(" ", "&nbsp;");
+			parseText.append(" ");
+//			parseText.toString().replaceAll("\n", "&nbsp;");
+//			parseText.toString().replaceAll(" ", "&nbsp;");
 			if((size>=2 && index==0) || (size==1 && index==0)){
 				//set front text
 				parseRequest.setFrontText(parseText.toString());

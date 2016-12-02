@@ -52,19 +52,13 @@ public class MyTaskResource {
 
 			if(taskData!=null){
 				GVisionData myData = new GVisionData();
-				myData.setImage(taskData.getImage());
-				myData.setBackImage(taskData.getBackImage());
+				myData.setFrontImage(taskData.getImage());
 				myData.setBackImage(taskData.getBackImage());
 				myData.setLeftImage(taskData.getLeftImage());
 				myData.setRightImage(taskData.getRightImage());
 				myData.setTopImage(taskData.getTopImage());
-				myData.setRequest(MessageConverter
-						.getParseRequestObjectFromJson(taskData
-								.getGivisionResponse()));
-				/*myData.getRequest().setFrontTextFormatted(myData.getRequest().getFrontTextFormatted().replaceAll("&nbsp;", " "));
-				if(myData.getRequest().getBackTextFormatted()!=null){
-					myData.getRequest().setBackTextFormatted(myData.getRequest().getBackTextFormatted().replaceAll("&nbsp;", " "));
-				}*/
+				myData.setRequest(MessageConverter.getParseRequestObjectFromJson(taskData.getGivisionResponse()));
+				myData.setAttributeBag(MessageConverter.getListOfMapFromJson(taskData.getAbsoobaResponse()));
 				myData.setSmartId(userTask);
 
 				return Response.ok().type(MediaType.APPLICATION_JSON)
@@ -189,27 +183,23 @@ public class MyTaskResource {
 	}
 
 	class GVisionData {
-		byte[] image;
+		byte[] frontImage;
 		ParseRequest request;
 		String smartId;
 		byte [] backImage;
 		byte[] leftImage;
 		byte [] rightImage;
 		byte[] topImage;
+		List<Map<String, Object>> attributeBag;
 
-		/**
-		 * @return the image
-		 */
-		public byte[] getImage() {
-			return image;
+		
+
+		public byte[] getFrontImage() {
+			return frontImage;
 		}
 
-		/**
-		 * @param image
-		 *            the image to set
-		 */
-		public void setImage(byte[] image) {
-			this.image = image;
+		public void setFrontImage(byte[] frontImage) {
+			this.frontImage = frontImage;
 		}
 
 		/**
@@ -278,6 +268,14 @@ public class MyTaskResource {
 
 		public void setTopImage(byte[] topImage) {
 			this.topImage = topImage;
+		}
+
+		public List<Map<String, Object>> getAttributeBag() {
+			return attributeBag;
+		}
+
+		public void setAttributeBag(List<Map<String, Object>> attributeBag) {
+			this.attributeBag = attributeBag;
 		}
 
 	}

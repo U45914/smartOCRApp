@@ -273,7 +273,7 @@
 								showLoadingScreen();
 								$http
 								.get(
-										'https://product-profiling.herokuapp.com/rest/mytask/get/all')
+										'rest/mytask/get/all')
 								.then(
 										function(response) {
 											$scope.alltasks = response.data;

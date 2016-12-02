@@ -243,7 +243,7 @@
 								showLoadingScreen();
 								$http
 										.get(
-												'https://product-profiling.herokuapp.com/rest/mytask/get')
+												'rest/mytask/get')
 										.then(
 												function(response) {
 													
@@ -277,7 +277,7 @@
 								showLoadingScreen();
 								$http
 										.post(
-												"https://product-profiling.herokuapp.com/rest/abzoobaParse/parseText",
+												"rest/abzoobaParse/parseText",
 												JSON
 														.stringify($scope.myTask.request),
 												{

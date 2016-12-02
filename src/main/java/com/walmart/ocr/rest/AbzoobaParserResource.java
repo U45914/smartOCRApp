@@ -10,7 +10,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,6 +50,29 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 	
 	public void setOcrInfoDao(OcrInfoDao ocrInfoDao) {
 		this.ocrInfoDao = ocrInfoDao;
+	}
+	
+	@PUT
+	@Path("/updateAbzoobaResponse/{smartOcrId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateAbzoobaResponse(@PathParam("smartOcrId") String ocrId, List<Map<String, Object>> abzoobaModel){
+		Map<String, String> message = new HashMap<String, String>();
+		try {
+			SmartOCRDataModel smartOcrModel = ocrInfoDao.findOcrDataById(MessageConverter.getIdForTask(ocrId));
+			
+			if (smartOcrModel != null) {
+				smartOcrModel.setAbzoobaResponse2(MessageConverter.getStringForObject(abzoobaModel));
+			}
+			ocrInfoDao.updateOcrData(smartOcrModel);
+			
+			message.put("message", "Values updated sucessfully");
+			
+		} catch (Exception e) {
+			message.put("Error", "Failed to update data");
+		}
+		
+		return Response.ok().entity(message).build();
 	}
 
 	@POST
