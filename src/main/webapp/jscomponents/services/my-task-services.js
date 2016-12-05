@@ -21,16 +21,18 @@
 				method : 'GET',
 				url : 'rest/mytask/get'
 			}
-			return $http(request).then(onSuccessResponse, onErrorResponse);			
+			return $http(request).then(onSuccessResponse, onErrorResponse);
+			//return $http.get("json/my-task-response.json").then(onSuccessResponse, onErrorResponse);	
 		}
 		
-		function updateTexts(jsonData){
+		function updateTexts(jsonData, id){
 			var request = {
-				method : 'POST',
-				url : 'rest/abzoobaParse/parseText',
+				method : 'PUT',
+				url : 'rest/updateAbzoobaResponse/'+ id,
 				data : jsonData,
 				headers : {					
 				    'Content-Type': 'application/json',
+				    'Accept':'application/json',
 				    'isCrowd' : 'True'
 				}
 			}
