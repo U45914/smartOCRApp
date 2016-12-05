@@ -36,7 +36,7 @@
 						});
 					} else {
 						$("#mainPallete").show();
-						 ctcvm.allTasks.request.smartOcrId = ctcvm.allTasks.smartId;
+						 //ctcvm.allTasks.request.smartOcrId = ctcvm.allTasks.smartId;
 					}
 					$rootScope.$broadcast('stop-spinner');
 				});			 
