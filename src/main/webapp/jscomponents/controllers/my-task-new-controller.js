@@ -38,7 +38,7 @@
 			 if(data.frontImage){
 				 var details = {};
 				 details.dotClass ="active";
-				 details.imageData = data.image;
+				 details.imageData = data.frontImage;
 				 details.classAttr = "item active";
 				 mtncvm.imagesArray.push(details);
 			 }
