@@ -28,7 +28,7 @@
 		function updateTexts(jsonData, id){
 			var request = {
 				method : 'PUT',
-				url : 'rest/updateAbzoobaResponse/'+ id,
+				url : 'rest/abzoobaParse/updateAbzoobaResponse/'+ id,
 				data : jsonData,
 				headers : {					
 				    'Content-Type': 'application/json',
