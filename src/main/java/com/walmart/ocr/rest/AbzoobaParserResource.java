@@ -31,6 +31,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.model.SmartOCRDataModel;
+import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
 import com.walmart.ocr.util.JsonstringToMap;
 import com.walmart.ocr.util.MessageConverter;
 
@@ -253,7 +254,8 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 		source = source.replace("rightSideText", "RightSideText");
 		source = source.replace("topSideText", "TopSideText");
 		source = source.replace("bottomSideText", "BottomSideText");
+		source = source.replaceAll(GvisionResponseToOCRResponseConverter.BR, " ");
 		
 		return source;
-	}
+	};
 }

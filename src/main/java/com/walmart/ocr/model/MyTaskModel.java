@@ -26,6 +26,7 @@ public class MyTaskModel implements Serializable {
 	private byte[] leftImage;
 	private byte [] rightImage;
 	private byte[] topImage;
+	private byte[] bottomImage;
 
 	
 	/**
@@ -123,6 +124,14 @@ public class MyTaskModel implements Serializable {
 
 	public void setTopImage(byte[] topImage) {
 		this.topImage = topImage;
+	}
+
+	public byte[] getBottomImage() {
+		return bottomImage;
+	}
+
+	public void setBottomImage(byte[] bottomImage) {
+		this.bottomImage = bottomImage;
 	}
 
 	/**

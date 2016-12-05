@@ -135,6 +135,9 @@ public class GoogleVisionResource {
 					else if(i==4){
 						ocrDataModel.setTopImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
 					}
+					else if(i==5){
+						ocrDataModel.setBottomImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));
+					}
 				}
 			}
 			

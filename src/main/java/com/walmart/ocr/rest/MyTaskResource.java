@@ -57,6 +57,7 @@ public class MyTaskResource {
 				myData.setLeftImage(taskData.getLeftImage());
 				myData.setRightImage(taskData.getRightImage());
 				myData.setTopImage(taskData.getTopImage());
+				myData.setBottomImage(taskData.getBottomImage());
 				myData.setRequest(MessageConverter.getParseRequestObjectFromJson(taskData.getGivisionResponse()));
 				myData.setAttributeBag(MessageConverter.getListOfMapFromJson(taskData.getAbsoobaResponse()));
 				myData.setSmartId(userTask);
@@ -114,6 +115,7 @@ public class MyTaskResource {
 				task.setLeftImage(data.getLeftImage());
 				task.setRightImage(data.getRightImage());
 				task.setTopImage(data.getTopImage());
+				task.setBottomImage(data.getBottomImage());
 				task.setSmartId(MessageConverter.getSmartOCRId(data.getOcrRequestId()));
 				task.setAbzoobaResponse(getAbzoobaModel(task, data));
 				tasks.add(task);
@@ -190,6 +192,7 @@ public class MyTaskResource {
 		byte[] leftImage;
 		byte [] rightImage;
 		byte[] topImage;
+		byte[] bottomImage;
 		List<Map<String, Object>> attributeBag;
 
 		
@@ -268,6 +271,14 @@ public class MyTaskResource {
 
 		public void setTopImage(byte[] topImage) {
 			this.topImage = topImage;
+		}
+
+		public byte[] getBottomImage() {
+			return bottomImage;
+		}
+
+		public void setBottomImage(byte[] bottomImage) {
+			this.bottomImage = bottomImage;
 		}
 
 		public List<Map<String, Object>> getAttributeBag() {

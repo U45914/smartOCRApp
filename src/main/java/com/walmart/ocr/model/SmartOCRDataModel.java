@@ -71,6 +71,9 @@ public class SmartOCRDataModel implements Serializable {
 	@Column(name="TOP_IMAGE")
 	private byte [] topImage;
 	
+	@Column(name="BOTTOM_IMAGE")
+	private byte [] bottomImage;
+	
 	public SmartOCRDataModel() {
 	}
 
@@ -317,18 +320,24 @@ public class SmartOCRDataModel implements Serializable {
 	}
 
 
-	@Override
-	public String toString() {
-		return "SmartOCRDataModel [ocrRequestId=" + ocrRequestId + ", givisionResponse=" + givisionResponse
-				+ ", crowdSourceResponse=" + crowdSourceResponse + ", absoobaRequestInfo=" + absoobaRequestInfo
-				+ ", absoobaResponse=" + absoobaResponse + ", crowdSourceUserId=" + crowdSourceUserId + ", status="
-				+ status + ", imageUrls=" + imageUrls + ", image=" + Arrays.toString(image) + ", imageUploadDate="
-				+ imageUploadDate + ", imageProcessedDate=" + imageProcessedDate + ", cloudeSourceSubmitDate="
-				+ cloudeSourceSubmitDate + ", abzoobaResponse2=" + abzoobaResponse2 + ", backImage="
-				+ Arrays.toString(backImage) + ", leftImage=" + Arrays.toString(leftImage) + ", rightImage="
-				+ Arrays.toString(rightImage) + ", topImage=" + Arrays.toString(topImage) + "]";
+	public byte[] getBottomImage() {
+		return bottomImage;
 	}
 
+
+	public void setBottomImage(byte[] bottomImage) {
+		this.bottomImage = bottomImage;
+	}
+
+
+	@Override
+	public String toString() {
+		return "SmartOCRDataModel [ocrRequestId=" + ocrRequestId + ", givisionResponse=" + givisionResponse + ", crowdSourceResponse="
+				+ crowdSourceResponse + ", absoobaRequestInfo=" + absoobaRequestInfo + ", absoobaResponse=" + absoobaResponse
+				+ ", crowdSourceUserId=" + crowdSourceUserId + ", status=" + status + ", imageUrls=" + imageUrls + ", imageUploadDate="
+				+ imageUploadDate + ", imageProcessedDate=" + imageProcessedDate + ", cloudeSourceSubmitDate=" + cloudeSourceSubmitDate
+				+ ", abzoobaResponse2=" + abzoobaResponse2 + "]";
+	}
 
 
 }
