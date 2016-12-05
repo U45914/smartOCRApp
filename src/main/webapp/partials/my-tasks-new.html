@@ -120,6 +120,9 @@
 			<div class="heading-top">
 				<h2>Smart Product</h2>
 			</div>
+			<!-- <div class="panel-footer">
+						<a class="btn btn-primary" role="button" ng-click="mtncvm.updateTexts()">Update OCR</a>
+				</div> -->
 				<div class="table-responsive tble_cntr">
 					  <table class="table attr_tbl table-bordered">
 					   	<thead>
@@ -131,16 +134,18 @@
 						    <tbody>
 						      <tr ng-repeat="resp in mtncvm.myTask.attributeBag">
 						        <td>{{resp.Attribute}}</td>				        
-						        <td><textarea class="form-control" rows="4" ng-model="resp.Value"></td>			       
+						        <td><textarea class="form-control" rows="4" ng-model="resp.Value"></textarea></td>			       
 						      </tr>						      
 						    </tbody>
 					  </table>
 					</div>
-				
+					<div class="panel-footer">
+						<a class="btn btn-primary" role="button" ng-click="mtncvm.updateTexts()">Update OCR</a>
+					</div>				
 			</div>
 		</div>
 	</div>
-	</section>
+	</section>	
 	
 	
 	</div>
