@@ -19,10 +19,10 @@
 		 ctcvm.viewAllTasks();
 
 		 function viewSingleTask(ele) {
-			showLoadingScreen();
+			 $rootScope.$broadcast('start-spinner');
 			$('#myModal').modal('show');
 			ctcvm.selected = ctcvm.allTasks[ele];
-			hideLoadingScreen();
+			 $rootScope.$broadcast('stop-spinner');
 		}
 		 
 		 function viewAllTasks(){
