@@ -12,10 +12,15 @@ angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize'])
 		controllerAs:'mocvm'
 		
 	})
-	.when('/myTasks',{
+	/*.when('/myTasks',{
 		templateUrl : 'partials/my-tasks.html',
 		controller: 'MyTaskController',
 		controllerAs:'mtcvm'
+	})*/
+	.when('/myTasksNew',{
+		templateUrl : 'partials/my-tasks-new.html',
+		controller: 'MyTaskNewController',
+		controllerAs:'mtncvm'
 	})
 	/*.when('/completedTasks', {
 		templateUrl : 'partials/completed-tasks.html',
