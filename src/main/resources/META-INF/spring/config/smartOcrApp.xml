@@ -12,6 +12,22 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<context:annotation-config />
 	
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="5" />
+		<property name="maxPoolSize" value="10" />
+		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
+	</bean>
+	
+	<bean id="ocrTaskCreator" class="com.walmart.ocr.job.SmartOcrTaskCreator" >
+		<property name="rabbitMqProvider" ref="rabbitMQProvider" />
+		<property name="ocrTaskExecutor" ref="taskExecutor" />
+		<property name="ocrInfoDao" ref="ocrInfoDao" />
+	</bean>
+	<bean id="smartOcrServiceResource" class="com.walmart.ocr.rest.service.SmartOcrServiceResourceImpl" >
+		<property name="ocrTaskCreator" ref="ocrTaskCreator" />
+	</bean>
+	
 	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
 	</bean>

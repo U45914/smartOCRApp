@@ -111,14 +111,7 @@ public class GoogleVisionResource {
 			});
 			
 			if(imageFiles!=null && !imageFiles.isEmpty()){
-
-				//future = executor.submit(new ImageBarcodeRunner(imageFiles));
-				
-//				ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(0), "jpg"));
-//				if(imageFiles.size()==2){
-//					ocrDataModel.setBackImage(ImageToByteConverter.convertImageToByte(imageFiles.get(1), "jpg"));
-//				}
-			
+		
 				for (int i = 0; i < imageFiles.size(); i++) {
 					if(i==0){
 						ocrDataModel.setImage(ImageToByteConverter.convertImageToByte(imageFiles.get(i), "jpg"));

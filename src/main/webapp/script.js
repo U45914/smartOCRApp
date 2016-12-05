@@ -75,7 +75,7 @@ $(function() {
 		$jqValue.html("");
 		$tableValue.html("");
 		$.ajax({
-			url : 'rest/smartOCR/convertImagesToText',
+			url : 'rest/services/uploadImages',
 			type : 'POST',
 			data : data,
 			cache : false,
