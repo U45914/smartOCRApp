@@ -10,7 +10,7 @@
 		 
 		 var ctcvm = this;
 		 ctcvm.viewAllTasks = viewAllTasks;
-		 ctcvm.viewTask = viewSingleTask;
+		 ctcvm.viewSingleTask = viewSingleTask;
 		 ctcvm.allTasks  = null;
 		 
 		 $rootScope.$broadcast('stop-spinner');
