@@ -35,7 +35,7 @@
 		 function extractImagesFromMyTasks(data){
 			 mtncvm.imagesArray = [];	
 			
-			 if(data.fronImage){
+			 if(data.frontImage){
 				 var details = {};
 				 details.dotClass ="active";
 				 details.imageData = data.image;
