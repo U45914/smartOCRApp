@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="images/favicon.ico">
+<title>Smart OCR</title>
+<link href="css/style.css" rel="stylesheet">
+<body>
+
+	<header id="header-section">
+		<div class="container-fluid">
+			<div class="row">
+				<nav class="navbar navbar-default">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							>
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand logo_txt" >Smart<span>OCR</span></a>
+					</div>
+					<div class="collapse navbar-collapse" id="myNavbar">
+						<ul class="nav navbar-nav navbar-right">
+							<li ><a href="./#/multiOCR">Home</a></li>
+							<li ><a href="./#/myTasksNew"> My Tasks</a></li>
+							<li><a href="./#/completedTasks">Completed Tasks</a></li>
+						</ul>
+
+					</div>
+				</nav>
+			</div>
+		</div>
+	</header>
+	<div class="content_wrapper">
+	<section id="container-section">		
+		<div class="attach_warp attach_button" id="bn-item" >
+			<a class="btn btn-default btn-file"  ng-click="mtncvm.getMyTasks()" role="button"><i class="fa fa-tasks" aria-hidden="true"></i>Get My Tasks</a>			
+		</div>	
+		<div class="col-md-12" id="gallery_section">			
+			<div class="col-md-5  margin_left text-center">
+				<div id="gallery_carousel" class="carousel slide" data-ride="carousel">
+					<!-- Indicators -->
+					<ol class="carousel-indicators">
+						<li ng-repeat="details in mtncvm.imagesArray" data-target="#gallery_carousel" data-slide-to="{{$index}}" ng-class="details.dotClass"></li>						
+					</ol>
+
+					<!-- Wrapper for slides -->
+					<!-- <div id="carousel" class="carousel-inner" role="listbox">
+						<div ng-repeat="details in mtncvm.imagesArray" ng-class="picFile.classAttr">
+							<img src="{{details.imageData}}">
+						</div>
+					</div> -->
+					<div id="carousel" class="carousel-inner" role="listbox">
+							<div ng-repeat="det in mtncvm.imagesArray" ng-class="det.classAttr">
+								<img src="data:image/png;base64,{{det.imageData}}"
+									class="img-responsive" alt="Responsive image">
+							</div>
+					</div>
+				</div>				
+			</div>			
+	
+	</div>
+	
+		<ocr-spinner></ocr-spinner>
+	
+	<div class="col-md-12" ng-show="mtncvm.isTablesVisible">
+		<div class="col-md-6 " >
+			<div class="heading-top">
+				<h2>Smart Text</h2>
+			</div>
+				<div class="table-responsive tble_cntr">
+					  <table class="table extract_tble table-bordered ">
+					   	<tbody>
+					      <tr>
+					        <td>Smart OCR ID</td>
+					        <td><p ng-bind-html="mtncvm.responseText.smartOcrId"/></td>
+					      </tr>
+					      <tr ng-if="mtncvm.responseText.frontText != null">
+					        <td>Front Image Text</td>
+					        <td> <p ng-bind-html="mtncvm.responseText.frontText"/> </td>
+					      </tr>
+					      <tr ng-if="mtncvm.responseText.backText != null">
+					        <td>Back Image Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.backText"/></td>
+					       </tr>
+					      <tr ng-if="mtncvm.responseText.leftSideText != null">
+					        <td>Left Side Image Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.leftSideText"/></td>
+					      </tr>
+					       <tr ng-if="mtncvm.responseText.rightSideText != null">
+					        <td>Right Side Image Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.rightSideText"/></td>
+					      </tr>
+					       <tr ng-if="mtncvm.responseText.topSideText != null">
+					        <td>Top Side Image Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.topSideText"/></td>
+					      </tr>
+					       <tr ng-if="mtncvm.responseText.bottomSideText != null">
+					        <td>Bottom Side Image Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.bottomSideText"/></td>
+					      </tr>
+					       <tr ng-if="mtncvm.responseText.extractedUpc != null">
+					        <td>Extracted UPC Text</td>
+					        <td><p ng-bind-html="mtncvm.responseText.extractedUpc"/></td>
+					      </tr>
+					    </tbody>
+					   </table>
+					</div>
+				
+			</div>
+		<div class="col-md-6">
+			<div class="heading-top">
+				<h2>Smart Product</h2>
+			</div>
+				<div class="table-responsive tble_cntr">
+					  <table class="table attr_tbl table-bordered">
+					   	<thead>
+					   	<tr>
+					   		 <td>Attribute</td>
+						      <td>Value</td>						      
+					   	</tr>
+					   	</thead>
+						    <tbody>
+						      <tr ng-repeat="resp in mtncvm.myTask.attributeBag">
+						        <td>{{resp.Attribute}}</td>				        
+						        <td><textarea class="form-control" rows="4" ng-model="resp.Value"></td>			       
+						      </tr>						      
+						    </tbody>
+					  </table>
+					</div>
+				
+			</div>
+		
+	</div>
+	</section>
+	
+	
+	</div>
+	<footer >
+	<div class="col-md-12" id="footer-section">
+		<div class="col-md-8">
+			<p class="copy-txt">Copyright &copy; SmartOCR</p>
+		</div>
+		<div class="col-md-4">
+			<div class="pull-right">
+				<img src="images/ust_logo.png" alt=""
+					class="img-responsive ust-logo">
+			</div>
+		</div>
+		</div>
+	</footer>
+	<script src="js/jquery-1.11.1.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/script.js"></script>
+
+
+</body>
+</html>
