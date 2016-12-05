@@ -128,7 +128,7 @@
 			mtncvm.convertToJson(mtncvm.myTask.attributeBag);
 			MyTaskServices.updateTexts(mtncvm.jsonString, mtncvm.myTask.smartId).then(function(responseData) {
 				$rootScope.$broadcast('stop-spinner');
-				mtncvm.updateDB(responseData.data);
+				//mtncvm.updateDB(responseData.data);
 				$("#alertSuccess").fadeTo(2000, 500).slideUp(500,function() {
 					$("#alertSuccess").slideUp(500);
 				});
@@ -136,13 +136,13 @@
 		}
 				
 		function updateDB(data){
-			$rootScope.$broadcast('start-spinner');
-			MyTaskServices.updateTexts(data).then(function(responseData) {
+			//$rootScope.$broadcast('start-spinner');
+			/*MyTaskServices.updateTexts(data).then(function(responseData) {
 				$rootScope.$broadcast('stop-spinner');
 				$("#alertSuccess").fadeTo(2000, 500).slideUp(500,function() {
 					$("#alertSuccess").slideUp(500);
 				});
-			});
+			});*/
 		}
 
 		$('.carousel').carousel({
