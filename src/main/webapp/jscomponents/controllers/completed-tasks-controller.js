@@ -61,16 +61,16 @@
 		 }
 		 
 		 function viewSingleTask(ele) {
-			 $rootScope.$broadcast('start-spinner');
+			$rootScope.$broadcast('start-spinner');
+			extractImagesFromResponse(ctcvm.allTasks[ele]);
 			$('#myModal').modal('show');
 			ctcvm.selected = ctcvm.allTasks[ele];
-			 $rootScope.$broadcast('stop-spinner');
+			$rootScope.$broadcast('stop-spinner');
 		}
 		 
 		 function viewAllTasks(){
 			 $rootScope.$broadcast('start-spinner');
-			 CompletedTasksServices.viewAllTasks().then(function(response){
-				 extractImagesFromResponse(response.data);
+			 CompletedTasksServices.viewAllTasks().then(function(response){				 
 				 ctcvm.allTasks = response.data;
 					if ( ctcvm.allTasks.message) {
 						$("#mainPallete").hide();
