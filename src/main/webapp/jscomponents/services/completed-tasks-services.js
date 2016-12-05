@@ -16,7 +16,10 @@
 		function viewAllTasks(){
 			var request = {
 				method : 'GET',
-				url : 'rest/mytask/get/all'
+				url : 'rest/mytask/get/all',
+				headers: {
+				    'Accept':'application/json'				    
+				}
 			};
 			return $http(request).then(onSuccessResponse, onErrorResponse);	
 		}
