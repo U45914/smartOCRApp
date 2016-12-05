@@ -125,6 +125,7 @@
 
 		 function updateTexts() {
 			$rootScope.$broadcast('start-spinner');
+			mtncvm.convertToJson(mtncvm.myTask.attributeBag);
 			MyTaskServices.updateTexts(mtncvm.jsonString).then(function(responseData) {
 				$rootScope.$broadcast('stop-spinner');
 				mtncvm.updateDB(responseData.data);
