@@ -73,7 +73,7 @@
 					<div class="collapse navbar-collapse" id="myNavbar">
 						<ul class="nav navbar-nav navbar-right">
 							<li><a href="./#/multiOCR">Home</a></li>
-							<li><a href="./#/myTasks"> My Tasks</a></li>
+							<li><a href="./#/myTasksNew"> My Tasks</a></li>
 							<li><a href="./#/completedTasks">Completed Tasks</a></li>
 						</ul>
 
@@ -107,7 +107,7 @@
 									<th width="120">UPC</th>
 									<th width="120">Action</th>
 								</tr>
-								<tr ng-repeat="n in alltasks track by $index">
+								<tr ng-repeat="n in allTasks track by $index">
 									<td class="tableCol first_td_img text-center"><img src="data:image/png;base64,{{n.image}}" class="img-responsive"
 											alt="Responsive image" width="75" height="75">
 									<img ng-if="n.backImage != undefined && n.backImage != null"
