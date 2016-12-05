@@ -22,11 +22,11 @@ angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize'])
 		controller: 'MyTaskNewController',
 		controllerAs:'mtncvm'
 	})
-	/*.when('/completedTasks', {
+	.when('/completedTasks', {
 		templateUrl : 'partials/completed-tasks.html',
 		controller: 'CompletedTasksController',
 		controllerAs:'ctcvm'
-	})*/
+	})
 	.otherwise({redirectTo: '/multiOCR'});
 }]).directive("ocrSpinner",function(){
 	 return{
