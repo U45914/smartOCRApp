@@ -51,7 +51,7 @@ public class SmartOcrTaskRunner implements Callable<String> {
 	@Override
 	public String call() throws Exception {
 		_LOGGER.info("OCR Processing started");
-		
+		freeGC();
 		ImageBarcodeRunner barcodeRunner = new ImageBarcodeRunner(imageFiles);
 		String resultBarcode = barcodeRunner.call();
 		
@@ -92,9 +92,15 @@ public class SmartOcrTaskRunner implements Callable<String> {
 		
 		updateOcrModelToDatabase();
 		
+		freeGC();
 		return this.smartOcrId;
 	}
 
+
+	private static void freeGC() {
+		System.gc();
+		Runtime.getRuntime().gc();
+	}
 
 	private void updateOcrModelToDatabase() {
 		ocrInfoDao.updateOcrData(ocrDataModel);

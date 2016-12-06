@@ -36,6 +36,7 @@ public class SmartOcrTaskCreator {
 	@Autowired
 	RabbitMQProvider rabbitMqProvider;
 
+	private ExecutorService executor = Executors.newFixedThreadPool(10);
 
 	@SuppressWarnings("unchecked")
 	public String submitJob(HttpServletRequest request) {
@@ -69,7 +70,6 @@ public class SmartOcrTaskCreator {
 		
 		SmartOcrTaskRunner ocrTaskRunner = new SmartOcrTaskRunner(smartId, imageFiles, ocrInfoDao, ocrDataModel);
 		
-		ExecutorService executor = Executors.newFixedThreadPool(1);
 		executor.submit(ocrTaskRunner);
 		
 		return smartId;
