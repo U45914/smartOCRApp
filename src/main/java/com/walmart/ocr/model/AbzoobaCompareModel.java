@@ -9,7 +9,7 @@ public class AbzoobaCompareModel implements Serializable {
 	private String valueFromCrowdSource;
 	private String valueFromGivision;
 	private String confidenceLevel;
-	private String confidenceLevelAfterCrowd;
+	
 	/**
 	 * 
 	 */
@@ -62,18 +62,6 @@ public class AbzoobaCompareModel implements Serializable {
 	 */
 	public void setConfidenceLevel(String confidenceLevel) {
 		this.confidenceLevel = confidenceLevel;
-	}
-	/**
-	 * @return the confidenceLevelAfterCrowd
-	 */
-	public String getConfidenceLevelAfterCrowd() {
-		return confidenceLevelAfterCrowd;
-	}
-	/**
-	 * @param confidenceLevelAfterCrowd the confidenceLevelAfterCrowd to set
-	 */
-	public void setConfidenceLevelAfterCrowd(String confidenceLevelAfterCrowd) {
-		this.confidenceLevelAfterCrowd = confidenceLevelAfterCrowd;
 	}
 
 }

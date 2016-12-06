@@ -49,7 +49,7 @@ public class Main {
 		System.out.println("****************************"+id+"***************************");
 		System.out.println("************************* xxxxxxxxx *************************");
 		
-		List<SmartOCRDataModel> dataModels= dao.findOcrDataByStatus("waiting", 1, 10);
+		List<SmartOCRDataModel> dataModels= dao.findOcrDataByStatus("waiting", 1, 10, "asc");
 
 		System.out.println("** "+dataModels+" **\n");
 		System.out.println("** "+dataModels.size()+" **");

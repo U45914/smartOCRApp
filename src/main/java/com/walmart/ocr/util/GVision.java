@@ -153,35 +153,6 @@ public class GVision {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.writeValue(new FileOutputStream("output.json"), batchResponse.getResponses());
 		return batchResponse;
-		
-		
-		
-//		List<AnnotateImageRequest> annotateImageRequests = new ArrayList<AnnotateImageRequest>();
-//		for (byte[] bFile : byteArrList) {
-//			AnnotateImageRequest request = new AnnotateImageRequest();		
-//			request.setFeatures(ImmutableList.of(new Feature().setType("TEXT_DETECTION").setMaxResults(MAX_RESULTS),
-//					new Feature().setType("LOGO_DETECTION").setMaxResults(MAX_RESULTS),
-//					new Feature().setType("LABEL_DETECTION").setMaxResults(MAX_RESULTS),
-//					new Feature().setType("IMAGE_PROPERTIES").setMaxResults(MAX_RESULTS)));
-//			request.setImage(new Image().encodeContent(bFile));
-//			annotateImageRequests.add(request);
-//		}
-//		Vision.Images.Annotate annotate;
-//		try {
-//			annotate = vision.images()
-//					.annotate(new BatchAnnotateImagesRequest().setRequests(annotateImageRequests));
-//			BatchAnnotateImagesResponse batchResponse = annotate.execute();
-//			//assert batchResponse.getResponses().size() == 1;
-//			
-//
-//				ObjectMapper objectMapper = new ObjectMapper();
-//				objectMapper.writeValue(new FileOutputStream("output.json"), batchResponse.getResponses());
-//				return batchResponse;
-//		
-//		} catch (IOException e) {
-//			logger.error("Failed to process Images", e);
-//			throw e;
-//		}
 	}
 	public static void main (String args[]){
 		GVision gvision = new GVision();

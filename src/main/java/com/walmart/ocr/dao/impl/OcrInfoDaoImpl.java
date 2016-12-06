@@ -11,6 +11,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -114,13 +115,15 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 	}
 
 	@Override
-	public List<SmartOCRDataModel> findOcrDataByStatus(String status,int start, int limit) {
+	public List<SmartOCRDataModel> findOcrDataByStatus(String status,int start, int limit, String orderBy) {
 		Session session=template.openSession();
+		Order order = orderBy.equalsIgnoreCase("asc") ? Order.asc("id") : Order.desc("id"); 
 		Criteria criteria=session.createCriteria(SmartOCRDataModel.class);
 		List<SmartOCRDataModel> ocrData=null;
-		criteria.add(Restrictions.eq("status", status))
+		criteria/*.add(Restrictions.eq("status", status))*/
 				.setFirstResult(start)
-				.setMaxResults(limit);
+				.setMaxResults(limit)
+				.addOrder(order);
 		
 		ocrData=criteria.list();
 		return ocrData;

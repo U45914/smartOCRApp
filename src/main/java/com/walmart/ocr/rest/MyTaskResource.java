@@ -133,8 +133,7 @@ public class MyTaskResource {
 		String abre2 =data.getAbzoobaResponse2();
 		List<Map<String, Object>> abzoobaResponse2=null;
 		if(abre2!=null){
-			abzoobaResponse2 = MessageConverter
-					.getListOfMapFromJson(abre2);
+			abzoobaResponse2 = MessageConverter.getListOfMapFromJson(abre2);
 		}
 		
 		for (Map<String, Object> attribute : abzoobaResponse) {
@@ -170,7 +169,6 @@ public class MyTaskResource {
 			
 			if(parentAttributeKey.equals(childAttributeKey)){
 				compareModel.setValueFromCrowdSource(String.valueOf(attribute.get("Value")));
-				compareModel.setConfidenceLevelAfterCrowd(String.valueOf(attribute.get("CLevel")));
 				break;
 			}
 		}

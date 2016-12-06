@@ -19,6 +19,16 @@
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
 	
+	<bean id="taskProvider" class="com.walmart.ocr.job.SmartOcrTaskProvider" >
+	
+	</bean>
+	<bean id="imageServiceProcessor" class="com.walmart.ocr.image.ImageServiceProcessor">
+		<property name="ocrInfoDao" ref="ocrInfoDao" />
+	</bean>
+	
+	<bean id="abzoobaRequestProcessor" class="com.walmart.ocr.job.AbzoobaAttributeRequestProcessor">
+		<property name="ocrInfoDao" ref="ocrInfoDao" />
+	</bean>
 	<bean id="ocrTaskCreator" class="com.walmart.ocr.job.SmartOcrTaskCreator" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider" />
 		<property name="ocrTaskExecutor" ref="taskExecutor" />
@@ -26,6 +36,9 @@
 	</bean>
 	<bean id="smartOcrServiceResource" class="com.walmart.ocr.rest.service.SmartOcrServiceResourceImpl" >
 		<property name="ocrTaskCreator" ref="ocrTaskCreator" />
+		<property name="imageServiceProcessor" ref="imageServiceProcessor" />
+		<property name="attributeRequestProcessor" ref="abzoobaRequestProcessor" />
+		<property name="taskProvider" ref="taskProvider" />
 	</bean>
 	
 	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
