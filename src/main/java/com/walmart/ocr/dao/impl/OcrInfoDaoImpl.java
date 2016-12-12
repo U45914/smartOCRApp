@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -47,6 +48,12 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 		Serializable id = null;
 		Session session = template.openSession();
 		id = session.save(ocrDataModel);
+		try{
+			session.setFlushMode(FlushMode.COMMIT);
+			session.flush();
+		}catch(Exception e){
+			LOGGER.error("Error while flushing  >>" + e);
+		}
 		return id;
 	}
 
