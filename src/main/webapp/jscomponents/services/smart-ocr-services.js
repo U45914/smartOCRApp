@@ -7,52 +7,111 @@
 	OCRServices.$inject = ['$http', '$rootScope'];
 
 	function OCRServices($http, $rootScope) {
-
+		
+		var imageArray = [];
+		var files = null;
+		var previewData = null;
+		var ocrId = null;
+		
 		var api = {
 			postImageData : postImageData,
-			extractAbzoobaResponse : extractAbzoobaResponse,
-			postDataToEmiForCreation : postDataToEmiForCreation
+			getImageData : getImageData,
+			getGoogleVisionResponse : getGoogleVisionResponse,
+			getAbzoobaParsedAttributes : getAbzoobaParsedAttributes,			
+			pushToArray : pushToArray,
+			getArray : getArray,
+			initArray : initArray,
+			setFiles : setFiles,
+			getFiles : getFiles,
+			setPreviewData : setPreviewData,
+			getPreviewData : getPreviewData,
+			setOcrId : setOcrId,
+			getOcrId : getOcrId			
 		}
 
 		return api;
 		
-		
 
 		function postImageData(files) {
-			return $http.post("rest/smartOCR/convertImagesToText", files, {
+			return $http.post("rest/services/uploadImages", files, {
 	            transformRequest: angular.identity,
 	            headers: {'Content-Type': undefined}
 	        }).then(onSuccessResponse, onErrorResponse);
 		}
 		
-		function extractAbzoobaResponse(jsonString){
+		function getImageData(id){
 			var request = {
-				method : 'POST',
-				url : 'rest/abzoobaParse/parseText',
-				data: jsonString,
-				headers: {
-				    'Accept':'application/json',
-				    'Content-Type': 'application/json'
-				}
-			}
+					method : 'GET',
+					url : 'rest/services/images/'+ id,					
+					headers: {
+					    'Accept':'application/json'					    
+					}
+			};
+			return $http(request).then(onSuccessResponse, onErrorResponse);						
+		}
+		
+		function getGoogleVisionResponse(ocrId){
+			var request = {
+					method : 'GET',
+					url : 'rest/services/ocrText/google/'+ ocrId,					
+					headers: {
+					    'Accept':'application/json'					    
+					}
+			};
 			return $http(request).then(onSuccessResponse, onErrorResponse);			
 		}
 		
-		function postDataToEmiForCreation(jsonString){
-			var request ={
-				method : 'POST',
-				url : 'http://WVWEA004C2483.homeoffice.Wal-Mart.com:8888/OCRImageToText/rest/Product/create',
-				data : jsonString,
-				headers :{
-					'Content-Type': 'application/json'
-				}
-			}
-			return $http(request).then(onSuccessResponse, onErrorResponse);	
+		function getAbzoobaParsedAttributes(ocrId){
+			var request = {
+					method : 'GET',
+					url : 'rest/services/attributes/'+ ocrId,					
+					headers: {
+					    'Accept':'application/json'					    
+					}
+			};
+			return $http(request).then(onSuccessResponse, onErrorResponse);			
 		}
+		
+		function pushToArray(imageData){
+			imageArray.push(imageData);
+		}
+		
+		function initArray(){
+			imageArray = [];
+		}
+		
+		function getArray(){
+			return imageArray;
+		}
+		
+		function setFiles(filesData){
+			files = filesData;
+		}
+		
+		function getFiles(){
+			return files;
+		}
+		
+		function setPreviewData(data){
+			previewData = data;
+		}
+		
+		function getPreviewData(){
+			return previewData;
+		}
+		
+		function setOcrId(id){
+			ocrId = id;
+		}
+		
+		function getOcrId (){
+			return ocrId;
+		}		
+		
 
 
-		function onSuccessResponse(response) {
-			return response;
+		function onSuccessResponse(response) {			
+				return response;
 		}
 
 		function onErrorResponse(response) {

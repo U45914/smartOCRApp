@@ -1,33 +1,48 @@
-angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize'])
+angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize', 'ui.bootstrap'])
 .config(['$routeProvider', function ($routeProvider) {
 		$routeProvider
-	/*.when('/', {
-		templateUrl : 'partials/landing-page.html',
+	.when('/', {
+		templateUrl : 'partials/first-screen.html',
 		controller: 'LandingController',
 		controllerAs:'lcvm'
-	})*/
-	.when('/multiOCR', {
+	})
+	.when('/initProfiler', {
+		templateUrl : 'partials/init-profiler-screen.html',
+		controller: 'InitProfilerController',
+		controllerAs:'ipcvm'
+	})
+	.when('/preview', {
+		templateUrl : 'partials/pre-profiler-view.html',
+		controller: 'PreProfilerViewController',
+		controllerAs:'ppvcvm'
+	})
+	.when('/googleVisionView', {
+		templateUrl : 'partials/google-vision-view.html',
+		controller: 'GoogleVisionController',
+		controllerAs:'gvcvm'
+	})
+	.when('/attributesView', {
+		templateUrl : 'partials/attributes-view.html',
+		controller: 'AttributesViewController',
+		controllerAs:'avcvm'
+	});
+	/*.when('/multiOCR', {
 		templateUrl : 'partials/multi-ocr-page.html',
 		controller: 'MultiOcrController',
 		controllerAs:'mocvm'
 		
-	})
-	/*.when('/myTasks',{
-		templateUrl : 'partials/my-tasks.html',
-		controller: 'MyTaskController',
-		controllerAs:'mtcvm'
-	})*/
+	})	
 	.when('/myTasksNew',{
 		templateUrl : 'partials/my-tasks-new.html',
 		controller: 'MyTaskNewController',
 		controllerAs:'mtncvm'
-	})
+	})	
 	.when('/completedTasks', {
 		templateUrl : 'partials/completed-tasks.html',
 		controller: 'CompletedTasksController',
 		controllerAs:'ctcvm'
-	})
-	.otherwise({redirectTo: '/multiOCR'});
+	})*/
+	//.otherwise({redirectTo: '/'});
 }]).directive("ocrSpinner",function(){
 	 return{
          link: linkFunction
