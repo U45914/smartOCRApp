@@ -55,8 +55,10 @@
 								</div>
 								</div>
 								<div class="panel-footer text-center">
-									<button class="btn btn-default btn_upld" ng-click="ipcvm.parseText()">Submit Your
-										Images</button>
+								 <span>
+									<button class="btn btn-default btn_upld" ng-show="ipcvm.showSubmitButton" ng-click="ipcvm.parseText()">Submit Your Images</button>
+									<button ng-show="ipcvm.isRetryButtonVisible" ng-disabled="ipcvm.isButtonDisabled" class="btn btn-default btn_upld" ng-click="ipcvm.retry()"><span ng-show="!ipcvm.isTimerVisible">Next >></span><span ng-show="ipcvm.isTimerVisible">Please wait for </span><span ng-show="ipcvm.isTimerVisible">{{ipcvm.counter}} seconds</span></button>
+								 </span>
 								</div>
 							</div>
 						</div>
