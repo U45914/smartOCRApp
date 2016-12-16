@@ -16,8 +16,8 @@ angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize', 'ui.bootstrap'])
 		controller: 'PreProfilerViewController',
 		controllerAs:'ppvcvm'
 	})
-	.when('/googleVisionView', {
-		templateUrl : 'partials/google-vision-view.html',
+	.when('/smartVisionView', {
+		templateUrl : 'partials/smart-vision-view.html',
 		controller: 'GoogleVisionController',
 		controllerAs:'gvcvm'
 	})
@@ -25,13 +25,13 @@ angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize', 'ui.bootstrap'])
 		templateUrl : 'partials/attributes-view.html',
 		controller: 'AttributesViewController',
 		controllerAs:'avcvm'
-	});
+	})
 	/*.when('/multiOCR', {
 		templateUrl : 'partials/multi-ocr-page.html',
 		controller: 'MultiOcrController',
 		controllerAs:'mocvm'
 		
-	})	
+	})*/	
 	.when('/myTasksNew',{
 		templateUrl : 'partials/my-tasks-new.html',
 		controller: 'MyTaskNewController',
@@ -41,8 +41,8 @@ angular.module('smartOCR', ['ngRoute', 'ui.grid', 'ngSanitize', 'ui.bootstrap'])
 		templateUrl : 'partials/completed-tasks.html',
 		controller: 'CompletedTasksController',
 		controllerAs:'ctcvm'
-	})*/
-	//.otherwise({redirectTo: '/'});
+	})
+	.otherwise({redirectTo: '/'});
 }]).directive("ocrSpinner",function(){
 	 return{
          link: linkFunction
