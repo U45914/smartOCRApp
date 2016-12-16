@@ -40,7 +40,7 @@ public class JsonstringToMap {
 				attribute.put("Attribute", key);
 				if (key.equalsIgnoreCase("Product_Long_Description")) {
 					String longDesc = String.valueOf(attributes.get(key));
-					longDesc= longDesc.replaceAll("\n", " ");					
+					longDesc= longDesc.replaceAll("\n", "<br/> <br/>");					
 					attribute.put("Value", longDesc);
 				} else {
 					attribute.put("Value", attributes.get(key));
