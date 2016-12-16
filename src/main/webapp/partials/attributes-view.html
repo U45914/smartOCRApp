@@ -83,6 +83,11 @@
 									</div>
 									</div>
 								</div>
+								<div class="panel-footer text-center">
+								 <span>									
+									<button ng-show="avcvm.isRetryButtonVisible" ng-disabled="avcvm.isButtonDisabled" class="btn btn-default btn_upld" ng-click="avcvm.retry()"><span ng-show="!avcvm.isTimerVisible">Retry</span><span ng-show="avcvm.isTimerVisible">Please wait for </span><span ng-show="avcvm.isTimerVisible">{{avcvm.counter}} seconds</span></button>
+								 </span>
+								</div>
 							</div>
 						</div>
 					</div>
