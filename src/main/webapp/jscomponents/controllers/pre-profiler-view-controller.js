@@ -42,7 +42,7 @@
 		 }
 		 
 		 function goToGoogleVisionView(){
-			 $location.path('/googleVisionView');
+			 $location.path('/smartVisionView');
 		 }
 		 
 		setTimeout(function(){
@@ -51,13 +51,14 @@
 			    
 			});
 			
+	
 			$('.multislider .item').each(function () {		
 		        var next = $(this).next();
 		        if (!next.length) {
 		            next = $(this).siblings(':first');
 		        }
 		        next.children(':first-child').clone().appendTo($(this));
-
+		        
 		        if (next.next().length > 0) {
 		            next.next().children(':first-child').clone().appendTo($(this));
 		        }
@@ -71,9 +72,8 @@
 		         var direction = nav.attr('class').indexOf('left') == 0 ? "prev" : "next";
 		         nav.parents('.carousel').carousel(direction);
 			 });
-		
+			
 			},750);
-		 
-		 
+		 		 
 	 }
 })();
