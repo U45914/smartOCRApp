@@ -16,16 +16,16 @@
 
 	<rabbit:admin connection-factory="rabbitMqConnectionFactory" />
 
-	<rabbit:queue name="WM.SMART.OCR" />
+	<rabbit:queue name="WM.SMART.OCR.TEST" />
 
 	<rabbit:direct-exchange name="smartOcrExchange">
 		<rabbit:bindings>
-			<rabbit:binding queue="WM.SMART.OCR"></rabbit:binding>
+			<rabbit:binding queue="WM.SMART.OCR.TEST"></rabbit:binding>
 		</rabbit:bindings>
 	</rabbit:direct-exchange>
 
 	<rabbit:template id="amqpTemplate" connection-factory="rabbitMqConnectionFactory"
-		exchange="smartOcrExchange" queue="WM.SMART.OCR" />
+		exchange="smartOcrExchange" queue="WM.SMART.OCR.TEST" />
 		
 	<!-- <rabbit:listener-container
         connection-factory="rabbitMqConnectionFactory">
