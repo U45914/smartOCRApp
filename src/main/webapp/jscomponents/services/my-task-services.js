@@ -19,7 +19,7 @@
 		function getTasks(){
 			var request = {
 				method : 'GET',
-				url : 'rest/mytask/get'
+				url : 'http://product-profiling.herokuapp.com/rest/mytask/get'
 			}
 			return $http(request).then(onSuccessResponse, onErrorResponse);
 			//return $http.get("json/my-task-response.json").then(onSuccessResponse, onErrorResponse);	
@@ -28,7 +28,7 @@
 		function updateTexts(jsonData, id){
 			var request = {
 				method : 'PUT',
-				url : 'rest/abzoobaParse/updateAbzoobaResponse/'+ id,
+				url : 'http://product-profiling.herokuapp.com/rest/abzoobaParse/updateAbzoobaResponse/'+ id,
 				data : jsonData,
 				headers : {					
 				    'Content-Type': 'application/json',
@@ -42,7 +42,7 @@
 		function updateDB(data){
 			var request ={
 					method : 'POST',
-					url : 'http://WVWEA004C2483.homeoffice.Wal-Mart.com:8888/OCRImageToText/rest/Product/create',
+					url : 'http://product-profiling.herokuapp.com/OCRImageToText/rest/Product/create',
 					data : data,
 					headers : {
 						'Content-Type' : 'application/json'

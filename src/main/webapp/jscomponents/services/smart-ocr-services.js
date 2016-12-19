@@ -33,7 +33,7 @@
 		
 
 		function postImageData(files) {
-			return $http.post("rest/services/uploadImages", files, {
+			return $http.post("http://product-profiling.herokuapp.com/rest/services/uploadImages", files, {
 	            transformRequest: angular.identity,
 	            headers: {'Content-Type': undefined}
 	        }).then(onSuccessResponse, onErrorSpecialResponse);
@@ -42,7 +42,7 @@
 		function getImageData(id){
 			var request = {
 					method : 'GET',
-					url : 'rest/services/images/'+ id,					
+					url : 'http://product-profiling.herokuapp.com/rest/services/images/'+ id,					
 					headers: {
 					    'Accept':'application/json'					    
 					}
@@ -53,7 +53,7 @@
 		function getGoogleVisionResponse(ocrId){
 			var request = {
 					method : 'GET',
-					url : 'rest/services/ocrText/google/'+ ocrId,					
+					url : 'http://product-profiling.herokuapp.com/rest/services/ocrText/google/'+ ocrId,					
 					headers: {
 					    'Accept':'application/json'					    
 					}
@@ -64,7 +64,7 @@
 		function getAbzoobaParsedAttributes(ocrId){
 			var request = {
 					method : 'GET',
-					url : 'rest/services/attributes/'+ ocrId,					
+					url : 'http://product-profiling.herokuapp.com/rest/services/attributes/'+ ocrId,					
 					headers: {
 					    'Accept':'application/json'					    
 					}
