@@ -31,6 +31,7 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 	Logger LOGGER = Logger.getLogger(OcrInfoDaoImpl.class);
 	@Autowired
 	SessionFactory template;
+	private Query Q;
 
 	/*
 	 * (non-Javadoc)
@@ -124,6 +125,14 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 		
 		ocrData=criteria.list();
 		return ocrData;
+	}
+
+	@Override
+	public void clearExistingData() {
+		Session session = template.openSession();
+		Query deleteQuery = session.createQuery("DELETE from SmartOCRDataModel");
+		deleteQuery.executeUpdate();
+		
 	}
 
 }

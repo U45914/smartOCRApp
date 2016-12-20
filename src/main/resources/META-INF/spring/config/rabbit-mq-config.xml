@@ -9,12 +9,14 @@
 
 	<bean id="rabbitMQProvider" class="com.walmart.ocr.rabbit.provider.RabbitMQProvider" > 
 		<property name="template" ref="amqpTemplate" />
+		<property name="ocrQueueAdmin" ref="ocrQueueAdmin" />
+		<property name="queueName" value="WM.SMART.OCR.MAIN" />
 	</bean>
 	
 	<rabbit:connection-factory id="rabbitMqConnectionFactory" port="10810" virtual-host="JGc7bZMDFAOc"
 		host="wet-buckthorn-1.bigwig.lshift.net" username="Ds2esvCc" password="3t1MLmb0PQRKkYVwEshelYn6E3f2pxaP" />
 
-	<rabbit:admin connection-factory="rabbitMqConnectionFactory" />
+	<rabbit:admin id="ocrQueueAdmin" connection-factory="rabbitMqConnectionFactory" />
 
 	<rabbit:queue name="WM.SMART.OCR.MAIN" />
 

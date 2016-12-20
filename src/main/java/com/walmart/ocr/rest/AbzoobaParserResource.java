@@ -144,8 +144,8 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 				
 				if (!StringUtils.isEmpty(parseInput.getExtractedUpc())) { 
 					Map<String, Object> extractedUpc = new HashMap();
-					extractedUpc.put("Attribute", "Extracted_UPC");
-					extractedUpc.put("Value", parseInput.getExtractedUpc());
+					extractedUpc.put("Attribute", "GTIN");
+					extractedUpc.put("Value",MessageConverter.convertUpcToGTIN(parseInput.getExtractedUpc()));
 					extractedUpc.put("CLevel", Double.valueOf("100"));
 					extractedUpc.put(AttributeNames.DISPLAY_ORDER, AttributeNames.getDisplayOrder("Extracted_UPC"));
 					
@@ -275,4 +275,6 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 		
 		return source;
 	};
+	
+
 }

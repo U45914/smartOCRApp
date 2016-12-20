@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+
+
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -80,4 +84,15 @@ public class MessageConverter {
 		}
 		return new ParseRequest();
 	}
+	
+	public static String convertUpcToGTIN(String upc) {
+		String gtin = null;
+		if(upc.length() < 14) {
+			int length = 14-upc.length();
+			gtin = StringUtils.leftPad(upc, 14, '0');
+		}
+		return gtin;
+	}
+	
+	
 }
