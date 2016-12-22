@@ -50,8 +50,9 @@ public class JsonstringToMap {
 					Double cLevelLongValue = Double.valueOf(cLevel) * 100;					
 					attribute.put("CLevel", cLevelLongValue);				
 				} else {
-					attribute.put("CLevel", 0);	
+					attribute.put("CLevel", Double.valueOf("0"));	
 				}
+				attribute.put(AttributeNames.DISPLAY_ORDER, AttributeNames.getDisplayOrder(key));
 				finalLIst.add(attribute);
 			}
 			

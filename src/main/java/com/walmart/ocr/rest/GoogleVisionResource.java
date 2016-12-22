@@ -15,9 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -73,6 +70,17 @@ public class GoogleVisionResource {
 	
 	@Autowired
 	private OcrInfoDao ocrInfoDao;
+	
+	@GET
+	@Path("/reset")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response clearExistingData() {
+		ocrInfoDao.clearExistingData();
+		rabbitMqProvider.purgeMessages();
+		return Response.ok(200).entity("application cleanup completed").build();
+		
+	}
 
 	@POST
 	@Path("/convertImagesToText")

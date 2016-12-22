@@ -12,6 +12,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,10 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 		LOGGER.info("persist ");
 		Serializable id = null;
 		Session session = template.openSession();
+		Transaction saveAction = session.beginTransaction();
 		id = session.save(ocrDataModel);
 		try{
+			saveAction.commit();
 			session.setFlushMode(FlushMode.COMMIT);
 			session.flush();
 		}catch(Exception e){
@@ -134,6 +137,14 @@ public class OcrInfoDaoImpl implements OcrInfoDao {
 		
 		ocrData=criteria.list();
 		return ocrData;
+	}
+
+	@Override
+	public void clearExistingData() {
+		Session session = template.openSession();
+		Query deleteQuery = session.createQuery("DELETE from SmartOCRDataModel");
+		deleteQuery.executeUpdate();
+		
 	}
 
 }

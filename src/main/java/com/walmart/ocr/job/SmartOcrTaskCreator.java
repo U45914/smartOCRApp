@@ -65,6 +65,7 @@ public class SmartOcrTaskCreator {
 		Integer ocrId = (Integer) ocrInfoDao.createOcrData(ocrDataModel);
 		
 		String smartId = MessageConverter.getSmartOCRId(ocrId);
+		ocrInfoDao.updateOcrData(ocrDataModel);
 		// Send ocrId to queue
 		rabbitMqProvider.sendMessage(smartId);
 		

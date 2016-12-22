@@ -1,6 +1,7 @@
 package com.walmart.ocr.job;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.AbzoobaCompareModel;
 import com.walmart.ocr.model.SmartOCRDataModel;
+import com.walmart.ocr.util.AttributeComparator;
+import com.walmart.ocr.util.AttributeNames;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
 import com.walmart.ocr.util.JsonstringToMap;
 import com.walmart.ocr.util.MessageConverter;
@@ -26,6 +29,8 @@ public class AbzoobaAttributeRequestProcessor {
 	private static final Logger _LOGGER = Logger.getLogger(AbzoobaAttributeRequestProcessor.class);
 
 	private final static int _TIMEOUT = 2 * 60 * 1000;
+	
+	public static final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparator();
 
 	Client client = Client.create();
 
@@ -78,6 +83,8 @@ public class AbzoobaAttributeRequestProcessor {
 
 			if (smartOcrModel != null && smartOcrModel.getAbsoobaResponse() != null) {
 				attributes = readAttributesFromJson(smartOcrModel.getAbsoobaResponse());
+				Collections.sort(attributes, ATTRIBUTE_COMPARATOR);
+				
 			}
 		} catch (Exception e) {
 			_LOGGER.error("Exception while fetching attributes", e);
@@ -123,7 +130,8 @@ public class AbzoobaAttributeRequestProcessor {
 		Map<String, Object> attribute = new HashMap<String, Object>();
 		attribute.put("Attribute", attributeName);
 		attribute.put("Value", value);
-		attribute.put("CLevel", 100);
+		attribute.put("CLevel", Double.valueOf("100"));
+		attribute.put(AttributeNames.DISPLAY_ORDER, AttributeNames.getDisplayOrder(attributeName));
 
 		attributesList.add(attribute);
 

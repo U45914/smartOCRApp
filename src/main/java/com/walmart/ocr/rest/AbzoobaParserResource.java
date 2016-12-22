@@ -1,6 +1,8 @@
 package com.walmart.ocr.rest;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -31,6 +34,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.walmart.ocr.dao.OcrInfoDao;
 import com.walmart.ocr.model.ParseRequest;
 import com.walmart.ocr.model.SmartOCRDataModel;
+import com.walmart.ocr.util.AttributeComparator;
+import com.walmart.ocr.util.AttributeNames;
 import com.walmart.ocr.util.GvisionResponseToOCRResponseConverter;
 import com.walmart.ocr.util.JsonstringToMap;
 import com.walmart.ocr.util.MessageConverter;
@@ -41,6 +46,7 @@ public class AbzoobaParserResource {
 private final static int _TIMEOUT = 2 * 60 * 1000; 
 	private static final Logger logger = Logger.getLogger(AbzoobaParserResource.class);
 	private static Client client = Client.create();
+	private final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparator();
 	
 	public AbzoobaParserResource() {
 		client.setConnectTimeout(_TIMEOUT);
@@ -132,10 +138,21 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 				Map<String, Object> upc = new HashMap();
 				upc.put("Attribute", "UPC");
 				upc.put("Value", parseInput.getId());
-				upc.put("CLevel", 100);
-				
-								
+				upc.put("CLevel", Double.valueOf("100"));
+				upc.put(AttributeNames.DISPLAY_ORDER, AttributeNames.getDisplayOrder("UPC"));				
 				response.add(upc);
+				
+				if (!StringUtils.isEmpty(parseInput.getExtractedUpc())) { 
+					Map<String, Object> extractedUpc = new HashMap();
+					extractedUpc.put("Attribute", "GTIN");
+					extractedUpc.put("Value",MessageConverter.convertUpcToGTIN(parseInput.getExtractedUpc()));
+					extractedUpc.put("CLevel", Double.valueOf("100"));
+					extractedUpc.put(AttributeNames.DISPLAY_ORDER, AttributeNames.getDisplayOrder("GTIN"));
+					
+					response.add(extractedUpc);
+				}
+				
+				Collections.sort(response, ATTRIBUTE_COMPARATOR);
 				
 				String finalResponse = MessageConverter.getStringForObject(response);
 				
@@ -258,4 +275,6 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 		
 		return source;
 	};
+	
+
 }

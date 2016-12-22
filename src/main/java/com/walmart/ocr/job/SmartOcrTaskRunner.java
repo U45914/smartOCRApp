@@ -4,6 +4,7 @@
 package com.walmart.ocr.job;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -85,8 +86,9 @@ public class SmartOcrTaskRunner implements Callable<String> {
 		List<Map<String, Object>> productAttributes = attributeRequestProcessor.getAttributes(ocrDataModel, resultBarcode, ocrDataModel.getGivisionResponse());
 		AbzoobaAttributeRequestProcessor.addRequiredAttributesToList(productAttributes, "UPC", upcNumber);
 		if (resultBarcode != null && !resultBarcode.isEmpty()) {
-			AbzoobaAttributeRequestProcessor.addRequiredAttributesToList(productAttributes, "Extracted UPC", resultBarcode);
+			AbzoobaAttributeRequestProcessor.addRequiredAttributesToList(productAttributes, "GTIN", resultBarcode);
 		}
+		Collections.sort(productAttributes, AbzoobaAttributeRequestProcessor.ATTRIBUTE_COMPARATOR);
 		// set attributes to data model
 		ocrDataModel.setAbsoobaResponse(MessageConverter.getStringForObject(productAttributes));
 		

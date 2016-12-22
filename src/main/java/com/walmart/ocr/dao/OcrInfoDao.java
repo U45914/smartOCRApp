@@ -19,4 +19,5 @@ public interface OcrInfoDao {
 	List<SmartOCRDataModel> findAllOcrData();
 	List<SmartOCRDataModel> findOcrDataByStatus(String status,int start, int limit, String orderBy);
 	void updateOcrData(SmartOCRDataModel ocrDataModel);
+	void clearExistingData();
 }
