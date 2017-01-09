@@ -12,23 +12,23 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<context:annotation-config />
 	
-	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
+	<bean id="googleVisionResource" class="com.smartocr.ocr.rest.GoogleVisionResource" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
 	</bean>
 	
-	<bean id="abzoobaParserResource" class="com.walmart.ocr.rest.AbzoobaParserResource" >
+	<bean id="abzoobaParserResource" class="com.smartocr.ocr.rest.AbzoobaParserResource" >
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
 	
-	<bean id="automation" class="com.walmart.ocr.rest.automation.SmartOCRRun">
+	<bean id="automation" class="com.smartocr.ocr.rest.automation.SmartOCRRun">
 	</bean>
 			
 	<!-- Tell Spring where to scan for components -->
 	<context:component-scan
-		base-package="com.walmart.ocr.dao.*" />
+		base-package="com.smartocr.ocr.dao.*" />
 		
 		
-	<bean name="ocrInfoDao" class="com.walmart.ocr.dao.impl.OcrInfoDaoImpl">
+	<bean name="ocrInfoDao" class="com.smartocr.ocr.dao.impl.OcrInfoDaoImpl">
 	</bean>
 	<!-- Import all resources -->
 

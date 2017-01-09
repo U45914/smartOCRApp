@@ -10,7 +10,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.walmart.ocr.model.SmartOCRDataModel</value>
+				<value>com.smartocr.ocr.model.SmartOCRDataModel</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

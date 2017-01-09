@@ -14,7 +14,7 @@
 	
 	<filter>
 		<filter-name>CORSFilter</filter-name>
-		<filter-class>com.walmart.ocr.util.CORSFilter</filter-class>
+		<filter-class>com.smartocr.ocr.util.CORSFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>CORSFilter</filter-name>
@@ -33,7 +33,7 @@
 		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>com.walmart.ocr.rest</param-value>
+			<param-value>com.smartocr.ocr.rest</param-value>
 		</init-param>
 		<init-param>
 			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
