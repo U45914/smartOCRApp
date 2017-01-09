@@ -11,7 +11,7 @@
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<context:annotation-config />
-	
+	<!-- <context:property-placeholder /> -->
 	<bean id="googleVisionResource" class="com.smartocr.ocr.rest.GoogleVisionResource" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
 	</bean>
@@ -33,6 +33,7 @@
 	<!-- Import all resources -->
 
 	<!-- db-sqlite-config.xml file is used to run a ddl command -->
+	<import resource="../security/smartocr-security.xml" />
 	<import resource="../database/db-sqlite-config.xml" />
 	
 	<import resource="../database/DataSource.xml"/>
