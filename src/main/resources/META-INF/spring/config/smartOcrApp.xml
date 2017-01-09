@@ -19,45 +19,45 @@
 		<property name="WaitForTasksToCompleteOnShutdown" value="true" />
 	</bean>
 	
-	<bean id="taskProvider" class="com.walmart.ocr.job.SmartOcrTaskProvider" >
+	<bean id="taskProvider" class="com.smartocr.ocr.job.SmartOcrTaskProvider" >
 	
 	</bean>
-	<bean id="imageServiceProcessor" class="com.walmart.ocr.image.ImageServiceProcessor">
+	<bean id="imageServiceProcessor" class="com.smartocr.ocr.image.ImageServiceProcessor">
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
 	
-	<bean id="abzoobaRequestProcessor" class="com.walmart.ocr.job.AbzoobaAttributeRequestProcessor">
+	<bean id="abzoobaRequestProcessor" class="com.smartocr.ocr.job.AbzoobaAttributeRequestProcessor">
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
-	<bean id="ocrTaskCreator" class="com.walmart.ocr.job.SmartOcrTaskCreator" >
+	<bean id="ocrTaskCreator" class="com.smartocr.ocr.job.SmartOcrTaskCreator" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider" />
 		<property name="ocrTaskExecutor" ref="taskExecutor" />
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
-	<bean id="smartOcrServiceResource" class="com.walmart.ocr.rest.service.SmartOcrServiceResourceImpl" >
+	<bean id="smartOcrServiceResource" class="com.smartocr.ocr.rest.service.SmartOcrServiceResourceImpl" >
 		<property name="ocrTaskCreator" ref="ocrTaskCreator" />
 		<property name="imageServiceProcessor" ref="imageServiceProcessor" />
 		<property name="attributeRequestProcessor" ref="abzoobaRequestProcessor" />
 		<property name="taskProvider" ref="taskProvider" />
 	</bean>
 	
-	<bean id="googleVisionResource" class="com.walmart.ocr.rest.GoogleVisionResource" >
+	<bean id="googleVisionResource" class="com.smartocr.ocr.rest.GoogleVisionResource" >
 		<property name="rabbitMqProvider" ref="rabbitMQProvider"></property>
 	</bean>
 	
-	<bean id="abzoobaParserResource" class="com.walmart.ocr.rest.AbzoobaParserResource" >
+	<bean id="abzoobaParserResource" class="com.smartocr.ocr.rest.AbzoobaParserResource" >
 		<property name="ocrInfoDao" ref="ocrInfoDao" />
 	</bean>
 	
-	<bean id="automation" class="com.walmart.ocr.rest.automation.SmartOCRRun">
+	<bean id="automation" class="com.smartocr.ocr.rest.automation.SmartOCRRun">
 	</bean>
 			
 	<!-- Tell Spring where to scan for components -->
 	<context:component-scan
-		base-package="com.walmart.ocr.dao.*" />
+		base-package="com.smartocr.ocr.dao.*" />
 		
 		
-	<bean name="ocrInfoDao" class="com.walmart.ocr.dao.impl.OcrInfoDaoImpl">
+	<bean name="ocrInfoDao" class="com.smartocr.ocr.dao.impl.OcrInfoDaoImpl">
 	</bean>
 	<!-- Import all resources -->
 

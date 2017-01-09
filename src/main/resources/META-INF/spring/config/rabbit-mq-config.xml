@@ -7,7 +7,7 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
     http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="rabbitMQProvider" class="com.walmart.ocr.rabbit.provider.RabbitMQProvider" > 
+	<bean id="rabbitMQProvider" class="com.smartocr.ocr.rabbit.provider.RabbitMQProvider" > 
 		<property name="template" ref="amqpTemplate" />
 		<property name="ocrQueueAdmin" ref="ocrQueueAdmin" />
 		<property name="queueName" value="WM.SMART.OCR.MAIN" />
@@ -35,13 +35,13 @@
     </rabbit:listener-container> -->
      
     <context:annotation-config />
-    <context:component-scan base-package="com.walmart" />
+    <context:component-scan base-package="com.smartocr" />
 <!--     <aop:aspectj-autoproxy /> -->
  
-    <bean id="smartOcrMessageListner" class="com.walmart.ocr.rabbit.listner.SmartOCRMessageListner">
+    <bean id="smartOcrMessageListner" class="com.smartocr.ocr.rabbit.listner.SmartOCRMessageListner">
     </bean>
     
-    <bean id="myTaskProvider" class="com.walmart.ocr.rabbit.listner.MQTaskProvider">
+    <bean id="myTaskProvider" class="com.smartocr.ocr.rabbit.listner.MQTaskProvider">
     </bean>
 </beans>
 
@@ -53,7 +53,7 @@
 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="rabbitMQProvider" class="com.walmart.ocr.rabbit.provider.RabbitMQProvider" > 
+	<bean id="rabbitMQProvider" class="com.smartocr.ocr.rabbit.provider.RabbitMQProvider" > 
 		<property name="template" ref="rabbiTemplate" />
 	</bean>
 	Connection Factory
