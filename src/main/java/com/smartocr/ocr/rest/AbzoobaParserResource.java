@@ -47,6 +47,7 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 	private static final Logger logger = Logger.getLogger(AbzoobaParserResource.class);
 	private static Client client = Client.create();
 	private final AttributeComparator ATTRIBUTE_COMPARATOR = new AttributeComparator();
+	private static final String ABZOOBA_ENDPOINT = "http://productprofiling.abzooba.com:5000/beauty";
 	
 	public AbzoobaParserResource() {
 		client.setConnectTimeout(_TIMEOUT);
@@ -113,7 +114,7 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 
 				// WebResource webResource =
 				// client.resource("http://52.23.170.75:5000/model2");
-				WebResource webResource = client.resource("http://34.224.38.146:5000/beauty");
+				WebResource webResource = client.resource(ABZOOBA_ENDPOINT);
 				ObjectMapper mapper = new ObjectMapper();
 				String jsonInString = mapper.writeValueAsString(parseInput);
 				jsonInString = processStringForAbzooba(jsonInString);
@@ -205,7 +206,7 @@ private final static int _TIMEOUT = 2 * 60 * 1000;
 
 				// WebResource webResource =
 				// client.resource("http://52.23.170.75:5000/model2");
-				WebResource webResource = client.resource("http://34.224.38.146:5000/beauty");
+				WebResource webResource = client.resource(ABZOOBA_ENDPOINT);
 				String jsonInString = mapper.writeValueAsString(pRequest);
 				jsonInString = jsonInString.replace("frontText", "FrontText");
 				jsonInString = jsonInString.replace("backText", "BackText");
